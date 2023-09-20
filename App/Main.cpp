@@ -5,6 +5,7 @@
 #include <SFML.hpp>
 
 #include "Assets/Scripts/TestScript.h"
+#include "Assets/Scripts/CameraController.h"
 
 #include <Windows.h>
 
@@ -18,6 +19,7 @@ int main()
 
 	GameObject camera;
 	camera.AddComponent<Camera>();
+	camera.AddComponent<CameraController>();
 
 	GameObject go;
 	SpriteRenderer* renderer = go.AddComponent<SpriteRenderer>();
@@ -26,6 +28,7 @@ int main()
 	camera.Awake();
 	go.Awake();
 	go.Start();
+	camera.Start();
 
 	while (WindowManager::IsOpen())
 	{
@@ -35,6 +38,7 @@ int main()
 
 		Time::Update();
 		go.Update();
+		camera.Update();
 
 		RenderStack::Execute();
 	}

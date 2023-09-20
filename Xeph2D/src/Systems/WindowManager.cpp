@@ -117,7 +117,7 @@ Vector2 Xeph2D::WindowManager::PixelToScreen(const Vector2 point)
 
 Vector2 Xeph2D::WindowManager::PixelToWorld(const Vector2 point)
 {
-	return PixelToScreen(point) + Get()._camera->transform->position;
+	return PixelToScreen(point) - Get()._camera->transform->position;
 }
 
 Vector2 Xeph2D::WindowManager::ScreenToPixel(const Vector2 point)
@@ -127,7 +127,7 @@ Vector2 Xeph2D::WindowManager::ScreenToPixel(const Vector2 point)
 
 Vector2 Xeph2D::WindowManager::WorldToPixel(const Vector2 point)
 {
-	return Vector2((point.x + Get()._camera->transform->position.x) * Get()._ppu * Get()._resScale, Get()._height - (point.y + Get()._camera->transform->position.y) * Get()._ppu * Get()._resScale);
+	return Vector2((point.x - Get()._camera->transform->position.x) * Get()._ppu * Get()._resScale, Get()._height - (point.y - Get()._camera->transform->position.y) * Get()._ppu * Get()._resScale);
 }
 
 float Xeph2D::WindowManager::PixelToUnit(const float val)
