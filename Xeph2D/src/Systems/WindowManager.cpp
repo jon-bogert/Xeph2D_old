@@ -30,7 +30,7 @@ void Xeph2D::WindowManager::DrawSprite(const GameObject* gameObject, sf::Sprite*
 			finalTransform.position.x += currObj->transform.position.x;
 			finalTransform.position.y += currObj->transform.position.y;
 
-			finalTransform.rotation += currObj->transform.rotation;
+			finalTransform.rotation.AddDeg(currObj->transform.rotation.GetDeg());
 
 			finalTransform.scale.x *= currObj->transform.scale.x;
 			finalTransform.scale.y *= currObj->transform.scale.y;
@@ -44,7 +44,7 @@ void Xeph2D::WindowManager::DrawSprite(const GameObject* gameObject, sf::Sprite*
 	Get()._height - ((finalTransform.position.y * Get()._ppu * Get()._resScale) - (Get()._camera->transform->position.y * Get()._ppu * Get()._resScale)) });
 	
 	sprite->setScale(finalTransform.scale.x * Get()._resScale, finalTransform.scale.y * Get()._resScale);
-	sprite->setRotation(finalTransform.rotation);
+	sprite->setRotation(finalTransform.rotation.GetDeg());
 
 	//sprite->setPosition(finalTransform.position.x, finalTransform.position.y);
 	Get()._window->draw(*sprite);
