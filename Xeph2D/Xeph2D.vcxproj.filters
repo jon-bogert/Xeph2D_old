@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\Component.cpp" />
+    <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\Systems\SceneManager.cpp" />
+    <ClCompile Include="src\Components\SpriteRenderer.cpp" />
+    <ClCompile Include="src\Systems\AssetManager.cpp" />
+    <ClCompile Include="src\Systems\Debug.cpp" />
+    <ClCompile Include="src\Systems\WindowManager.cpp" />
+    <ClCompile Include="src\Components\Camera.cpp" />
+    <ClCompile Include="src\Systems\Time.cpp" />
+    <ClCompile Include="src\Systems\RenderStack.cpp" />
+    <ClCompile Include="src\Systems\InputSystem\GamepadHandler.cpp" />
+    <ClCompile Include="src\Systems\InputSystem\InputActionMap.cpp" />
+    <ClCompile Include="src\Systems\InputSystem\InputSystem.cpp" />
+    <ClCompile Include="src\Systems\InputSystem\KeyHandler.cpp" />
+    <ClCompile Include="src\Structs.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\GameObject.h" />
+    <ClInclude Include="include\Scene.h" />
+    <ClInclude Include="include\Systems\SceneManager.h" />
+    <ClInclude Include="include\Structs.h" />
+    <ClInclude Include="include\Components\SpriteRenderer.h" />
+    <ClInclude Include="include\Systems\AssetManager.h" />
+    <ClInclude Include="include\Systems\Debug.h" />
+    <ClInclude Include="include\Systems\WindowManager.h" />
+    <ClInclude Include="include\Components\Camera.h" />
+    <ClInclude Include="include\Systems\Time.h" />
+    <ClInclude Include="include\Xeph2D.h" />
+    <ClInclude Include="include\Systems\RenderStack.h" />
+    <ClInclude Include="include\Systems\InputSystem\Enums.h" />
+    <ClInclude Include="include\Systems\InputSystem\InputActionMap.h" />
+    <ClInclude Include="include\Systems\InputSystem\InputSystem.h" />
+    <ClInclude Include="src\Systems\InputSystem\GamepadHandler.h" />
+    <ClInclude Include="src\Systems\InputSystem\KeyHandler.h" />
+  </ItemGroup>
+</Project>

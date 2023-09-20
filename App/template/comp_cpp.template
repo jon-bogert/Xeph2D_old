@@ -1,0 +1,13 @@
+#include "@NAME@.h"
+
+using namespace Xeph2D;
+
+void @NAME@::Start()
+{
+	
+}
+
+void @NAME@::Update()
+{
+	
+}
