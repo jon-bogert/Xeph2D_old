@@ -5,7 +5,6 @@ using namespace Xeph2D;
 
 void TestScript::Start()
 {
-	std::cout << "Calling Start" << std::endl;
 	renderer = gameObject->GetComponent<SpriteRenderer>();
 	renderer->LoadTextureByTag("test");
 
@@ -22,7 +21,9 @@ void TestScript::Update()
 	transform->position.y += speed * moveAxis.y * Time::DeltaTime();
 
 	Color c = Color::Red;
+	c.a = .5f;
 	Debug::DrawCircleFilled(transform->position, 0.5f, c);
+	Debug::DrawBoxOutline(transform->position, {1, 1}, Color::Green);
 	Debug::DrawLine(transform->position, Vector2::Zero(), Color::Green);
 	Debug::Monitor("Player Position", "X: " + std::to_string(transform->position.x) + " Y: " + std::to_string(transform->position.y));
 }

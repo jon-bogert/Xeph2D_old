@@ -159,7 +159,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\AudioData.h" />
     <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\Components\AudioSource.h" />
     <ClInclude Include="include\Components\Camera.h" />
     <ClInclude Include="include\Components\SpriteRenderer.h" />
     <ClInclude Include="include\GameObject.h" />
@@ -179,6 +181,8 @@
     <ClInclude Include="src\Systems\InputSystem\KeyHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AudioData.cpp" />
+    <ClCompile Include="src\Components\AudioSource.cpp" />
     <ClCompile Include="src\Structs.cpp" />
     <ClCompile Include="src\Systems\InputSystem\GamepadHandler.cpp" />
     <ClCompile Include="src\Systems\InputSystem\InputActionMap.cpp" />

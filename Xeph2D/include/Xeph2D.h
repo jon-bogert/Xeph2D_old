@@ -1,6 +1,7 @@
 #pragma once
 
 //Standard
+#include "AudioData.h"
 #include "Component.h"
 #include "GameObject.h"
 #include "Scene.h"
@@ -16,5 +17,6 @@
 #include "Systems/WindowManager.h"
 
 //Implemented Components
+#include "Components/AudioSource.h"
 #include "Components/Camera.h"
 #include "Components/SpriteRenderer.h"

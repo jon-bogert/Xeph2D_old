@@ -17,6 +17,8 @@
     <ClCompile Include="src\Systems\InputSystem\InputSystem.cpp" />
     <ClCompile Include="src\Systems\InputSystem\KeyHandler.cpp" />
     <ClCompile Include="src\Structs.cpp" />
+    <ClCompile Include="src\AudioData.cpp" />
+    <ClCompile Include="src\Components\AudioSource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Component.h" />
@@ -37,5 +39,7 @@
     <ClInclude Include="include\Systems\InputSystem\InputSystem.h" />
     <ClInclude Include="src\Systems\InputSystem\GamepadHandler.h" />
     <ClInclude Include="src\Systems\InputSystem\KeyHandler.h" />
+    <ClInclude Include="include\AudioData.h" />
+    <ClInclude Include="include\Components\AudioSource.h" />
   </ItemGroup>
 </Project>
