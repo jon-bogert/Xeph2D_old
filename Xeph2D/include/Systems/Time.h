@@ -26,5 +26,6 @@ namespace Xeph2D
 		static float UnscaledDeltaTime();
 		static float GetTimeScale();
 		static void SetTimeScale(float timescale);
+		static uint32_t FPS();
 	};
 }

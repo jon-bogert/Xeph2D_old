@@ -76,13 +76,22 @@ void Xeph2D::WindowManager::ClearCamera(Camera* camera)
 
 bool Xeph2D::WindowManager::CheckCloseEvent()
 {
+	bool flag = false;
 	sf::Event winEvent;
 	while (Get()._window->pollEvent(winEvent))
 	{
 		if (winEvent.type == sf::Event::Closed)
-			return true;
+			flag = true;
+		if (winEvent.type == sf::Event::Resized)
+		{
+			sf::FloatRect visibleArea(0, 0, winEvent.size.width, winEvent.size.height);
+			Get()._window->setView(sf::View(visibleArea));
+			Get()._width = winEvent.size.width;
+			Get()._height = winEvent.size.height;
+			Get()._resScale = Get()._height / static_cast<float>(Get()._refHeight);
+		}
 	}
-	return false;
+	return flag;
 }
 
 void Xeph2D::WindowManager::Begin()
@@ -108,6 +117,26 @@ void Xeph2D::WindowManager::Close()
 HWND& WindowManager::GetHandle()
 {
 	return Get()._handle;
+}
+
+uint32_t Xeph2D::WindowManager::GetWidthPixels()
+{
+	return Get()._width;
+}
+
+uint32_t Xeph2D::WindowManager::GetHeightPixels()
+{
+	return Get()._height;
+}
+
+uint32_t Xeph2D::WindowManager::GetWidthUnits()
+{
+	return PixelToUnit(Get()._width);
+}
+
+uint32_t Xeph2D::WindowManager::GetHeightUnits()
+{
+	return PixelToUnit(Get()._height);
 }
 
 Vector2 Xeph2D::WindowManager::PixelToScreen(const Vector2 point)

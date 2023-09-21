@@ -324,7 +324,7 @@ namespace Xeph2D
 		static const Color DarkBlue;
 		static const Color DarkCyan;
 		static const Color DarkGoldenrod;
-		static const Color DarkGray;
+		static const Color DarkGrey;
 		static const Color DarkGreen;
 		static const Color DarkKhaki;
 		static const Color DarkMagenta;
@@ -335,12 +335,12 @@ namespace Xeph2D
 		static const Color DarkSalmon;
 		static const Color DarkSeaGreen;
 		static const Color DarkSlateBlue;
-		static const Color DarkSlateGray;
+		static const Color DarkSlateGrey;
 		static const Color DarkTurquoise;
 		static const Color DarkViolet;
 		static const Color DeepPink;
 		static const Color DeepSkyBlue;
-		static const Color DimGray;
+		static const Color DimGrey;
 		static const Color DodgerBlue;
 		static const Color Firebrick;
 		static const Color FloralWhite;
@@ -350,7 +350,7 @@ namespace Xeph2D
 		static const Color GhostWhite;
 		static const Color Gold;
 		static const Color Goldenrod;
-		static const Color Gray;
+		static const Color Grey;
 		static const Color Green;
 		static const Color GreenYellow;
 		static const Color Honeydew;
@@ -368,12 +368,12 @@ namespace Xeph2D
 		static const Color LightCyan;
 		static const Color LightGoldenrodYellow;
 		static const Color LightGreen;
-		static const Color LightGray;
+		static const Color LightGrey;
 		static const Color LightPink;
 		static const Color LightSalmon;
 		static const Color LightSeaGreen;
 		static const Color LightSkyBlue;
-		static const Color LightSlateGray;
+		static const Color LightSlateGrey;
 		static const Color LightSteelBlue;
 		static const Color LightYellow;
 		static const Color Lime;
@@ -425,7 +425,7 @@ namespace Xeph2D
 		static const Color Silver;
 		static const Color SkyBlue;
 		static const Color SlateBlue;
-		static const Color SlateGray;
+		static const Color SlateGrey;
 		static const Color Snow;
 		static const Color SpringGreen;
 		static const Color SteelBlue;

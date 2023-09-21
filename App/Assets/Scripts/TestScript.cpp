@@ -23,9 +23,14 @@ void TestScript::Update()
 
 	Color c = Color::Red;
 	Debug::DrawCircleFilled(transform->position, 0.5f, c);
+	Debug::DrawLine(transform->position, Vector2::Zero(), Color::Green);
+	Debug::Monitor("Player Position", "X: " + std::to_string(transform->position.x) + " Y: " + std::to_string(transform->position.y));
 }
 
 void Xeph2D::TestScript::MoveInput(InputAction* ctx)
 {
 	ctx->ReadValue(&moveAxis.x);
+	Debug::LogColor(Color::Magenta);
+	Debug::Log("axis X: %.2f", moveAxis.x);
+	Debug::Log("axis Y: %.2f", moveAxis.y);
 }

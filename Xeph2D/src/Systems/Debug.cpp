@@ -1,17 +1,84 @@
 #include "Systems/Debug.h"
 #include "Systems/WindowManager.h"
+#include "Systems/Time.h"
 #include <cstdio>
 #include <cstdarg>
 #include <ctime>
+#include <filesystem>
+
+#include "../res/JetBrainsMono_ttf.h"
+#include "../res/BasierSquare_Medium_otf.h"
 
 #pragma warning (disable : 4996)
 
 using namespace Xeph2D;
 
+#define FONT_SIZE 12
+#define LINE_OFFSET 14
+#define INSTR_OFFSET 80.f
+
+Xeph2D::Debug::Debug()
+{
+#ifdef _DEBUG
+    res::JetBrainsMono_ttf(_fontData, _fontDataLength);
+
+    _font = std::make_unique<sf::Font>();
+    _font->loadFromMemory((void*)_fontData.get(), _fontDataLength);
+
+    _textTemplate.setFont(*_font);
+    _textTemplate.setCharacterSize(FONT_SIZE);
+    _textTemplate.setFillColor(_defaultLogColor);
+
+    InputActionMap* map = InputSystem::CreateInputActionMap("Xeph2D::Debug");
+    InputAction* toggleShowGraphics = map->CreateAction("ToggleShowGraphics");
+    toggleShowGraphics->AddButton(_drawGraphicsKey);
+    toggleShowGraphics->performed.Subscribe(XEInputActionCallback(Debug::ToggleShowGraphics));
+    InputAction* toggleShowOutput = map->CreateAction("ToggleShowOutput");
+    toggleShowOutput->AddButton(_drawOutputKey);
+    toggleShowOutput->performed.Subscribe(XEInputActionCallback(Debug::ToggleShowOutput));
+
+    _instructions = _textTemplate;
+    _instructions.setString("Press: [F1] to hide Debug Text, [F2] to hide Debug Graphics");
+    _instructions.setPosition(INSTR_OFFSET, 0.f);
+
+    if (_logToFile)
+    {
+        if (!std::filesystem::exists(L"log/"))
+            std::filesystem::create_directories(L"log/");
+
+        time_t now = time(0);
+        struct tm* localtm = localtime(&now);
+        char timebuffer[80];
+        strftime(timebuffer, sizeof(timebuffer), "%Y-%m-%d_%H-%M-%S", localtm);
+
+        _logFile.open("log/" + std::string(timebuffer) + ".log");
+    }
+#endif // _DEBUG
+}
+
+Xeph2D::Debug::~Debug()
+{
+    if (_logFile.is_open())
+        _logFile.close();
+}
+
 Debug& Debug::Get()
 {
     static Debug instance;
     return instance;
+}
+
+void Xeph2D::Debug::Update()
+{
+    for (size_t i = 0; i < Get()._logBuffer.size(); ++i)
+    {
+        Get()._logBuffer[i].timer += Time::UnscaledDeltaTime();
+        if (Get()._logBuffer[i].timer >= Get()._logTime)
+        {
+            Get()._logBuffer.resize(i);
+            return;
+        }
+    }
 }
 
 void Xeph2D::Debug::Log(const char* format, ...)
@@ -20,17 +87,26 @@ void Xeph2D::Debug::Log(const char* format, ...)
     time_t now = time(0);
     struct tm* localtm = localtime(&now);
 
-    char buffer[80];
+    char timebuffer[80];
 
-    strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", localtm);
+    strftime(timebuffer, sizeof(timebuffer), "%Y-%m-%d %H:%M:%S", localtm);
 
-    printf("{%s}  [LOG] ", buffer);
+    LogEntry entry;
+    entry.dateTime = "{" + std::string(timebuffer) + "} ";
 
     va_list args;
     va_start(args, format);
-    vprintf(format, args);
+    char buffer[256];
+    vsnprintf(buffer, sizeof(buffer), format, args);
     va_end(args);
-    printf("\n");
+
+    entry.contents = " [LOG] " + std::string(buffer);
+    entry.color = Get()._logColor;
+    Get()._logColor = Get()._defaultLogColor;
+
+    Get().AddToLogBuffer(entry);
+    OutputDebugStringA((entry.dateTime + entry.contents + "\n").c_str());
+    Get().LogToFile(entry.dateTime + entry.contents);
 #endif //_DEBUG
 }
 
@@ -40,17 +116,26 @@ void Xeph2D::Debug::LogWarn(const char* format, ...)
     time_t now = time(0);
     struct tm* localtm = localtime(&now);
 
-    char buffer[80];
+    char timebuffer[80];
 
-    strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", localtm);
+    strftime(timebuffer, sizeof(timebuffer), "%Y-%m-%d %H:%M:%S", localtm);
 
-    printf("{%s} [WARN] ", buffer);
+    LogEntry entry;
+    entry.dateTime = "{" + std::string(timebuffer) + "} ";
 
     va_list args;
     va_start(args, format);
-    vprintf(format, args);
+    char buffer[256];
+    vsnprintf(buffer, sizeof(buffer), format, args);
     va_end(args);
-    printf("\n");
+
+    entry.contents = "[WARN] " + std::string(buffer);
+    entry.color = Get()._warnColor;
+    Get()._warnColor = Get()._defaultWarnColor;
+
+    Get().AddToLogBuffer(entry);
+    OutputDebugStringA((entry.dateTime + entry.contents + "\n").c_str());
+    Get().LogToFile(entry.dateTime + entry.contents);
 #endif //_DEBUG
 }
 
@@ -60,18 +145,55 @@ void Xeph2D::Debug::LogErr(const char* format, ...)
     time_t now = time(0);
     struct tm* localtm = localtime(&now);
 
-    char buffer[80];
+    char timebuffer[80];
 
-    strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", localtm);
+    strftime(timebuffer, sizeof(timebuffer), "%Y-%m-%d %H:%M:%S", localtm);
 
-    printf("{%s}  [ERR] ", buffer);
+    LogEntry entry;
+    entry.dateTime = "{" + std::string(timebuffer) + "} ";
 
     va_list args;
     va_start(args, format);
-    vprintf(format, args);
+    char buffer[256];
+    vsnprintf(buffer, sizeof(buffer), format, args);
     va_end(args);
-    printf("\n");
+
+    entry.contents = " [ERR] " + std::string(buffer);
+    entry.color = Get()._errColor;
+    Get()._errColor = Get()._defaultErrColor;
+
+    Get().AddToLogBuffer(entry);
+    OutputDebugStringA((entry.dateTime + entry.contents + "\n").c_str());
+    Get().LogToFile(entry.dateTime + entry.contents);
 #endif //_DEBUG
+}
+
+void Xeph2D::Debug::LogColor(Color color, LogType type)
+{
+    switch (type)
+    {
+    case LogType::Log:
+        Get()._logColor = color;
+        break;
+    case LogType::Warn:
+        Get()._warnColor = color;
+        break;
+    case LogType::Err:
+        Get()._errColor = color;
+        break;
+    }
+}
+
+void Xeph2D::Debug::Monitor(const std::string& key, const std::string& valueStr)
+{
+#ifdef _DEBUG
+    Get()._monitorBuffer[key] = valueStr;
+#endif // _DEBUG
+}
+
+void Xeph2D::Debug::ClearMonitorBuffer()
+{
+    Get()._monitorBuffer.clear();
 }
 
 void Debug::DrawLine(Vector2 start, Vector2 end, Color color, bool isWorldSpace)
@@ -156,22 +278,84 @@ void Debug::DrawCircleFilled(Vector2 center, float radius, Color color, bool isW
 void Debug::DrawToWindow()
 {
 #ifdef _DEBUG
-    for (sf::RectangleShape& r : Get()._rectBuffer)
-        WindowManager::__UnWrap()->draw(r);
 
-    for (sf::CircleShape& c : Get()._circleBuffer)
-        WindowManager::__UnWrap()->draw(c);
-
-    for (sf::VertexArray& va : Get()._lineBuffer)
+    if (Get()._drawGraphics)
     {
-        if (va.getVertexCount() <= 1)
-            return;
+        for (sf::RectangleShape& r : Get()._rectBuffer)
+            WindowManager::__UnWrap()->draw(r);
 
-        WindowManager::__UnWrap()->draw(va);
+        for (sf::CircleShape& c : Get()._circleBuffer)
+            WindowManager::__UnWrap()->draw(c);
+
+        for (sf::VertexArray& va : Get()._lineBuffer)
+        {
+            if (va.getVertexCount() <= 1)
+                return;
+
+            WindowManager::__UnWrap()->draw(va);
+        }
+    }
+
+    if (Get()._drawOutput)
+    {
+        WindowManager::__UnWrap()->draw(Get()._instructions);
+
+        Get().UpdateTextBuffer();
+
+        for (sf::Text& t : Get()._textBuffer)
+        {
+            WindowManager::__UnWrap()->draw(t);
+        }
     }
 
     Get()._rectBuffer.clear();
     Get()._circleBuffer.clear();
     Get()._lineBuffer.clear();
 #endif // _DEBUG
+}
+
+void Xeph2D::Debug::UpdateTextBuffer()
+{
+    _textBuffer.resize(1 + _monitorBuffer.size() + _logBuffer.size(), _textTemplate);
+    _textBuffer[0].setString("FPS: " + std::to_string(Time::FPS()));
+    size_t index = 1;
+    for (auto& keyval : _monitorBuffer)
+    {
+        sf::Text& text = _textBuffer[index];
+        text.setString(keyval.first + ": " + keyval.second);
+        text.setPosition(0, LINE_OFFSET * (index++));
+    }
+    for (LogEntry& entry : _logBuffer)
+    {
+        sf::Text& text = _textBuffer[index];
+        Color color = entry.color;
+        color.a = (_logTime - entry.timer) / _logTime;
+        text.setColor(color);
+        text.setString(entry.contents);
+        text.setPosition(0, LINE_OFFSET * (index++));
+    }
+}
+
+void Xeph2D::Debug::AddToLogBuffer(const LogEntry& entry)
+{
+    _logBuffer.push_front(entry);
+}
+
+void Xeph2D::Debug::ToggleShowOutput(InputAction* ctx)
+{
+    _drawOutput = !_drawOutput;
+}
+
+void Xeph2D::Debug::ToggleShowGraphics(InputAction* ctx)
+{
+    _drawGraphics = !_drawGraphics;
+}
+
+void Xeph2D::Debug::LogToFile(const std::string& msg)
+{
+    if (!_logToFile || !_logFile.is_open())
+        return;
+
+    _logFile << msg << std::endl;
+    _logFile.flush();
 }

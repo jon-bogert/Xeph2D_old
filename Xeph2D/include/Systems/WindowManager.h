@@ -52,6 +52,11 @@ namespace Xeph2D
 		static void Close();
 		static HWND& GetHandle();
 
+		static uint32_t GetWidthPixels();
+		static uint32_t GetHeightPixels();
+		static uint32_t GetWidthUnits();
+		static uint32_t GetHeightUnits();
+
 		static Vector2 PixelToScreen(const Vector2 point);
 		static Vector2 PixelToWorld(const Vector2 point);
 		static Vector2 ScreenToPixel(const Vector2 point);

@@ -32,3 +32,8 @@ void Xeph2D::Time::SetTimeScale(float timescale)
 {
 	Get()._timescale = timescale;
 }
+
+uint32_t Xeph2D::Time::FPS()
+{
+	return (Get()._delta <= 0.f) ? 0.f : 1.f / Get()._delta;
+}

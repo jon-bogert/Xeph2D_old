@@ -11,7 +11,7 @@
 
 using namespace Xeph2D;
 
-int main()
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	AssetManager::LoadTextureFromFile("test.png");
 	WindowManager::Initialize(1280, 720);
@@ -37,6 +37,7 @@ int main()
 			WindowManager::Close();
 
 		Time::Update();
+		Debug::Update();
 		go.Update();
 		camera.Update();
 
