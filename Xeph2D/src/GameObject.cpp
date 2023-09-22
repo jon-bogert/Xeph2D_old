@@ -14,3 +14,14 @@ void GameObject::Update()		{ __CALLONALL(Update) }
 void GameObject::LateUpdate()	{ __CALLONALL(LateUpdate) }
 void GameObject::OnDisable()	{ __CALLONALL(OnDisable) }
 void GameObject::OnDestroy()	{ __CALLONALL(OnDestroy) }
+
+GameObject* Xeph2D::GameObject::GetParent() const
+{
+    return _parent;
+}
+
+void Xeph2D::GameObject::SetParent(GameObject* parent)
+{
+    _parent = parent;
+    // TODO - Re-jig Scene
+}

@@ -22,9 +22,9 @@ void Xeph2D::WindowManager::Initialize(uint32_t width, uint32_t height)
 void Xeph2D::WindowManager::DrawSprite(const GameObject* gameObject, sf::Sprite* sprite)
 {
 	Transform finalTransform = gameObject->transform;
-	if (gameObject->parent)
+	if (gameObject->_parent)
 	{
-		GameObject* currObj = gameObject->parent;
+		GameObject* currObj = gameObject->_parent;
 		while (currObj)
 		{
 			finalTransform.position.x += currObj->transform.position.x;
@@ -35,7 +35,7 @@ void Xeph2D::WindowManager::DrawSprite(const GameObject* gameObject, sf::Sprite*
 			finalTransform.scale.x *= currObj->transform.scale.x;
 			finalTransform.scale.y *= currObj->transform.scale.y;
 
-			currObj = currObj->parent;
+			currObj = currObj->_parent;
 		}
 	}
 

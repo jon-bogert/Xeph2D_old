@@ -11,10 +11,10 @@ namespace Xeph2D
 	public:
 		uint32_t instID = 0;
 		Transform transform = {};
-		GameObject* parent = nullptr;
-		//std::vector<std::unique_ptr<GameObject>> children 
 
 	private:
+		GameObject* _parent = nullptr;
+		//std::vector<std::unique_ptr<GameObject>> children 
 		std::vector<std::unique_ptr<Component>> _components;
 
 	public:
@@ -31,6 +31,9 @@ namespace Xeph2D
 		void LateUpdate();
 		void OnDisable();
 		void OnDestroy();
+
+		GameObject* GetParent() const;
+		void SetParent(GameObject* parent);
 	};
 
 	template<typename _Component>
