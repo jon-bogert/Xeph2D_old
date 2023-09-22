@@ -11,7 +11,7 @@ GameObject* Xeph2D::Scene::AddGameObject(GameObject* parent)
 	{
 		obj->SetParent(parent);
 	}
-
+	return obj;
 }
 
 void Scene::Awake()			{ __CALLONALL(Awake) }

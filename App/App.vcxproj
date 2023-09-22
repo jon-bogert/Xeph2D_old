@@ -172,7 +172,9 @@
   <ItemGroup>
     <ClInclude Include="Assets\Scripts\CameraController.h" />
     <ClInclude Include="Assets\Scripts\MusicManager.h" />
+    <ClInclude Include="Assets\Scripts\.generated\SceneManifest.generated.h" />
     <ClInclude Include="Assets\Scripts\TestScript.h" />
+    <ClInclude Include="ScriptManifest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

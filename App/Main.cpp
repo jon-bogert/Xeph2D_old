@@ -1,14 +1,9 @@
 #include <cstdint>
 #include <iostream>
-
-#include "Xeph2D.h"
 #include <SFML.hpp>
-
-#include "Assets/Scripts/TestScript.h"
-#include "Assets/Scripts/CameraController.h"
-#include "Assets/Scripts/MusicManager.h"
-
 #include <Windows.h>
+#include "Xeph2D.h"
+#include "Assets/Scripts/.generated/SceneManifest.generated.h"
 
 using namespace Xeph2D;
 
@@ -20,41 +15,21 @@ int main()
 	AssetManager::LoadAudioDataFromFile("music.ogg", false);
 	WindowManager::Initialize(1280, 720);
 	InputSystem::Initialize(WindowManager::GetHandle());
-
-	GameObject camera;
-	camera.AddComponent<Camera>();
-	camera.AddComponent<CameraController>();
-
-	GameObject musicManager;
-	musicManager.AddComponent<AudioSource>();
-	musicManager.AddComponent<MusicManager>();
-
-	GameObject go;
-	SpriteRenderer* renderer = go.AddComponent<SpriteRenderer>();
-	go.AddComponent<AudioSource>();
-	TestScript* ptr = go.AddComponent<TestScript>();
-
-	camera.Awake();
-	go.Awake();
-	go.Start();
-	camera.Start();
-	musicManager.Start();
-
+	SceneManager::Initialize(&Xeph2D::LoadSceneManifest);
+	SceneManager::Startup();
 	while (WindowManager::IsOpen())
 	{
 		InputSystem::Update();
 		if (WindowManager::CheckCloseEvent() || InputSystem::GetKeyDown(Key::Esc))
 			WindowManager::Close();
-
 		Time::Update();
 		Debug::Update();
-		go.Update();
-		camera.Update();
-
+		SceneManager::EarlyUpdate();
+		SceneManager::Update();
+		SceneManager::LateUpdate();
 		RenderStack::Execute();
+		SceneManager::HandleSceneChange();
 	}
-
-	camera.OnDestroy();
-
+	SceneManager::Shutdown();
 	return 0;
 }
