@@ -1,9 +1,8 @@
 #include "Systems/SceneManager.h"
 #include "Systems/WindowManager.h"
+#include "Systems/Debug.h"
 
 using namespace Xeph2D;
-
-#define __CURRSCENE Get()._scenes[Get()._currIndex]
 
 SceneManager& SceneManager::Get()
 {
@@ -11,17 +10,20 @@ SceneManager& SceneManager::Get()
     return instance;
 }
 
-void SceneManager::Initialize(std::function<void(SceneManager*)> loadProcess)
+void SceneManager::Initialize(std::function<void(SceneManager*, int, bool)> loadCallback)
 {
-    loadProcess(&Get());
+    Get()._loadCallback = loadCallback;
 }
 
-Scene* SceneManager::AddScene(const std::string& name)
+Scene* Xeph2D::SceneManager::NewScene()
 {
-    Scene* scene = Get()._scenes.emplace_back(std::make_unique<Scene>()).get();
-    if (!name.empty())
-        scene->name = name;
-    return scene;
+    Get()._currScene = std::make_unique<Scene>();
+    return Get()._currScene.get();
+}
+
+void SceneManager::AddScene(const std::string& name)
+{
+    Get()._scenes.emplace_back(name);
 }
 
 void SceneManager::LoadScene(const std::string& name)
@@ -31,33 +33,23 @@ void SceneManager::LoadScene(const std::string& name)
 
 void SceneManager::LoadScene(const int index)
 {
+    Get()._nextIndex = index;
+    Get()._doLoadScene = true;
 }
 
 int SceneManager::GetSceneIndex(const std::string& name)
 {
     for (int i = 0; i < Get()._scenes.size(); ++i)
     {
-        if (Get()._scenes[i]->name == name)
+        if (Get()._scenes[i] == name)
             return i;
     }
     return -1;
 }
 
-Scene* SceneManager::GetScene(const std::string& name)
-{
-    return GetScene(GetSceneIndex(name));
-}
-
-Scene* SceneManager::GetScene(const int index)
-{
-    return Get()._scenes[index].get();
-}
-
 Scene* Xeph2D::SceneManager::GetCurrentScene()
 {
-    if (Get()._currIndex < 0)
-        return nullptr;
-    return Get()._scenes[Get()._currIndex].get();
+    return Get()._currScene.get();
 }
 
 int Xeph2D::SceneManager::GetCurrentIndex()
@@ -67,28 +59,47 @@ int Xeph2D::SceneManager::GetCurrentIndex()
 
 void Xeph2D::SceneManager::HandleSceneChange()
 {
+    if (!Get()._doLoadScene)
+        return;
+
+    Get()._doLoadScene = false;
+
+    Get()._currScene->OnDisable();
+    Get()._currScene->OnDestroy();
+
+    Debug::ClearMonitorBuffer();
+    Get()._loadCallback(&Get(), Get()._nextIndex, false);
+    Get()._currIndex = Get()._nextIndex;
+
+    Get()._currScene->Awake();
+    Get()._currScene->Start();
+    Get()._currScene->OnEnable();
 }
 
 void Xeph2D::SceneManager::Startup()
 {
+    Get()._currIndex = 0;
+    Get()._loadCallback(&Get(), Get()._currIndex, true);
     if (Get()._scenes.size() <= 0)
     {
         WindowManager::Close();
         return;
     }
-    Get()._currIndex = 0;
 
-    __CURRSCENE->Awake();
-    __CURRSCENE->Start();
-    __CURRSCENE->OnEnable();
+    Get()._currScene->Awake();
+    Get()._currScene->Start();
+    Get()._currScene->OnEnable();
 }
 
-void Xeph2D::SceneManager::EarlyUpdate()    { __CURRSCENE->EarlyUpdate(); }
-void Xeph2D::SceneManager::Update()         { __CURRSCENE->Update(); }
-void Xeph2D::SceneManager::LateUpdate()     { __CURRSCENE->LateUpdate(); }
+void Xeph2D::SceneManager::EarlyUpdate()    { Get()._currScene->EarlyUpdate(); }
+void Xeph2D::SceneManager::Update()         { Get()._currScene->Update(); }
+void Xeph2D::SceneManager::LateUpdate()     { Get()._currScene->LateUpdate(); }
 
 void Xeph2D::SceneManager::Shutdown()
 {
-    __CURRSCENE->OnDisable();
-    __CURRSCENE->OnDestroy();
+    if (Get()._currIndex < 0)
+        return;
+
+    Get()._currScene->OnDisable();
+    Get()._currScene->OnDestroy();
 }

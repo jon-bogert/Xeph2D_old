@@ -14,6 +14,7 @@ namespace Xeph2D
 		
 		void Start() override;
 		void Update() override;
+		void OnDestroy() override;
 
 	private:
 		void MoveInput(InputAction* ctx);

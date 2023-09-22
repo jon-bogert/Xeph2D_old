@@ -5,9 +5,6 @@ namespace Xeph2D
 {
 	class Scene
 	{
-	public:
-		std::string name = "";
-
 	protected:
 		std::vector<std::unique_ptr<GameObject>> _gameObjects;
 		std::vector<GameObject*> _rootObjects;

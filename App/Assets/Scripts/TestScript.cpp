@@ -11,14 +11,27 @@ void TestScript::Start()
 	audioSource = gameObject->GetComponent<AudioSource>();
 	audioSource->LoadAudioByTag("gun-shot");
 
-	InputActionMap* map = InputSystem::CreateInputActionMap("Player");
-	InputAction* move = map->CreateAction("Move", InputAction::Type::Axis2D);
-	move->Add2DAxis(Gamepad::Axis::LS);
-	move->Add2DAxis(Key::A, Key::D, Key::S, Key::W);
-	move->performed.Subscribe(XEInputActionCallback(TestScript::MoveInput));
+	InputAction* move;
+	InputAction* onSpace;
+	InputActionMap* map = InputSystem::FindInputActionMap("Player");
+	if (!map)
+	{
+		map = InputSystem::CreateInputActionMap("Player");
 
-	InputAction* onSpace = map->CreateAction("Space");
-	onSpace->AddButton(Key::Space);
+		move = map->CreateAction("Move", InputAction::Type::Axis2D);
+		move->Add2DAxis(Gamepad::Axis::LS);
+		move->Add2DAxis(Key::A, Key::D, Key::S, Key::W);
+
+		onSpace = map->CreateAction("Space");
+		onSpace->AddButton(Key::Space);
+	}
+	else
+	{
+		move = map->FindInputAction("Move");
+		onSpace = map->FindInputAction("Space");
+	}
+	
+	move->performed.Subscribe(XEInputActionCallback(TestScript::MoveInput));
 	onSpace->performed.Subscribe(XEInputActionCallback(TestScript::OnSpace));
 }
 
@@ -33,6 +46,18 @@ void TestScript::Update()
 	Debug::DrawBoxOutline(transform->position, {1, 1}, Color::Green);
 	Debug::DrawLine(transform->position, Vector2::Zero(), Color::Green);
 	Debug::Monitor("Player Position", "X: " + std::to_string(transform->position.x) + " Y: " + std::to_string(transform->position.y));
+
+	if (InputSystem::GetKeyDown(Key::E))
+		SceneManager::LoadScene(1);
+	else if (InputSystem::GetKeyDown(Key::Q))
+		SceneManager::LoadScene(0);
+}
+
+void Xeph2D::TestScript::OnDestroy()
+{
+	InputActionMap* map = InputSystem::FindInputActionMap("Player");
+	map->FindInputAction("Move")->performed.UnsubscribeAll(this);
+	map->FindInputAction("Space")->performed.UnsubscribeAll(this);
 }
 
 void Xeph2D::TestScript::MoveInput(InputAction* ctx)

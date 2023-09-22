@@ -55,6 +55,13 @@ void Xeph2D::RenderStack::SubscribeDrawCall(void* component, std::function<void(
 
 void Xeph2D::RenderStack::UnubscribeDrawCall(void* component)
 {
-	std::remove_if(Get()._drawCallbacks.begin(), Get()._drawCallbacks.end(),
-		[=](const Callback& x) { return component == x.comp; });
+	//std::remove_if(Get()._drawCallbacks.begin(), Get()._drawCallbacks.end(),
+	//	[=](const Callback& x) { return component == x.comp; });
+	for (auto it = Get()._drawCallbacks.begin(); it != Get()._drawCallbacks.end();)
+	{
+		if (it->comp == component)
+			it = Get()._drawCallbacks.erase(it);
+		else
+			it++;
+	}
 }
