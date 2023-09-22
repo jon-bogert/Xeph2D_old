@@ -70,9 +70,10 @@ Xeph2D::InputSystem::~InputSystem()
 //================================================================================
 
 
-void Xeph2D::InputSystem::Initialize(HWND& hwnd)
+void Xeph2D::InputSystem::Initialize(HWND& hwnd, std::function<void(InputSystem*)> func)
 {
 	Get()._Initialize(hwnd);
+	func(&Get());
 }
 
 void Xeph2D::InputSystem::Update()

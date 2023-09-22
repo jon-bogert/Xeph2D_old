@@ -74,14 +74,13 @@ void Xeph2D::WindowManager::ClearCamera(Camera* camera)
 	Debug::LogWarn("WindowManager::ClearCamera -> Camera to be cleared was not the same as provided camera");
 }
 
-bool Xeph2D::WindowManager::CheckCloseEvent()
+void Xeph2D::WindowManager::CheckWindowEvents()
 {
-	bool flag = false;
 	sf::Event winEvent;
 	while (Get()._window->pollEvent(winEvent))
 	{
 		if (winEvent.type == sf::Event::Closed)
-			flag = true;
+			Close();
 		if (winEvent.type == sf::Event::Resized)
 		{
 			sf::FloatRect visibleArea(0, 0, winEvent.size.width, winEvent.size.height);
@@ -91,7 +90,6 @@ bool Xeph2D::WindowManager::CheckCloseEvent()
 			Get()._resScale = Get()._height / static_cast<float>(Get()._refHeight);
 		}
 	}
-	return flag;
 }
 
 void Xeph2D::WindowManager::Begin()

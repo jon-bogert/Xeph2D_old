@@ -36,11 +36,8 @@ namespace Xeph2D
 		static int GetCurrentIndex();
 
 		static void Startup();
+		static void Update();
 		static void HandleSceneChange();
 		static void Shutdown();
-
-		static void EarlyUpdate();
-		static void Update();
-		static void LateUpdate();
 	};
 }

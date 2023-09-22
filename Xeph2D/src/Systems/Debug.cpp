@@ -1,4 +1,5 @@
 #include "Systems/Debug.h"
+#ifdef _DEBUG
 #include "Systems/WindowManager.h"
 #include "Systems/Time.h"
 #include <cstdio>
@@ -7,9 +8,9 @@
 #include <filesystem>
 
 #include "../res/JetBrainsMono_ttf.h"
-#include "../res/BasierSquare_Medium_otf.h"
 
 #pragma warning (disable : 4996)
+#endif // _DEBUG
 
 using namespace Xeph2D;
 
@@ -58,8 +59,10 @@ Xeph2D::Debug::Debug()
 
 Xeph2D::Debug::~Debug()
 {
+#ifdef _DEBUG
     if (_logFile.is_open())
         _logFile.close();
+#endif // _DEBUG
 }
 
 Debug& Debug::Get()
@@ -70,6 +73,10 @@ Debug& Debug::Get()
 
 void Xeph2D::Debug::Update()
 {
+#ifdef _DEBUG
+    if (Get()._closeOnEscape && InputSystem::GetKeyDown(Key::Esc))
+        WindowManager::Close();
+
     for (size_t i = 0; i < Get()._logBuffer.size(); ++i)
     {
         Get()._logBuffer[i].timer += Time::UnscaledDeltaTime();
@@ -79,6 +86,7 @@ void Xeph2D::Debug::Update()
             return;
         }
     }
+#endif //_DEBUG
 }
 
 void Xeph2D::Debug::Log(const char* format, ...)
@@ -105,7 +113,11 @@ void Xeph2D::Debug::Log(const char* format, ...)
     Get()._logColor = Get()._defaultLogColor;
 
     Get().AddToLogBuffer(entry);
+#ifdef _CONSOLE
+    std::cout << entry.dateTime + entry.contents << std::endl;
+#else
     OutputDebugStringA((entry.dateTime + entry.contents + "\n").c_str());
+#endif // _CONSOLE
     Get().LogToFile(entry.dateTime + entry.contents);
 #endif //_DEBUG
 }
@@ -134,7 +146,11 @@ void Xeph2D::Debug::LogWarn(const char* format, ...)
     Get()._warnColor = Get()._defaultWarnColor;
 
     Get().AddToLogBuffer(entry);
+#ifdef _CONSOLE
+    std::cout << entry.dateTime + entry.contents << std::endl;
+#else
     OutputDebugStringA((entry.dateTime + entry.contents + "\n").c_str());
+#endif // _CONSOLE
     Get().LogToFile(entry.dateTime + entry.contents);
 #endif //_DEBUG
 }
@@ -163,13 +179,18 @@ void Xeph2D::Debug::LogErr(const char* format, ...)
     Get()._errColor = Get()._defaultErrColor;
 
     Get().AddToLogBuffer(entry);
+#ifdef _CONSOLE
+    std::cout << entry.dateTime + entry.contents << std::endl;
+#else
     OutputDebugStringA((entry.dateTime + entry.contents + "\n").c_str());
+#endif // _CONSOLE
     Get().LogToFile(entry.dateTime + entry.contents);
 #endif //_DEBUG
 }
 
 void Xeph2D::Debug::LogColor(Color color, LogType type)
 {
+#ifdef _DEBUG
     switch (type)
     {
     case LogType::Log:
@@ -182,6 +203,7 @@ void Xeph2D::Debug::LogColor(Color color, LogType type)
         Get()._errColor = color;
         break;
     }
+#endif // _DEBUG
 }
 
 void Xeph2D::Debug::Monitor(const std::string& key, const std::string& valueStr)
@@ -193,7 +215,9 @@ void Xeph2D::Debug::Monitor(const std::string& key, const std::string& valueStr)
 
 void Xeph2D::Debug::ClearMonitorBuffer()
 {
+#ifdef _DEBUG
     Get()._monitorBuffer.clear();
+#endif // _DEBUG
 }
 
 void Debug::DrawLine(Vector2 start, Vector2 end, Color color, bool isWorldSpace)
@@ -314,6 +338,7 @@ void Debug::DrawToWindow()
 #endif // _DEBUG
 }
 
+#ifdef _DEBUG
 void Xeph2D::Debug::UpdateTextBuffer()
 {
     _textBuffer.resize(1 + _monitorBuffer.size() + _logBuffer.size(), _textTemplate);
@@ -359,3 +384,4 @@ void Xeph2D::Debug::LogToFile(const std::string& msg)
     _logFile << msg << std::endl;
     _logFile.flush();
 }
+#endif // _DEBUG

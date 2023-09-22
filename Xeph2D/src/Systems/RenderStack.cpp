@@ -22,7 +22,7 @@ void RenderStack::AddSprite(const GameObject* gameObject, sf::Sprite* sprite, in
 	std::sort(Get()._stack.begin(), Get()._stack.end(), [](const Item& i0, const Item& i1) { return i0.order < i1.order; });
 }
 
-void RenderStack::Execute()
+void RenderStack::Draw()
 {
 	for (Callback& callback : Get()._drawCallbacks)
 	{

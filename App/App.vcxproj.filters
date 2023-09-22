@@ -44,5 +44,8 @@
     <ClInclude Include="ScriptManifest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Assets\Scripts\.generated\InputActions.generated.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

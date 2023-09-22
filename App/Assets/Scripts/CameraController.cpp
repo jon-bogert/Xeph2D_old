@@ -6,11 +6,6 @@ void CameraController::Start()
 {
 	InputActionMap* map = InputSystem::FindInputActionMap("Player");
 	InputAction* action = map->FindInputAction("Camera");
-	if (!action)
-	{
-		action = map->CreateAction("Camera", InputAction::Type::Axis2D);
-		action->Add2DAxis(Key::Left, Key::Right, Key::Down, Key::Up);
-	}
 	action->performed.Subscribe(XEInputActionCallback(CameraController::MoveInput));
 }
 

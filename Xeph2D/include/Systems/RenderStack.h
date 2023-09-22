@@ -41,7 +41,7 @@ namespace Xeph2D
 		RenderStack operator=(const RenderStack&& other) = delete;
 
 		static void AddSprite(const GameObject* gameObject, sf::Sprite* sprite, int order = 0);
-		static void Execute();
+		static void Draw();
 
 		static void SubscribeDrawCall(void* component, std::function<void(void)> drawCall);
 		static void UnubscribeDrawCall(void* component);

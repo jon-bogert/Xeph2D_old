@@ -58,7 +58,7 @@ namespace Xeph2D
 
         ~InputSystem();
 
-		static void Initialize(HWND& hwnd);
+		static void Initialize(HWND& hwnd, std::function<void(InputSystem*)> func);
 		static void Update();
 
         static bool IsControllerConnected(const uint8_t num);

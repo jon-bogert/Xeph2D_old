@@ -44,7 +44,7 @@ namespace Xeph2D
 		static void SetCamera(Camera* camera);
 		static void ClearCamera(Camera* camera = nullptr);
 
-		static bool CheckCloseEvent();
+		static void CheckWindowEvents();
 		static void Begin();
 		static void End();
 

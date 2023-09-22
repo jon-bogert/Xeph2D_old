@@ -2,9 +2,9 @@
 #include <Xeph2D.h>
 #include "../../../ScriptManifest.h"
 
-#define __X2D_LOAD_SCENES &Xeph2D::LoadSceneManafest
+#define __X2D_LOAD_SCENES &Xeph2D::Generated::LoadSceneManifest
 
-namespace Xeph2D
+namespace Xeph2D::Generated
 {
 	void LoadSceneManifest(SceneManager* mngr, int num, bool init)
 	{
@@ -20,11 +20,9 @@ namespace Xeph2D
 			_00000000->AddComponent<SpriteRenderer>();
 			_00000000->AddComponent<AudioSource>();
 			_00000000->AddComponent<TestScript>();
-
 			GameObject* _00000001 = scn->AddGameObject();
 			_00000001->AddComponent<Camera>();
 			_00000001->AddComponent<CameraController>();
-
 			GameObject* _00000002 = scn->AddGameObject();
 			_00000002->AddComponent<AudioSource>();
 			_00000002->AddComponent<MusicManager>();
@@ -36,7 +34,6 @@ namespace Xeph2D
 			_0000003->AddComponent<AudioSource>();
 			_0000003->AddComponent<TestScript>();
 			_0000003->transform.position = { 10, 10 };
-
 			GameObject* _00000004 = scn->AddGameObject();
 			_00000004->AddComponent<Camera>();
 			_00000004->AddComponent<CameraController>();

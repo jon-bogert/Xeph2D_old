@@ -91,9 +91,12 @@ void Xeph2D::SceneManager::Startup()
     Get()._currScene->OnEnable();
 }
 
-void Xeph2D::SceneManager::EarlyUpdate()    { Get()._currScene->EarlyUpdate(); }
-void Xeph2D::SceneManager::Update()         { Get()._currScene->Update(); }
-void Xeph2D::SceneManager::LateUpdate()     { Get()._currScene->LateUpdate(); }
+void Xeph2D::SceneManager::Update()
+{
+    Get()._currScene->EarlyUpdate();
+    Get()._currScene->Update();
+    Get()._currScene->LateUpdate();
+}
 
 void Xeph2D::SceneManager::Shutdown()
 {

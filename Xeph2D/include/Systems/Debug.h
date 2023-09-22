@@ -24,7 +24,9 @@ namespace Xeph2D
 
 		Debug();
 		static Debug& Get();
-
+		
+#ifdef _DEBUG
+		bool _closeOnEscape = true;
 		bool _logToFile = false;
 		std::string _logPath = "log/";
 		std::ofstream _logFile;
@@ -54,7 +56,7 @@ namespace Xeph2D
 		Color _warnColor = _defaultWarnColor;
 		Color _errColor = _defaultErrColor;
 		float _logTime = 5.f;
-
+#endif // _DEBUG
 
 	public:
 		~Debug();
@@ -82,10 +84,12 @@ namespace Xeph2D
 		static void DrawToWindow();
 
 	private:
+#ifdef _DEBUG
 		void UpdateTextBuffer();
 		void AddToLogBuffer(const LogEntry& entry);
 		void ToggleShowOutput(InputAction* ctx);
 		void ToggleShowGraphics(InputAction* ctx);
 		void LogToFile(const std::string& msg);
+#endif // _DEBUG
 	};
 }

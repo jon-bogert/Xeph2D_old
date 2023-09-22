@@ -11,25 +11,9 @@ void TestScript::Start()
 	audioSource = gameObject->GetComponent<AudioSource>();
 	audioSource->LoadAudioByTag("gun-shot");
 
-	InputAction* move;
-	InputAction* onSpace;
 	InputActionMap* map = InputSystem::FindInputActionMap("Player");
-	if (!map)
-	{
-		map = InputSystem::CreateInputActionMap("Player");
-
-		move = map->CreateAction("Move", InputAction::Type::Axis2D);
-		move->Add2DAxis(Gamepad::Axis::LS);
-		move->Add2DAxis(Key::A, Key::D, Key::S, Key::W);
-
-		onSpace = map->CreateAction("Space");
-		onSpace->AddButton(Key::Space);
-	}
-	else
-	{
-		move = map->FindInputAction("Move");
-		onSpace = map->FindInputAction("Space");
-	}
+	InputAction* move = map->FindInputAction("Move");
+	InputAction* onSpace = map->FindInputAction("Space");
 	
 	move->performed.Subscribe(XEInputActionCallback(TestScript::MoveInput));
 	onSpace->performed.Subscribe(XEInputActionCallback(TestScript::OnSpace));
