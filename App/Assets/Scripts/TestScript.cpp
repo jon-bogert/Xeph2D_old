@@ -8,11 +8,18 @@ void TestScript::Start()
 	renderer = gameObject->GetComponent<SpriteRenderer>();
 	renderer->LoadTextureByTag("test");
 
+	audioSource = gameObject->GetComponent<AudioSource>();
+	audioSource->LoadAudioByTag("gun-shot");
+
 	InputActionMap* map = InputSystem::CreateInputActionMap("Player");
 	InputAction* move = map->CreateAction("Move", InputAction::Type::Axis2D);
 	move->Add2DAxis(Gamepad::Axis::LS);
 	move->Add2DAxis(Key::A, Key::D, Key::S, Key::W);
 	move->performed.Subscribe(XEInputActionCallback(TestScript::MoveInput));
+
+	InputAction* onSpace = map->CreateAction("Space");
+	onSpace->AddButton(Key::Space);
+	onSpace->performed.Subscribe(XEInputActionCallback(TestScript::OnSpace));
 }
 
 void TestScript::Update()
@@ -34,4 +41,9 @@ void Xeph2D::TestScript::MoveInput(InputAction* ctx)
 	Debug::LogColor(Color::Magenta);
 	Debug::Log("axis X: %.2f", moveAxis.x);
 	Debug::Log("axis Y: %.2f", moveAxis.y);
+}
+
+void Xeph2D::TestScript::OnSpace(InputAction* ctx)
+{
+	audioSource->Play();
 }

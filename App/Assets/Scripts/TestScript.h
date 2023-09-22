@@ -5,6 +5,7 @@ namespace Xeph2D
 	class TestScript : public Component
 	{
 		SpriteRenderer* renderer = nullptr;
+		AudioSource* audioSource = nullptr;
 		float speed = 10.f;
 		Vector2 moveAxis = {};
 
@@ -16,6 +17,7 @@ namespace Xeph2D
 
 	private:
 		void MoveInput(InputAction* ctx);
+		void OnSpace(InputAction* ctx);
 	};
 
 }

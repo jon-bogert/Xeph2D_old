@@ -1,11 +1,11 @@
-#include "AudioSource.h"
+#include "AudioData.h"
 #include "Systems/Debug.h"
 
 using namespace Xeph2D;
 using MusicPtr = std::shared_ptr<sf::Music>;
 using SoundBufferPtr = std::shared_ptr<sf::SoundBuffer>;
 
-void Xeph2D::AudioData::LoadAssetData(const std::string& filepath)
+void AudioData::LoadAssetData(const std::string& filepath)
 {
 	_filepath = filepath;
 	if (_isStreamed)
@@ -21,13 +21,13 @@ void Xeph2D::AudioData::LoadAssetData(const std::string& filepath)
 	source->loadFromFile(filepath);
 }
 
-void Xeph2D::AudioData::LoadAssetData(const std::string& filepath, bool isStreamed)
+void AudioData::LoadAssetData(const std::string& filepath, bool isStreamed)
 {
 	_isStreamed = isStreamed;
 	LoadAssetData(filepath);
 }
 
-void Xeph2D::AudioData::SetIsStreamed(const bool isStreamed)
+void AudioData::SetIsStreamed(const bool isStreamed)
 {
 	if (_isStreamed == isStreamed)
 		return;
@@ -36,7 +36,7 @@ void Xeph2D::AudioData::SetIsStreamed(const bool isStreamed)
 	LoadAssetData(_filepath);
 }
 
-bool Xeph2D::AudioData::GetIsStreamed() const
+bool AudioData::GetIsStreamed() const
 {
 	return _isStreamed;
 }
@@ -51,7 +51,7 @@ sf::SoundBuffer* Xeph2D::AudioData::GetBuffer() const
 	return std::any_cast<SoundBufferPtr>(_source).get();
 }
 
-sf::Music* Xeph2D::AudioData::GetStream() const
+sf::Music* AudioData::GetStream() const
 {
 	if (!_isStreamed)
 	{

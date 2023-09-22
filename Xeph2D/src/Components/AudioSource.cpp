@@ -1,13 +1,44 @@
-#include "AudioSource.h"
+#include "Components/AudioSource.h"
+#include "Systems/AssetManager.h"
 
 using namespace Xeph2D;
+#define __CALL(func) if (IsStreamed()) { _data->GetStream()->func(); return; } _sound->func()
+#define __CALL_GET(func) if (IsStreamed()) { return _data->GetStream()->func(); } return _sound->func()
+#define __CALL_SET(func, val) if (IsStreamed()) { _data->GetStream()->func(val); return; } _sound->func(val)
 
-void AudioSource::Start()
+void Xeph2D::AudioSource::LoadAudioByTag(const std::string& tag)
 {
-	
+	AudioData& data = AssetManager::GetAudioData(tag);
+	_data = &data;
+	//_data = &AssetManager::GetAudioData(tag);
+	if (IsStreamed())
+		return;
+
+	SoundSetup();
 }
 
-void AudioSource::Update()
+void Xeph2D::AudioSource::Play()	{ __CALL(play); }
+void Xeph2D::AudioSource::Pause()	{ __CALL(pause); }
+void Xeph2D::AudioSource::Stop()	{ __CALL(stop); }
+
+AudioStatus Xeph2D::AudioSource::Status()
 {
-	
+	sf::SoundSource::Status status;
+	if (IsStreamed())
+		status = _data->GetStream()->getStatus();
+	else
+		status = _sound->getStatus();
+
+	return static_cast<AudioStatus>(status);
+}
+
+bool Xeph2D::AudioSource::IsStreamed()
+{
+	return _data->GetIsStreamed();
+}
+
+void Xeph2D::AudioSource::SoundSetup()
+{
+	_sound = std::make_unique<sf::Sound>();
+	_sound->setBuffer(*_data->GetBuffer());
 }

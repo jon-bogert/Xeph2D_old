@@ -29,6 +29,7 @@ AudioData& Xeph2D::AssetManager::LoadAudioDataFromFile(const std::string& filena
 	
 	AudioData& source = Get()._audioSources[tag];
 	source.LoadAssetData(fullpath, isStreamed);
+	return source;
 }
 
 sf::Texture& Xeph2D::AssetManager::GetTexture(const std::string& tag)
