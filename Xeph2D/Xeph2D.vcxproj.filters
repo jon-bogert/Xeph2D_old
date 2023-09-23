@@ -19,6 +19,10 @@
     <ClCompile Include="src\Structs.cpp" />
     <ClCompile Include="src\AudioData.cpp" />
     <ClCompile Include="src\Components\AudioSource.cpp" />
+    <ClCompile Include="src\Editor\Editor.cpp" />
+    <ClCompile Include="src\Editor\EditorWindow.cpp" />
+    <ClCompile Include="src\Editor\EditorWindows\Viewport.cpp" />
+    <ClCompile Include="src\Editor\EditorWindows\Inspector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Component.h" />
@@ -41,5 +45,9 @@
     <ClInclude Include="src\Systems\InputSystem\KeyHandler.h" />
     <ClInclude Include="include\AudioData.h" />
     <ClInclude Include="include\Components\AudioSource.h" />
+    <ClInclude Include="include\Editor\Editor.h" />
+    <ClInclude Include="include\Editor\EditorWindow.h" />
+    <ClInclude Include="include\Editor\EditorWindows\Viewport.h" />
+    <ClInclude Include="include\Editor\EditorWindows\Inspector.h" />
   </ItemGroup>
 </Project>

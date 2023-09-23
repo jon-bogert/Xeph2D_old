@@ -2,16 +2,32 @@
 #include <Windows.h>
 
 #include "Xeph2D.h"
+#ifdef _EDITOR
+#include "Editor/Editor.h"
+#endif //_EDITOR
 #include "Assets/Scripts/.generated/SceneManifest.generated.h"
 #include "Assets/Scripts/.generated/InputActions.generated.h"
 
 using namespace Xeph2D;
+#ifdef _EDITOR
+using namespace Xeph2D::Edit;
+#endif //_!EDITOR
 
-#ifdef _CONSOLE
-int main()
+#ifdef _EDITOR
+void EditMain()
+{
+	Editor::Initialize();
+	while (Editor::IsOpen())
+	{
+		Editor::CheckWindowEvents();
+		Editor::Update();
+		Editor::OnGUI();
+		Editor::Draw();
+	}
+	Editor::Shutdown();
+}
 #else
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
-#endif // _CONSOLE
+void BuildMain()
 {
 	//---- MOVE TO SCENE LOAD
 	AssetManager::LoadTextureFromFile("test.png");
@@ -33,5 +49,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		SceneManager::HandleSceneChange();
 	}
 	SceneManager::Shutdown();
+}
+#endif // _EDITOR
+
+#ifdef _CONSOLE
+int main()
+#else
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+#endif // _CONSOLE
+{
+#ifdef _EDITOR
+	EditMain();
+#else //_EDITOR
+	BuildMain();
+#endif //_EDITOR
 	return 0;
 }
