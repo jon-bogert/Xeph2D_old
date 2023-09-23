@@ -15,8 +15,13 @@ void Xeph2D::WindowManager::Initialize(uint32_t width, uint32_t height)
 	Get()._height = height;
 	Get()._resScale = Get()._height / static_cast<float>(Get()._refHeight);
 
+#ifdef _EDITOR
+	Get()._viewport = std::make_unique<sf::RenderTexture>();
+	Get()._viewport->create(width, height);
+#else
 	Get()._window = std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), "WindowTitle");
 	Get()._handle = FindWindowA(NULL, "WindowTitle");
+#endif //_EDITOR
 }
 
 void Xeph2D::WindowManager::DrawSprite(const GameObject* gameObject, sf::Sprite* sprite)
@@ -47,7 +52,11 @@ void Xeph2D::WindowManager::DrawSprite(const GameObject* gameObject, sf::Sprite*
 	sprite->setRotation(finalTransform.rotation.GetDeg());
 
 	//sprite->setPosition(finalTransform.position.x, finalTransform.position.y);
+#ifdef _EDITOR
+	Get()._viewport->draw(*sprite);
+#else
 	Get()._window->draw(*sprite);
+#endif // _EDITOR
 }
 
 void Xeph2D::WindowManager::SetCamera(Camera* camera)
@@ -94,12 +103,20 @@ void Xeph2D::WindowManager::CheckWindowEvents()
 
 void Xeph2D::WindowManager::Begin()
 {
+#ifdef _EDITOR
+	Get()._viewport->clear(sf::Color::Black);
+#else
 	Get()._window->clear(sf::Color::Black);
+#endif //_EDITOR
 }
 
 void Xeph2D::WindowManager::End()
 {
+#ifdef _EDITOR
+	Get()._viewport->display();
+#else
 	Get()._window->display();
+#endif //_EDITOR
 }
 
 bool Xeph2D::WindowManager::IsOpen()

@@ -1,3 +1,4 @@
+#ifdef _EDITOR
 #include "Editor/EditorWindow.h"
 
 const char* Xeph2D::Edit::EditorWindow::GetName() const
@@ -24,3 +25,5 @@ void Xeph2D::Edit::EditorWindow::Open()
 {
 	isOpen = true;
 }
+
+#endif //_EDITOR

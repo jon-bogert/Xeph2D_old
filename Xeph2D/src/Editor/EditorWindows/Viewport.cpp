@@ -1,4 +1,7 @@
+#ifdef _EDITOR
 #include "Editor/EditorWindows/Viewport.h"
+#include "Systems/WindowManager.h"
+#include <imgui-SFML.h>
 
 void Xeph2D::Edit::Viewport::Initialize()
 {
@@ -7,5 +10,7 @@ void Xeph2D::Edit::Viewport::Initialize()
 
 void Xeph2D::Edit::Viewport::OnGUI()
 {
-	ImGui::Text("Hello Viewport");
+	ImGui::Image(WindowManager::__Viewport()->getTexture());
 }
+
+#endif //_EDITOR

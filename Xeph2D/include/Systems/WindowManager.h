@@ -14,7 +14,11 @@ namespace Xeph2D
 	{
 		WindowManager() {}
 		static WindowManager& Get();
-
+#ifdef _EDITOR
+		std::unique_ptr<sf::RenderTexture> _viewport = nullptr;
+	public:
+		static sf::RenderTexture* __Viewport() { return Get()._viewport.get(); }
+#endif
 		std::unique_ptr<sf::RenderWindow> _window = nullptr;
 
 		uint32_t _width = 1280;

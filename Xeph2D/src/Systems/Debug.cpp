@@ -74,8 +74,10 @@ Debug& Debug::Get()
 void Xeph2D::Debug::Update()
 {
 #ifdef _DEBUG
+#ifndef _EDITOR
     if (Get()._closeOnEscape && InputSystem::GetKeyDown(Key::Esc))
         WindowManager::Close();
+#endif //!_EDITOR
 
     for (size_t i = 0; i < Get()._logBuffer.size(); ++i)
     {
@@ -303,6 +305,36 @@ void Debug::DrawToWindow()
 {
 #ifdef _DEBUG
 
+#ifdef _EDITOR
+    if (Get()._drawGraphics)
+    {
+        for (sf::RectangleShape& r : Get()._rectBuffer)
+            WindowManager::__Viewport()->draw(r);
+
+        for (sf::CircleShape& c : Get()._circleBuffer)
+            WindowManager::__Viewport()->draw(c);
+
+        for (sf::VertexArray& va : Get()._lineBuffer)
+        {
+            if (va.getVertexCount() <= 1)
+                return;
+
+            WindowManager::__Viewport()->draw(va);
+        }
+    }
+
+    if (Get()._drawOutput)
+    {
+        WindowManager::__Viewport()->draw(Get()._instructions);
+
+        Get().UpdateTextBuffer();
+
+        for (sf::Text& t : Get()._textBuffer)
+        {
+            WindowManager::__Viewport()->draw(t);
+        }
+    }
+#else
     if (Get()._drawGraphics)
     {
         for (sf::RectangleShape& r : Get()._rectBuffer)
@@ -331,6 +363,7 @@ void Debug::DrawToWindow()
             WindowManager::__UnWrap()->draw(t);
         }
     }
+#endif //_EDITOR
 
     Get()._rectBuffer.clear();
     Get()._circleBuffer.clear();

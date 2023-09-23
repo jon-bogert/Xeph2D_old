@@ -1,3 +1,4 @@
+#ifdef _EDITOR
 #include "Editor/EditorWindows/Inspector.h"
 
 void Xeph2D::Edit::Inspector::Initialize()
@@ -13,3 +14,4 @@ void Xeph2D::Edit::Inspector::OnGUI()
 	ImGui::DragFloat("Rotation", &f);
 	ImGui::DragFloat2("Scale", &v2.x);
 }
+#endif //_EDITOR
