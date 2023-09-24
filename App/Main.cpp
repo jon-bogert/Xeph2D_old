@@ -30,10 +30,14 @@ void EditMain()
 	{
 		InputSystem::Update();
 		Editor::CheckWindowEvents();
+		Editor::InputProc();
 		Editor::Update();
 		Time::Update();
 		Debug::Update();
 		//SceneManager::Update();
+#ifdef _DEBUG
+		SceneManager::DebugDraw();
+#endif //_DEBUG
 		RenderStack::Draw();
 		Editor::OnGUI();
 		Editor::Draw();
@@ -61,6 +65,9 @@ void BuildMain()
 		Time::Update();
 		Debug::Update();
 		SceneManager::Update();
+#ifdef _DEBUG
+		SceneManager::DebugDraw();
+#endif //_DEBUG
 		RenderStack::Draw();
 		SceneManager::HandleSceneChange();
 	}

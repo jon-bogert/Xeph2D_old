@@ -110,6 +110,11 @@ void Xeph2D::SceneManager::Update()
     Get()._currScene->LateUpdate();
 }
 
+void Xeph2D::SceneManager::DebugDraw()
+{
+    Get()._currScene->DebugDraw();
+}
+
 void Xeph2D::SceneManager::Shutdown()
 {
     if (Get()._currIndex < 0)

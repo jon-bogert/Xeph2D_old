@@ -130,7 +130,7 @@ void Xeph2D::WindowManager::CheckWindowEvents()
 void Xeph2D::WindowManager::Begin()
 {
 #ifdef _EDITOR
-	Get()._viewport->clear(sf::Color::Black);
+	Get()._viewport->clear(Color(0.1f, 0.1f, 0.1f, 1.f));
 #else
 	Get()._window->clear(sf::Color::Black);
 #endif //_EDITOR
@@ -170,14 +170,24 @@ uint32_t Xeph2D::WindowManager::GetHeightPixels()
 	return Get()._height;
 }
 
-uint32_t Xeph2D::WindowManager::GetWidthUnits()
+float Xeph2D::WindowManager::GetWidthUnits()
 {
 	return PixelToUnit(Get()._width);
 }
 
-uint32_t Xeph2D::WindowManager::GetHeightUnits()
+float Xeph2D::WindowManager::GetHeightUnits()
 {
 	return PixelToUnit(Get()._height);
+}
+
+Vector2 Xeph2D::WindowManager::WorldWindowMinimum()
+{
+	return Vector2(__CAMERA->position.x, __CAMERA->position.y);
+}
+
+Vector2 Xeph2D::WindowManager::WorldWindowMaximum()
+{
+	return Vector2(__CAMERA->position.x + (float)GetWidthUnits(), __CAMERA->position.y + (float)GetHeightUnits());
 }
 
 Vector2 Xeph2D::WindowManager::PixelToScreen(const Vector2 point)
@@ -187,7 +197,7 @@ Vector2 Xeph2D::WindowManager::PixelToScreen(const Vector2 point)
 
 Vector2 Xeph2D::WindowManager::PixelToWorld(const Vector2 point)
 {
-	return PixelToScreen(point) - Get()._camera->transform->position;
+	return PixelToScreen(point) - __CAMERA->position;
 }
 
 Vector2 Xeph2D::WindowManager::ScreenToPixel(const Vector2 point)
@@ -197,7 +207,7 @@ Vector2 Xeph2D::WindowManager::ScreenToPixel(const Vector2 point)
 
 Vector2 Xeph2D::WindowManager::WorldToPixel(const Vector2 point)
 {
-	return Vector2((point.x - Get()._camera->transform->position.x) * Get()._ppu * Get()._resScale, Get()._height - (point.y - Get()._camera->transform->position.y) * Get()._ppu * Get()._resScale);
+	return Vector2((point.x - __CAMERA->position.x) * Get()._ppu * Get()._resScale, Get()._height - (point.y - __CAMERA->position.y) * Get()._ppu * Get()._resScale);
 }
 
 float Xeph2D::WindowManager::PixelToUnit(const float val)

@@ -32,6 +32,7 @@ namespace Xeph2D
 		void EarlyUpdate();
 		void Update();
 		void LateUpdate();
+		void DebugDraw();
 		void OnDisable();
 		void OnDestroy();
 

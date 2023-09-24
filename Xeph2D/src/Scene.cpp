@@ -23,5 +23,6 @@ void Scene::OnEnable()			{ __CALLONALL(OnEnable) }
 void Scene::EarlyUpdate()		{ __CALLONALL(EarlyUpdate) }
 void Scene::Update()			{ __CALLONALL(Update) }
 void Scene::LateUpdate()		{ __CALLONALL(LateUpdate) }
+void Scene::DebugDraw()			{ __CALLONALL(DebugDraw) }
 void Scene::OnDisable()			{ __CALLONALL(OnDisable) }
 void Scene::OnDestroy()			{ __CALLONALL(OnDestroy) }

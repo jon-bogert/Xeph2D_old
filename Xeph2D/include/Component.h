@@ -39,6 +39,7 @@ namespace Xeph2D
 		virtual void EarlyUpdate() {}
 		virtual void Update() {}
 		virtual void LateUpdate() {}
+		virtual void DebugDraw() {};
 		virtual void OnDisable() {}
 		virtual void OnDestroy() {}
 

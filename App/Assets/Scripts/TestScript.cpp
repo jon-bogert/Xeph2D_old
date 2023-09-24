@@ -31,17 +31,21 @@ void TestScript::Update()
 	transform->position.x += speed * moveAxis.x * Time::DeltaTime();
 	transform->position.y += speed * moveAxis.y * Time::DeltaTime();
 
-	Color c = Color::Red;
-	c.a = .5f;
-	Debug::DrawCircleFilled(transform->position, 0.5f, c);
-	Debug::DrawBoxOutline(transform->position, {1, 1}, Color::Green);
-	Debug::DrawLine(transform->position, Vector2::Zero(), Color::Green);
 	Debug::Monitor("Player Position", "X: " + std::to_string(transform->position.x) + " Y: " + std::to_string(transform->position.y));
 
 	if (InputSystem::GetKeyDown(Key::E))
 		SceneManager::LoadScene(1);
 	else if (InputSystem::GetKeyDown(Key::Q))
 		SceneManager::LoadScene(0);
+}
+
+void Xeph2D::TestScript::DebugDraw()
+{
+	Color c = Color::Red;
+	c.a = .5f;
+	Debug::DrawCircleFilled(transform->position, 0.5f, c);
+	Debug::DrawBoxOutline(transform->position, { 1, 1 }, Color::Green);
+	Debug::DrawLine(transform->position, Vector2::Zero(), Color::Green);
 }
 
 void Xeph2D::TestScript::OnDestroy()

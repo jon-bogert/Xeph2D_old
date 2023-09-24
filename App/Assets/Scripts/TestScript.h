@@ -16,6 +16,7 @@ namespace Xeph2D
 
 		void Start() override;
 		void Update() override;
+		void DebugDraw() override;
 		void OnDestroy() override;
 
 	private:

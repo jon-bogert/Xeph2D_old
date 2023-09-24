@@ -9,6 +9,10 @@ namespace Xeph2D::Edit
 	class EditorWindow
 	{
 		friend class Editor;
+		bool _isFocused = false;
+		bool _isHovered = false;
+		void UpdateValues();
+
 	protected:
 		std::string name = "<Unnamed>";
 		int flags = 0;
@@ -26,5 +30,8 @@ namespace Xeph2D::Edit
 		bool IsOpen() const;
 		void Close();
 		void Open();
+
+		bool IsFocused() const;
+		bool IsHovered() const;
 	};
 }

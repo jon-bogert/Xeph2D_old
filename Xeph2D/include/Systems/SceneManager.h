@@ -40,6 +40,7 @@ namespace Xeph2D
 
 		static void Startup();
 		static void Update();
+		static void DebugDraw();
 		static void HandleSceneChange();
 		static void Shutdown();
 	};

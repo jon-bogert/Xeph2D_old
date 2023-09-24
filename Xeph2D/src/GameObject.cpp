@@ -15,6 +15,7 @@ void GameObject::OnEnable()		    { __CALLONALL(OnEnable) }
 void GameObject::EarlyUpdate()	    { __CALLONALL(EarlyUpdate) }
 void GameObject::Update()		    { __CALLONALL(Update) }
 void GameObject::LateUpdate()	    { __CALLONALL(LateUpdate) }
+void GameObject::DebugDraw()        { __CALLONALL(DebugDraw) }
 void GameObject::OnDisable()	    { __CALLONALL(OnDisable) }
 void GameObject::OnDestroy()	    { __CALLONALL(OnDestroy) }
 

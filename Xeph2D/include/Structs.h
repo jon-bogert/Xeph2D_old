@@ -42,7 +42,7 @@ namespace Xeph2D
 		float x, y;
 
 		Vector2() : x(0.0f), y(0.0f) {}
-		Vector2(float inX, float inY) : x(inX), y(inY) {}
+		constexpr Vector2(float inX, float inY) : x(inX), y(inY) {}
 
 		static Vector2 Zero() { return Vector2(); }
 		static Vector2 One() { return Vector2(1.0f, 1.0f); }

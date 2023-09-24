@@ -5,6 +5,7 @@
 #include <memory>
 #include "EditorWindow.h"
 #include "Xeph2D.h"
+#include "Editor/EditorWindows/Viewport.h"
 
 namespace Xeph2D::Edit
 {
@@ -25,6 +26,7 @@ namespace Xeph2D::Edit
         void* _hwnd;
 
         Transform _viewportTransform{};
+        Viewport* _viewportWindow = nullptr;
 
     public:
         ~Editor() = default;
@@ -35,6 +37,7 @@ namespace Xeph2D::Edit
 
         static void Initialize();
         static void CheckWindowEvents();
+        static void InputProc();
         static void Update();
         static void OnGUI();
         static void Draw();
@@ -45,6 +48,7 @@ namespace Xeph2D::Edit
         static Transform* GetViewportTransform();
 
     private:
+        void ViewportGUI();
         void SetUIStyle();
     };
 

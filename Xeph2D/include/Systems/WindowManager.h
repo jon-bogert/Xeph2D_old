@@ -60,8 +60,11 @@ namespace Xeph2D
 
 		static uint32_t GetWidthPixels();
 		static uint32_t GetHeightPixels();
-		static uint32_t GetWidthUnits();
-		static uint32_t GetHeightUnits();
+		static float GetWidthUnits();
+		static float GetHeightUnits();
+
+		static Vector2 WorldWindowMinimum();
+		static Vector2 WorldWindowMaximum();
 
 		static Vector2 PixelToScreen(const Vector2 point);
 		static Vector2 PixelToWorld(const Vector2 point);
