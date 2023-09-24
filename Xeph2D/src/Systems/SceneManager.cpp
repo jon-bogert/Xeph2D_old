@@ -57,6 +57,18 @@ int Xeph2D::SceneManager::GetCurrentIndex()
     return Get()._currIndex;
 }
 
+void Xeph2D::SceneManager::EditorInit()
+{
+    Get()._currIndex = 0;
+    Get()._loadCallback(&Get(), Get()._currIndex, true);
+    Get()._currScene->EditorInit();
+}
+
+void Xeph2D::SceneManager::EditorShutdown()
+{
+    Get()._currScene->EditorShutdown();
+}
+
 void Xeph2D::SceneManager::HandleSceneChange()
 {
     if (!Get()._doLoadScene)

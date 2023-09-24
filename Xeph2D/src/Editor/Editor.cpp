@@ -90,6 +90,11 @@ bool Xeph2D::Edit::Editor::IsOpen()
     return Get()._window->isOpen();
 }
 
+Transform* Xeph2D::Edit::Editor::GetViewportTransform()
+{
+	return &Get()._viewportTransform;
+}
+
 void Xeph2D::Edit::Editor::SetUIStyle()
 {
 	ImGuiStyle& style = ImGui::GetStyle();

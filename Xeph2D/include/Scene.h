@@ -15,6 +15,9 @@ namespace Xeph2D
 
 		GameObject* AddGameObject(GameObject* parent = nullptr);
 
+		void EditorInit();
+		void EditorShutdown();
+
 		void Awake();
 		void Start();
 		void OnEnable();

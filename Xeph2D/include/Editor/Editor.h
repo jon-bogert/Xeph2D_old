@@ -4,6 +4,7 @@
 
 #include <memory>
 #include "EditorWindow.h"
+#include "Xeph2D.h"
 
 namespace Xeph2D::Edit
 {
@@ -23,6 +24,8 @@ namespace Xeph2D::Edit
         std::vector<std::unique_ptr<EditorWindow>> _editorWindows;
         void* _hwnd;
 
+        Transform _viewportTransform{};
+
     public:
         ~Editor() = default;
         Editor(const Editor& other) = delete;
@@ -38,6 +41,8 @@ namespace Xeph2D::Edit
         static void Shutdown();
 
         static bool IsOpen();
+
+        static Transform* GetViewportTransform();
 
     private:
         void SetUIStyle();

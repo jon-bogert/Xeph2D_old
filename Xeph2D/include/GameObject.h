@@ -23,6 +23,9 @@ namespace Xeph2D
 		template <typename _Component>
 		_Component* GetComponent();
 
+		void EditorInit();
+		void EditorShutdown();
+
 		void Awake();
 		void Start();
 		void OnEnable();

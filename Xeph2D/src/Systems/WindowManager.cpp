@@ -3,6 +3,13 @@
 
 using namespace Xeph2D;
 
+#ifdef _EDITOR
+#include "Editor/Editor.h"
+#define __CAMERA Edit::Editor::GetViewportTransform()
+#else
+#define __CAMERA Get()._camera->transform
+#endif //_EDITOR
+
 WindowManager& WindowManager::Get()
 {
 	static WindowManager instance;
@@ -64,8 +71,8 @@ void Xeph2D::WindowManager::DrawSprite(const GameObject* gameObject, sf::Sprite*
 	}
 
 	sprite->setPosition({
-	(finalTransform.position.x * Get()._ppu * Get()._resScale) - (Get()._camera->transform->position.x * Get()._ppu * Get()._resScale),
-	Get()._height - ((finalTransform.position.y * Get()._ppu * Get()._resScale) - (Get()._camera->transform->position.y * Get()._ppu * Get()._resScale)) });
+	(finalTransform.position.x * Get()._ppu * Get()._resScale) - (__CAMERA->position.x * Get()._ppu * Get()._resScale),
+	Get()._height - ((finalTransform.position.y * Get()._ppu * Get()._resScale) - (__CAMERA->position.y * Get()._ppu * Get()._resScale)) });
 	
 	sprite->setScale(finalTransform.scale.x * Get()._resScale, finalTransform.scale.y * Get()._resScale);
 	sprite->setRotation(finalTransform.rotation.GetDeg());

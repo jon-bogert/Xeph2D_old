@@ -4,6 +4,16 @@
 
 using namespace Xeph2D;
 
+void Xeph2D::SpriteRenderer::EditorInit()
+{
+	Awake();
+}
+
+void Xeph2D::SpriteRenderer::EditorShutdown()
+{
+	OnDestroy();
+}
+
 void Xeph2D::SpriteRenderer::Awake()
 {
 	RenderStack::SubscribeDrawCall(this, std::bind(&SpriteRenderer::Draw, this));

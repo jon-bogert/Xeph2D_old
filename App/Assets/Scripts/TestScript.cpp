@@ -1,7 +1,14 @@
 #include "TestScript.h"
-#include <windows.h>
 
 using namespace Xeph2D;
+
+void Xeph2D::TestScript::EditorInit()
+{
+#ifdef _EDITOR
+	renderer = gameObject->GetComponent<SpriteRenderer>();
+	renderer->LoadTextureByTag("test");
+#endif //_EDITOR
+}
 
 void TestScript::Start()
 {
@@ -54,5 +61,6 @@ void Xeph2D::TestScript::MoveInput(InputAction* ctx)
 
 void Xeph2D::TestScript::OnSpace(InputAction* ctx)
 {
+	Debug::Log("Space Pressed");
 	//audioSource->Play();
 }

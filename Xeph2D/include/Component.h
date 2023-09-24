@@ -30,6 +30,9 @@ namespace Xeph2D
 	public:
 		virtual void Register(GameObject* gameObject) = 0;
 
+		virtual void EditorInit() {};
+		virtual void EditorShutdown() {};
+
 		virtual void Awake() {}
 		virtual void Start() {}
 		virtual void OnEnable() {}

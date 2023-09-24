@@ -25,7 +25,7 @@ void EditMain()
 	WindowManager::Initialize(1280, 720);
 	InputSystem::Initialize(WindowManager::GetHandle(), __X2D_LOAD_INPUTACTIONS);
 	SceneManager::Initialize(__X2D_LOAD_SCENES);
-	SceneManager::Startup();
+	SceneManager::EditorInit();
 	while (Editor::IsOpen())
 	{
 		InputSystem::Update();
@@ -33,13 +33,13 @@ void EditMain()
 		Editor::Update();
 		Time::Update();
 		Debug::Update();
-		SceneManager::Update();
+		//SceneManager::Update();
 		RenderStack::Draw();
 		Editor::OnGUI();
 		Editor::Draw();
 	}
 	Editor::Shutdown();
-	SceneManager::Shutdown();
+	SceneManager::EditorShutdown();
 	AssetManager::UnloadAll();
 }
 #else

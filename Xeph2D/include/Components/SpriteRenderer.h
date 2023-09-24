@@ -17,6 +17,9 @@ namespace Xeph2D
 
 		int order = 0;
 
+		void EditorInit() override;
+		void EditorShutdown() override;
+
 		void Awake() override;
 		void OnDestroy() override;
 
