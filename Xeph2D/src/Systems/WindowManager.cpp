@@ -9,6 +9,25 @@ WindowManager& WindowManager::Get()
 	return instance;
 }
 
+#ifdef _EDITOR
+void Xeph2D::WindowManager::__UpdateViewportSize(Vector2 size)
+{
+	float windRatio = size.x / size.y;
+	if (windRatio > Get()._aspect)
+	{
+		Get()._width = size.y * Get()._aspect;
+		Get()._height = size.y;
+	}
+	else
+	{
+		Get()._width = size.x;
+		Get()._height = size.x / Get()._aspect;
+	}
+	Get()._resScale = Get()._height / static_cast<float>(Get()._refHeight);
+	Get()._viewport->create(Get()._width, Get()._height);
+}
+#endif //_EDITOR
+
 void Xeph2D::WindowManager::Initialize(uint32_t width, uint32_t height)
 {
 	Get()._width = width;

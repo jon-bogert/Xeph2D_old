@@ -47,12 +47,12 @@ void Xeph2D::TestScript::OnDestroy()
 void Xeph2D::TestScript::MoveInput(InputAction* ctx)
 {
 	ctx->ReadValue(&moveAxis.x);
-	Debug::LogColor(Color::Magenta);
-	Debug::Log("axis X: %.2f", moveAxis.x);
-	Debug::Log("axis Y: %.2f", moveAxis.y);
+	//Debug::LogColor(Color::Magenta);
+	//Debug::Log("axis X: %.2f", moveAxis.x);
+	//Debug::Log("axis Y: %.2f", moveAxis.y);
 }
 
 void Xeph2D::TestScript::OnSpace(InputAction* ctx)
 {
-	audioSource->Play();
+	//audioSource->Play();
 }

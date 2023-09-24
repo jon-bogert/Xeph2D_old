@@ -12,15 +12,18 @@
 #include "../res/JetBrainsMono_ttf.h"
 
 #include <iostream>
+#include <windows.h>
 
 using namespace Xeph2D;
 
 void Xeph2D::Edit::Editor::Initialize()
 {
     Get()._window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Xeph2D Editor");
+	Get()._hwnd = (void*)FindWindowA(NULL, "Xeph2D Editor");
     ImGui::SFML::Init(*Get()._window);
 
-    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     Get().SetUIStyle();
 
@@ -52,8 +55,18 @@ void Xeph2D::Edit::Editor::Update()
 
 void Xeph2D::Edit::Editor::OnGUI()
 {
+	
+	ImGui::BeginMainMenuBar();
+	ImGui::MenuItem("File##MainMenu");
+	ImGui::MenuItem("Edit##MainMenu");
+	ImGui::MenuItem("View##MainMenu");
+	ImGui::EndMainMenuBar();
+	ImGui::DockSpaceOverViewport();
 	for (auto& window : Get()._editorWindows)
 	{
+		if (!window->isOpen)
+			continue;
+
 		ImGui::Begin(window->GetName(), &window->isOpen, window->flags);
 		window->OnGUI();
 		ImGui::End();

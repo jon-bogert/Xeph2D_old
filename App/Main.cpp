@@ -28,7 +28,7 @@ void EditMain()
 	SceneManager::Startup();
 	while (Editor::IsOpen())
 	{
-		//InputSystem::Update();
+		InputSystem::Update();
 		Editor::CheckWindowEvents();
 		Editor::Update();
 		Time::Update();
@@ -40,6 +40,7 @@ void EditMain()
 	}
 	Editor::Shutdown();
 	SceneManager::Shutdown();
+	AssetManager::UnloadAll();
 }
 #else
 void BuildMain()
@@ -64,6 +65,7 @@ void BuildMain()
 		SceneManager::HandleSceneChange();
 	}
 	SceneManager::Shutdown();
+	AssetManager::UnloadAll();
 }
 #endif // _EDITOR
 

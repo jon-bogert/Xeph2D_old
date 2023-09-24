@@ -18,6 +18,8 @@ namespace Xeph2D
 		std::unique_ptr<sf::RenderTexture> _viewport = nullptr;
 	public:
 		static sf::RenderTexture* __Viewport() { return Get()._viewport.get(); }
+		static void __UpdateViewportSize(Vector2 size);
+	private:
 #endif
 		std::unique_ptr<sf::RenderWindow> _window = nullptr;
 
@@ -25,7 +27,7 @@ namespace Xeph2D
 		uint32_t _height = 720;
 		uint32_t _refWidth = 1920;
 		uint32_t _refHeight = 1080;
-
+		float _aspect = _refWidth / (float)_refHeight;
 		uint32_t _ppu = 32;
 
 		float _resScale = 1.f;

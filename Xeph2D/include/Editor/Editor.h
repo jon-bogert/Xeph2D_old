@@ -21,6 +21,7 @@ namespace Xeph2D::Edit
         size_t _fontDataLength = 0;
 
         std::vector<std::unique_ptr<EditorWindow>> _editorWindows;
+        void* _hwnd;
 
     public:
         ~Editor() = default;
