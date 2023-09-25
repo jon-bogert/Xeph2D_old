@@ -38,6 +38,8 @@ namespace Xeph2D
 		static void EditorInit();
 		static void EditorShutdown();
 
+		static void Serializables();
+
 		static void Startup();
 		static void Update();
 		static void DebugDraw();

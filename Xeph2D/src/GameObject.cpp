@@ -1,10 +1,18 @@
 #include "GameObject.h"
 
+#include "Systems/Serializer.h"
 #include "Component.h"
 
 #define __CALLONALL(func) for (auto& c : _components) { c->func(); }
 
 using namespace Xeph2D;
+
+void Xeph2D::GameObject::Serializables()
+{
+    Serializer::Register(instID, Serializer::DataType::Transform, &transform, "go_transform");
+    Serializer::Register(instID, Serializer::DataType::String, &name, "go_name");
+    __CALLONALL(Serializables)
+}
 
 void GameObject::EditorInit()       { __CALLONALL(EditorInit) }
 void GameObject::EditorShutdown()   { __CALLONALL(EditorShutdown) }

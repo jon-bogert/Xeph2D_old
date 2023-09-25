@@ -69,6 +69,11 @@ void Xeph2D::SceneManager::EditorShutdown()
     Get()._currScene->EditorShutdown();
 }
 
+void Xeph2D::SceneManager::Serializables()
+{
+    Get()._currScene->Serializables();
+}
+
 void Xeph2D::SceneManager::HandleSceneChange()
 {
     if (!Get()._doLoadScene)

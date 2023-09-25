@@ -26,6 +26,7 @@ void EditMain()
 	InputSystem::Initialize(WindowManager::GetHandle(), __X2D_LOAD_INPUTACTIONS);
 	SceneManager::Initialize(__X2D_LOAD_SCENES);
 	SceneManager::EditorInit();
+	SceneManager::Serializables();
 	while (Editor::IsOpen())
 	{
 		InputSystem::Update();
@@ -42,6 +43,7 @@ void EditMain()
 		Editor::OnGUI();
 		Editor::Draw();
 	}
+	Serializer::SaveToFile();
 	Editor::Shutdown();
 	SceneManager::EditorShutdown();
 	AssetManager::UnloadAll();

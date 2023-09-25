@@ -1,10 +1,16 @@
 #include "Components/AudioSource.h"
 #include "Systems/AssetManager.h"
+#include "Systems/Serializer.h"
 
 using namespace Xeph2D;
 #define __CALL(func) if (IsStreamed()) { _data->GetStream()->func(); return; } _sound->func()
 #define __CALL_GET(func) if (IsStreamed()) { return _data->GetStream()->func(); } return _sound->func()
 #define __CALL_SET(func, val) if (IsStreamed()) { _data->GetStream()->func(val); return; } _sound->func(val)
+
+void AudioSource::Serializables()
+{
+	SERIALIZE_DEFAULT;
+}
 
 void Xeph2D::AudioSource::LoadAudioByTag(const std::string& tag)
 {

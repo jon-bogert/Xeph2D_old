@@ -1,6 +1,7 @@
 #include "Components/SpriteRenderer.h"
 #include "Systems/AssetManager.h"
 #include "Systems/RenderStack.h"
+#include "Systems/Serializer.h"
 
 using namespace Xeph2D;
 
@@ -13,6 +14,12 @@ void Xeph2D::SpriteRenderer::EditorShutdown()
 {
 	OnDestroy();
 }
+
+void SpriteRenderer::Serializables()
+{
+	SERIALIZE_DEFAULT;
+}
+
 
 void Xeph2D::SpriteRenderer::Awake()
 {

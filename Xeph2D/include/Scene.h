@@ -15,6 +15,8 @@ namespace Xeph2D
 
 		GameObject* AddGameObject(GameObject* parent = nullptr);
 
+		void Serializables();
+
 		void EditorInit();
 		void EditorShutdown();
 

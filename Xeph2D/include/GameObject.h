@@ -11,6 +11,7 @@ namespace Xeph2D
 	public:
 		uint32_t instID = 0;
 		Transform transform = {};
+		std::string name = "GameObject";
 
 	private:
 		GameObject* _parent = nullptr;
@@ -22,6 +23,8 @@ namespace Xeph2D
 		_Component* AddComponent();
 		template <typename _Component>
 		_Component* GetComponent();
+
+		void Serializables();
 
 		void EditorInit();
 		void EditorShutdown();
