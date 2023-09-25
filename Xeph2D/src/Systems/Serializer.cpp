@@ -177,11 +177,11 @@ void Xeph2D::Serializer::DataExport(VarEntry& iter, void*& ptr)
 	}
 }
 
-void Xeph2D::Serializer::_SaveToFile()
+void Xeph2D::Serializer::_SaveToFile(const std::string& scene)
 {
 	if (!std::filesystem::exists("Assets/Scenes"))
 		std::filesystem::create_directories("Assets/Scenes");
-	std::ofstream file("Assets/Scenes/scene.txt");
+	std::ofstream file("Assets/Scenes/" + scene + ".txt");
 	for (auto& obj : _manifest)
 	{
 		file << "inst=" << std::setw(8) << std::setfill('0') << std::hex << obj.first << std::dec << std::endl;

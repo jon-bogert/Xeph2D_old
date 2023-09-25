@@ -57,6 +57,11 @@ int Xeph2D::SceneManager::GetCurrentIndex()
     return Get()._currIndex;
 }
 
+std::string Xeph2D::SceneManager::GetCurrentName()
+{
+    return Get()._scenes[Get()._currIndex];
+}
+
 void Xeph2D::SceneManager::EditorInit()
 {
     Get()._currIndex = 0;

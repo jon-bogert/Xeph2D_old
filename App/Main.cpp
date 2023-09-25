@@ -43,7 +43,7 @@ void EditMain()
 		Editor::OnGUI();
 		Editor::Draw();
 	}
-	Serializer::SaveToFile();
+	Serializer::SaveToFile(SceneManager::GetCurrentName());
 	Editor::Shutdown();
 	SceneManager::EditorShutdown();
 	AssetManager::UnloadAll();
