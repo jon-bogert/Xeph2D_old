@@ -10,6 +10,5 @@ void MusicManager::Serializables()
 void MusicManager::Start()
 {
 	audio = gameObject->GetComponent<AudioSource>();
-	audio->LoadAudioByTag("music");
 	//audio->Play();
 }

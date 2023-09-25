@@ -8,12 +8,8 @@ void TestScript::Serializables()
 }
 
 void TestScript::Start()
-{
-	renderer = gameObject->GetComponent<SpriteRenderer>();
-	renderer->LoadTextureByTag("test");
-
+{	
 	audioSource = gameObject->GetComponent<AudioSource>();
-	audioSource->LoadAudioByTag("gun-shot");
 
 	InputActionMap* map = InputSystem::FindInputActionMap("Player");
 	InputAction* move = map->FindInputAction("Move");
