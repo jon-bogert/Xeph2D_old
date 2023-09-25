@@ -1,0 +1,12 @@
+inst=00000000
+    12 00000003_dataKey=gun_shot
+    15 go_transform=30.000000,30.000000,0.000000,1.000000,1.000000
+    12 go_name=GameObject
+    12 00000002_textureKey=test
+inst=00000001
+    15 go_transform=0.000000,0.000000,0.000000,1.000000,1.000000
+    12 go_name=GameObject
+inst=00000002
+    12 00000003_dataKey=music
+    15 go_transform=0.000000,0.000000,0.000000,1.000000,1.000000
+    12 go_name=GameObject

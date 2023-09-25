@@ -13,6 +13,7 @@
 #include "Systems/InputSystem/InputSystem.h"
 #include "Systems/RenderStack.h"
 #include "Systems/SceneManager.h"
+#include "Systems/Serializer.h"
 #include "Systems/Time.h"
 #include "Systems/WindowManager.h"
 

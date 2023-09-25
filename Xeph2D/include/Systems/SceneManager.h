@@ -34,9 +34,12 @@ namespace Xeph2D
 
 		static Scene* GetCurrentScene();
 		static int GetCurrentIndex();
+		static std::string GetCurrentName();
 
 		static void EditorInit();
 		static void EditorShutdown();
+
+		static void Serializables();
 
 		static void Startup();
 		static void Update();

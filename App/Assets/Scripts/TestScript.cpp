@@ -2,21 +2,14 @@
 
 using namespace Xeph2D;
 
-void Xeph2D::TestScript::EditorInit()
+void TestScript::Serializables()
 {
-#ifdef _EDITOR
-	renderer = gameObject->GetComponent<SpriteRenderer>();
-	renderer->LoadTextureByTag("test");
-#endif //_EDITOR
+	SERIALIZE_DEFAULT;
 }
 
 void TestScript::Start()
-{
-	renderer = gameObject->GetComponent<SpriteRenderer>();
-	renderer->LoadTextureByTag("test");
-
+{	
 	audioSource = gameObject->GetComponent<AudioSource>();
-	audioSource->LoadAudioByTag("gun-shot");
 
 	InputActionMap* map = InputSystem::FindInputActionMap("Player");
 	InputAction* move = map->FindInputAction("Move");

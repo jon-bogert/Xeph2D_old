@@ -2,6 +2,11 @@
 
 using namespace Xeph2D;
 
+void CameraController::Serializables()
+{
+	SERIALIZE_DEFAULT;
+}
+
 void CameraController::Start()
 {
 	InputActionMap* map = InputSystem::FindInputActionMap("Player");

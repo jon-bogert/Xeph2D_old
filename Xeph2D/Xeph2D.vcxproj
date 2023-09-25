@@ -303,11 +303,13 @@
     <ClInclude Include="include\Systems\InputSystem\Enums.h" />
     <ClInclude Include="include\Systems\InputSystem\InputActionMap.h" />
     <ClInclude Include="include\Systems\InputSystem\InputSystem.h" />
+    <ClInclude Include="include\Systems\Serializer.macros.h" />
     <ClInclude Include="include\Systems\RenderStack.h" />
     <ClInclude Include="include\Systems\SceneManager.h" />
     <ClInclude Include="include\Structs.h" />
     <ClInclude Include="include\Systems\AssetManager.h" />
     <ClInclude Include="include\Systems\Debug.h" />
+    <ClInclude Include="include\Systems\Serializer.h" />
     <ClInclude Include="include\Systems\Time.h" />
     <ClInclude Include="include\Systems\WindowManager.h" />
     <ClInclude Include="include\Xeph2D.h" />
@@ -329,6 +331,7 @@
     <ClCompile Include="src\Systems\InputSystem\InputSystem.cpp" />
     <ClCompile Include="src\Systems\InputSystem\KeyHandler.cpp" />
     <ClCompile Include="src\Systems\RenderStack.cpp" />
+    <ClCompile Include="src\Systems\Serializer.cpp" />
     <ClCompile Include="src\Systems\Time.cpp" />
     <ClCompile Include="src\Components\Camera.cpp" />
     <ClCompile Include="src\Systems\Debug.cpp" />

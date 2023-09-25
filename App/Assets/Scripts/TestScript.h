@@ -11,8 +11,6 @@ namespace Xeph2D
 
 	public:
 		COMP_HEADER_STD(25);
-		
-		void EditorInit() override;
 
 		void Start() override;
 		void Update() override;

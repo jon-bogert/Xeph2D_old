@@ -15,8 +15,8 @@ namespace Xeph2D
 		AudioData() = default;
 		virtual ~AudioData() = default;
 
-		void LoadAssetData(const std::string& filepath);
-		void LoadAssetData(const std::string& filepath, bool isStreamed);
+		bool LoadAssetData(const std::string& filepath);
+		bool LoadAssetData(const std::string& filepath, bool isStreamed);
 
 		void SetIsStreamed(const bool isStreamed);
 		bool GetIsStreamed() const;

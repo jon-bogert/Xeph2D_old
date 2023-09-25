@@ -14,6 +14,8 @@ GameObject* Xeph2D::Scene::AddGameObject(GameObject* parent)
 	return obj;
 }
 
+void Scene::Serializables()		{ __CALLONALL(Serializables) }
+
 void Scene::EditorInit()		{ __CALLONALL(EditorInit) }
 void Scene::EditorShutdown()	{ __CALLONALL(EditorShutdown) }
 
