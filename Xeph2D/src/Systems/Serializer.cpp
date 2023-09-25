@@ -37,16 +37,19 @@ void Xeph2D::Serializer::Register(const uint32_t instID, DataType type, void* pt
 				field->second.type = type;
 				Get().DataImport(field->second, ptr);
 				field->second.ptr = ptr;
+				return;
 			}
 			//Good Type
 			Get().DataExport(field->second, ptr);
 			field->second.ptr = ptr;
+			return;
 		}
 		// No Field
 		auto& inst = obj->second[name];
 		inst.type = type;
 		Get().DataImport(inst, ptr);
 		inst.ptr = ptr;
+		return;
 	}
 	// No Object
 	auto& inst = s._manifest[instID][name];
@@ -118,6 +121,7 @@ void Xeph2D::Serializer::DataImport(VarEntry& iter, void*& ptr)
 
 void Xeph2D::Serializer::DataExport(VarEntry& iter, void*& ptr)
 {
+	Transform t;
 	switch (iter.type)
 	{
 	case DataType::UInt8:
@@ -166,6 +170,7 @@ void Xeph2D::Serializer::DataExport(VarEntry& iter, void*& ptr)
 		*(Color*)ptr = iter.DataAs<Color>();
 		break;
 	case DataType::Transform:
+		t = iter.DataAs<Transform>();
 		*(Transform*)ptr = iter.DataAs<Transform>();
 		break;
 	case DataType::Pointer:
@@ -175,22 +180,6 @@ void Xeph2D::Serializer::DataExport(VarEntry& iter, void*& ptr)
 		Debug::LogErr("Serializer::DataExport -> Enum type not supported");
 		break;
 	}
-}
-
-void Xeph2D::Serializer::_SaveToFile(const std::string& scene)
-{
-	if (!std::filesystem::exists("Assets/Scenes"))
-		std::filesystem::create_directories("Assets/Scenes");
-	std::ofstream file("Assets/Scenes/" + scene + ".txt");
-	for (auto& obj : _manifest)
-	{
-		file << "inst=" << std::setw(8) << std::setfill('0') << std::hex << obj.first << std::dec << std::endl;
-		for (auto& field : obj.second)
-		{
-			file << "    " << (int)field.second.type << ' ' << field.first << '=' << DataStr(field.second) << std::endl;
-		}
-	}
-	file.close();
 }
 
 std::string Xeph2D::Serializer::DataStr(VarEntry& var) const
@@ -241,4 +230,144 @@ std::string Xeph2D::Serializer::DataStr(VarEntry& var) const
 		Debug::LogErr("Serializer::DataStr -> Enum type not supported");
 		return "";
 	}
+}
+
+void Xeph2D::Serializer::DataParse(VarEntry& entry, std::string& data)
+{
+	Vector2 v2{};
+	Color c{};
+	Transform t{};
+	std::stringstream datastream(data);
+	std::string cell;
+	switch (entry.type)
+	{
+	case DataType::UInt8:
+		entry.data = (uint8_t)std::stoi(data);
+		break;
+	case DataType::UInt16:
+		entry.data = (uint16_t)std::stoi(data);
+		break;
+	case DataType::UInt32:
+		entry.data = (uint32_t)std::stol(data);
+		break;
+	case DataType::UInt64:
+		entry.data = (uint64_t)std::stoul(data);
+		break;
+	case DataType::Int8:
+		entry.data = (int8_t)std::stoi(data);
+		break;
+	case DataType::Int16:
+		entry.data = (int16_t)std::stoi(data);
+		break;
+	case DataType::Int32:
+		entry.data = (int32_t)std::stoi(data);
+		break;
+	case DataType::Int64:
+		entry.data = (int64_t)std::stol(data);
+		break;
+	case DataType::Float:
+		entry.data = (float)std::stof(data);
+		break;
+	case DataType::Double:
+		entry.data = (double)std::stod(data);
+		break;
+	case DataType::Bool:
+		entry.data = (data == "true");
+		break;
+	case DataType::Char:
+		entry.data = data[0];
+		break;
+	case DataType::String:
+		entry.data = data;
+		break;
+	case DataType::Vector2:
+		std::getline(datastream, cell, ',');
+		v2.x = std::stof(cell);
+		std::getline(datastream, cell, ',');
+		v2.y = std::stof(cell);
+		entry.data = v2;
+		break;
+	case DataType::Color:
+		std::getline(datastream, cell, ',');
+		c.r = std::stof(cell);
+		std::getline(datastream, cell, ',');
+		c.g = std::stof(cell);
+		std::getline(datastream, cell, ',');
+		c.b = std::stof(cell);
+		std::getline(datastream, cell, ',');
+		c.a = std::stof(cell);
+		entry.data = c;
+		break;
+	case DataType::Transform:
+		std::getline(datastream, cell, ',');
+		t.position.x = std::stof(cell);
+		std::getline(datastream, cell, ',');
+		t.position.y = std::stof(cell);
+		std::getline(datastream, cell, ',');
+		t.rotation.SetDeg(std::stof(cell));
+		std::getline(datastream, cell, ',');
+		t.scale.x = std::stof(cell);
+		std::getline(datastream, cell, ',');
+		t.scale.y = std::stof(cell);
+		entry.data = t;
+		break;
+	default:
+		Debug::LogErr("Serializer::DataStr -> Enum type not supported");
+		break;
+	}
+}
+
+void Xeph2D::Serializer::_SaveToFile(const std::string& scene)
+{
+	if (!std::filesystem::exists("Assets/Scenes"))
+		std::filesystem::create_directories("Assets/Scenes");
+	std::ofstream file("Assets/Scenes/" + scene + ".txt");
+	for (auto& obj : _manifest)
+	{
+		file << "inst=" << std::setw(8) << std::setfill('0') << std::hex << obj.first << std::dec << std::endl;
+		for (auto& field : obj.second)
+		{
+			file << "    " << (int)field.second.type << ' ' << field.first << '=' << DataStr(field.second) << std::endl;
+		}
+	}
+	file.close();
+}
+
+void Xeph2D::Serializer::_LoadFromFile(const std::string& scene)
+{
+	std::ifstream file("Assets/Scenes/" + scene + ".txt");
+	if (!file.is_open())
+	{
+		Debug::LogWarn("Serializer::LoadFromFile -> No file to load: %s", (scene + ".txt").c_str());
+		return;
+	}
+
+	std::string line;
+	uint32_t inst = 0;
+	while (std::getline(file, line))
+	{
+		if (line.substr(0, 5) == "inst=")
+		{
+			std::stringstream id;
+			id << std::hex << line.substr(5);
+			id >> inst;
+			continue;
+		}
+		if (line.substr(0, 4) != "    ")
+		{
+			Debug::LogErr("Serializer::LoadFromFile -> Bad Formatting: %s", line.c_str());
+			continue;
+		}
+		std::stringstream linestream(line.substr(4));
+		std::string cell;
+		VarEntry entry;
+		std::string key;
+		std::getline(linestream, cell, ' ');
+		entry.type = static_cast<Serializer::DataType>(std::stoi(cell));
+		std::getline(linestream, key, '=');
+		std::getline(linestream, cell, '\n');
+		DataParse(entry, cell);
+		_manifest[inst][key] = entry;
+	}
+	file.close();
 }

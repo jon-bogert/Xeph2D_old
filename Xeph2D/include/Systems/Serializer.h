@@ -57,13 +57,16 @@ namespace Xeph2D
         static void Register(const uint32_t instID, DataType type, void* ptr, const std::string& name);
         static void Register(const uint32_t instID, const uint32_t typeID, DataType type, void* ptr, const std::string& name);
         static void SaveToFile(const std::string& scene) { Get()._SaveToFile(scene); };
+        static void LoadFromFile(const std::string& scene) { Get()._LoadFromFile(scene); };
 
     private:
         void DataImport(VarEntry& iter, void*& ptr);
         void DataExport(VarEntry& iter, void*& ptr);
+        std::string DataStr(VarEntry& var) const;
+        void DataParse(VarEntry& entry, std::string& data);
 
         void _SaveToFile(const std::string& scene);
-        std::string DataStr(VarEntry& var) const;
+        void _LoadFromFile(const std::string& scene);
     };
 
 }

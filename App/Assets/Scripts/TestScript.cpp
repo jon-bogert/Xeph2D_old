@@ -2,15 +2,6 @@
 
 using namespace Xeph2D;
 
-void Xeph2D::TestScript::EditorInit()
-{
-#ifdef _EDITOR
-	transform->position = { 10, 10 };
-	renderer = gameObject->GetComponent<SpriteRenderer>();
-	renderer->LoadTextureByTag("test");
-#endif //_EDITOR
-}
-
 void TestScript::Serializables()
 {
 	SERIALIZE_DEFAULT;

@@ -18,11 +18,13 @@ void Xeph2D::SpriteRenderer::EditorShutdown()
 void SpriteRenderer::Serializables()
 {
 	SERIALIZE_DEFAULT;
+	SERIALIZE_STRING(_textureKey);
 }
 
 
 void Xeph2D::SpriteRenderer::Awake()
 {
+	LoadTextureByTag(_textureKey);
 	RenderStack::SubscribeDrawCall(this, std::bind(&SpriteRenderer::Draw, this));
 }
 

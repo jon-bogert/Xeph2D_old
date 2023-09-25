@@ -1,6 +1,8 @@
 #include "Systems/SceneManager.h"
 #include "Systems/WindowManager.h"
 #include "Systems/Debug.h"
+#include "Systems/Serializer.h"
+
 
 using namespace Xeph2D;
 
@@ -13,6 +15,9 @@ SceneManager& SceneManager::Get()
 void SceneManager::Initialize(std::function<void(SceneManager*, int, bool)> loadCallback)
 {
     Get()._loadCallback = loadCallback;
+    Get()._currIndex = 0;
+    Get()._loadCallback(&Get(), Get()._currIndex, true);
+    Serializer::LoadFromFile(GetCurrentName());
 }
 
 Scene* Xeph2D::SceneManager::NewScene()
@@ -64,8 +69,6 @@ std::string Xeph2D::SceneManager::GetCurrentName()
 
 void Xeph2D::SceneManager::EditorInit()
 {
-    Get()._currIndex = 0;
-    Get()._loadCallback(&Get(), Get()._currIndex, true);
     Get()._currScene->EditorInit();
 }
 
@@ -100,8 +103,6 @@ void Xeph2D::SceneManager::HandleSceneChange()
 
 void Xeph2D::SceneManager::Startup()
 {
-    Get()._currIndex = 0;
-    Get()._loadCallback(&Get(), Get()._currIndex, true);
     if (Get()._scenes.size() <= 0)
     {
         WindowManager::Close();

@@ -18,6 +18,7 @@ void EditMain()
 {
 	//---- MOVE TO SCENE LOAD
 	AssetManager::LoadTextureFromFile("test.png");
+	AssetManager::LoadTextureFromFile("test2.png");
 	AssetManager::LoadAudioDataFromFile("gun-shot.wav", false);
 	AssetManager::LoadAudioDataFromFile("music.ogg", false);
 	//----
@@ -25,8 +26,8 @@ void EditMain()
 	WindowManager::Initialize(1280, 720);
 	InputSystem::Initialize(WindowManager::GetHandle(), __X2D_LOAD_INPUTACTIONS);
 	SceneManager::Initialize(__X2D_LOAD_SCENES);
-	SceneManager::EditorInit();
 	SceneManager::Serializables();
+	SceneManager::EditorInit();
 	while (Editor::IsOpen())
 	{
 		InputSystem::Update();
@@ -53,12 +54,14 @@ void BuildMain()
 {
 	//---- MOVE TO SCENE LOAD
 	AssetManager::LoadTextureFromFile("test.png");
+	AssetManager::LoadTextureFromFile("test2.png");
 	AssetManager::LoadAudioDataFromFile("gun-shot.wav", false);
 	AssetManager::LoadAudioDataFromFile("music.ogg", false);
 	//----
 	WindowManager::Initialize(1280, 720);
 	InputSystem::Initialize(WindowManager::GetHandle(), __X2D_LOAD_INPUTACTIONS);
 	SceneManager::Initialize(__X2D_LOAD_SCENES);
+	SceneManager::Serializables();
 	SceneManager::Startup();
 	while (WindowManager::IsOpen())
 	{
