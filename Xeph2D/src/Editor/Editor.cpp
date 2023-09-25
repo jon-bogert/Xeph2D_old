@@ -7,6 +7,7 @@
 
 #include "Editor/EditorWindows/Viewport.h"
 #include "Editor/EditorWindows/Inspector.h"
+#include "Editor/EditorWindows/Hierarchy.h"
 
 #include "../res/BasierSquare_Medium_otf.h"
 #include "../res/JetBrainsMono_ttf.h"
@@ -30,6 +31,7 @@ void Xeph2D::Edit::Editor::Initialize()
 	Get()._viewportWindow =
 		(Viewport*)Get()._editorWindows.emplace_back(std::make_unique<Viewport>()).get();
 	Get()._editorWindows.emplace_back(std::make_unique<Inspector>());
+	Get()._editorWindows.emplace_back(std::make_unique<Hierarchy>());
 
 	for (auto& window : Get()._editorWindows)
 		window->Initialize();
@@ -53,7 +55,8 @@ void Xeph2D::Edit::Editor::InputProc()
 {
 	if (Get()._viewportWindow->IsHovered())
 	{
-		if (InputSystem::GetMouseHold(Mouse::Button::Right))
+		if (InputSystem::GetMouseHold(Mouse::Button::Right) ||
+			(InputSystem::GetKeyHold(Key::LAlt) && InputSystem::GetMouseHold(Mouse::Button::Left)))
 		{
 			Vector2 delta{};
 			InputSystem::GetMouseDelta(&delta.x);

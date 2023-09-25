@@ -29,5 +29,7 @@ namespace Xeph2D
 		void DebugDraw();
 		void OnDisable();
 		void OnDestroy();
+
+		std::vector<GameObject*> GetAllObjects();
 	};
 }

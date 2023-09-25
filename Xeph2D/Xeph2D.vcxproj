@@ -297,6 +297,7 @@
     <ClInclude Include="include\Components\Camera.h" />
     <ClInclude Include="include\Components\SpriteRenderer.h" />
     <ClInclude Include="include\Editor\Editor.h" />
+    <ClInclude Include="include\Editor\EditorWindows\Hierarchy.h" />
     <ClInclude Include="include\Editor\EditorWindows\Viewport.h" />
     <ClInclude Include="include\GameObject.h" />
     <ClInclude Include="include\Scene.h" />
@@ -323,6 +324,7 @@
     <ClCompile Include="src\Components\AudioSource.cpp" />
     <ClCompile Include="src\Editor\Editor.cpp" />
     <ClCompile Include="src\Editor\EditorWindow.cpp" />
+    <ClCompile Include="src\Editor\EditorWindows\Hierarchy.cpp" />
     <ClCompile Include="src\Editor\EditorWindows\Inspector.cpp" />
     <ClCompile Include="src\Editor\EditorWindows\Viewport.cpp" />
     <ClCompile Include="src\Structs.cpp" />

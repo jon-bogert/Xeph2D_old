@@ -28,3 +28,13 @@ void Scene::LateUpdate()		{ __CALLONALL(LateUpdate) }
 void Scene::DebugDraw()			{ __CALLONALL(DebugDraw) }
 void Scene::OnDisable()			{ __CALLONALL(OnDisable) }
 void Scene::OnDestroy()			{ __CALLONALL(OnDestroy) }
+
+std::vector<GameObject*> Xeph2D::Scene::GetAllObjects()
+{
+	std::vector<GameObject*> objs;
+
+	for (auto& ptr : _gameObjects)
+		objs.push_back(ptr.get());
+
+	return objs;
+}
