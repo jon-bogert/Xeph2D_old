@@ -1,9 +1,0 @@
-inst=00000000
-    15 go_transform=10.000000,10.000000,0.000000,1.000000,1.000000
-    12 go_name=GameObject
-inst=00000001
-    15 go_transform=0.000000,0.000000,0.000000,1.000000,1.000000
-    12 go_name=GameObject
-inst=00000002
-    15 go_transform=0.000000,0.000000,0.000000,1.000000,1.000000
-    12 go_name=GameObject

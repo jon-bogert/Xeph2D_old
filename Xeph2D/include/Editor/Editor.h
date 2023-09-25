@@ -6,6 +6,7 @@
 #include "EditorWindow.h"
 #include "Xeph2D.h"
 #include "Editor/EditorWindows/Viewport.h"
+#include "Editor/EditorWindows/Inspector.h"
 
 namespace Xeph2D::Edit
 {
@@ -27,6 +28,7 @@ namespace Xeph2D::Edit
 
         Transform _viewportTransform{};
         Viewport* _viewportWindow = nullptr;
+        Inspector* _inspector = nullptr;
 
     public:
         ~Editor() = default;
@@ -46,6 +48,7 @@ namespace Xeph2D::Edit
         static bool IsOpen();
 
         static Transform* GetViewportTransform();
+        static Inspector* GetInspectorWindow();
 
     private:
         void ViewportGUI();

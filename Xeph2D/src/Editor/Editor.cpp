@@ -30,7 +30,8 @@ void Xeph2D::Edit::Editor::Initialize()
 
 	Get()._viewportWindow =
 		(Viewport*)Get()._editorWindows.emplace_back(std::make_unique<Viewport>()).get();
-	Get()._editorWindows.emplace_back(std::make_unique<Inspector>());
+	Get()._inspector = 
+		(Inspector*)Get()._editorWindows.emplace_back(std::make_unique<Inspector>()).get();
 	Get()._editorWindows.emplace_back(std::make_unique<Hierarchy>());
 
 	for (auto& window : Get()._editorWindows)
@@ -112,6 +113,11 @@ bool Xeph2D::Edit::Editor::IsOpen()
 Transform* Xeph2D::Edit::Editor::GetViewportTransform()
 {
 	return &Get()._viewportTransform;
+}
+
+Xeph2D::Edit::Inspector* Xeph2D::Edit::Editor::GetInspectorWindow()
+{
+	return Get()._inspector;
 }
 
 void Xeph2D::Edit::Editor::ViewportGUI()

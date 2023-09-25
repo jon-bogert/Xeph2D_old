@@ -6,6 +6,8 @@ namespace Xeph2D::Edit
 {
 	class Hierarchy : public EditorWindow
 	{
+
+	private:
 		int _selectionIndex = -1;
 
 	public:

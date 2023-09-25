@@ -58,39 +58,29 @@ void Xeph2D::Serializer::Register(const uint32_t instID, DataType type, void* pt
 	inst.ptr = ptr;
 }
 
+Xeph2D::Serializer::VarMap* Xeph2D::Serializer::GetDataFromInstance(uint32_t instID)
+{
+	auto it = Get()._manifest.find(instID);
+	if (it == Get()._manifest.end())
+	{
+		std::stringstream idStr;
+		idStr << std::hex << std::setfill('0') << instID;
+		Debug::LogErr("Serializer::GetDataFromInstance -> Could not find object with instance id: %s", idStr.str().c_str());
+		return nullptr;
+	}
+
+	return &it->second;
+}
+
 void Xeph2D::Serializer::DataImport(VarEntry& iter, void*& ptr)
 {
 	switch (iter.type)
 	{
-	case DataType::UInt8:
-		iter.data = *(uint8_t*)ptr;
-		break;
-	case DataType::UInt16:
-		iter.data = *(uint16_t*)ptr;
-		break;
-	case DataType::UInt32:
-		iter.data = *(uint32_t*)ptr;
-		break;
-	case DataType::UInt64:
-		iter.data = *(uint64_t*)ptr;
-		break;
-	case DataType::Int8:
-		iter.data = *(int8_t*)ptr;
-		break;
-	case DataType::Int16:
-		iter.data = *(int16_t*)ptr;
-		break;
-	case DataType::Int32:
-		iter.data = *(int32_t*)ptr;
-		break;
-	case DataType::Int64:
-		iter.data = *(int64_t*)ptr;
+	case DataType::Int:
+		iter.data = *(int*)ptr;
 		break;
 	case DataType::Float:
 		iter.data = *(float*)ptr;
-		break;
-	case DataType::Double:
-		iter.data = *(double*)ptr;
 		break;
 	case DataType::Bool:
 		iter.data = *(bool*)ptr;
@@ -110,9 +100,6 @@ void Xeph2D::Serializer::DataImport(VarEntry& iter, void*& ptr)
 	case DataType::Transform:
 		iter.data = *(Transform*)ptr;
 		break;
-	case DataType::Pointer:
-		iter.data = *(void**)ptr;
-		break;
 	default:
 		Debug::LogErr("Serializer::DataImport -> Enum type not supported");
 		break;
@@ -124,35 +111,11 @@ void Xeph2D::Serializer::DataExport(VarEntry& iter, void*& ptr)
 	Transform t;
 	switch (iter.type)
 	{
-	case DataType::UInt8:
-		*(uint8_t*)ptr = iter.DataAs<uint8_t>();
-		break;
-	case DataType::UInt16:
-		*(uint16_t*)ptr = iter.DataAs<uint16_t>();
-		break;
-	case DataType::UInt32:
-		*(uint32_t*)ptr = iter.DataAs<uint32_t>();
-		break;
-	case DataType::UInt64:
-		*(uint64_t*)ptr = iter.DataAs<uint64_t>();
-		break;
-	case DataType::Int8:
-		*(int8_t*)ptr = iter.DataAs<int8_t>();
-		break;
-	case DataType::Int16:
-		*(int16_t*)ptr = iter.DataAs<int16_t>();
-		break;
-	case DataType::Int32:
-		*(int32_t*)ptr = iter.DataAs<int32_t>();
-		break;
-	case DataType::Int64:
-		*(int64_t*)ptr = iter.DataAs<int64_t>();
+	case DataType::Int:
+		*(int*)ptr = iter.DataAs<int>();
 		break;
 	case DataType::Float:
 		*(float*)ptr = iter.DataAs<float>();
-		break;
-	case DataType::Double:
-		*(double*)ptr = iter.DataAs<double>();
 		break;
 	case DataType::Bool:
 		*(bool*)ptr = iter.DataAs<bool>();
@@ -173,9 +136,6 @@ void Xeph2D::Serializer::DataExport(VarEntry& iter, void*& ptr)
 		t = iter.DataAs<Transform>();
 		*(Transform*)ptr = iter.DataAs<Transform>();
 		break;
-	case DataType::Pointer:
-		*(void**)ptr = iter.DataAs<void*>();
-		break;
 	default:
 		Debug::LogErr("Serializer::DataExport -> Enum type not supported");
 		break;
@@ -189,26 +149,10 @@ std::string Xeph2D::Serializer::DataStr(VarEntry& var) const
 	Transform t{};
 	switch (var.type)
 	{
-	case DataType::UInt8:
-		return std::to_string(var.DataAs<uint8_t>());
-	case DataType::UInt16:
-		return std::to_string(var.DataAs<uint16_t>());
-	case DataType::UInt32:
-		return std::to_string(var.DataAs<uint32_t>());
-	case DataType::UInt64:
-		return std::to_string(var.DataAs<uint64_t>());
-	case DataType::Int8:
-		return std::to_string(var.DataAs<int8_t>());
-	case DataType::Int16:
-		return std::to_string(var.DataAs<int16_t>());
-	case DataType::Int32:
-		return std::to_string(var.DataAs<int32_t>());
-	case DataType::Int64:
-		return std::to_string(var.DataAs<int64_t>());
+	case DataType::Int:
+		return std::to_string(var.DataAs<int>());
 	case DataType::Float:
 		return std::to_string(var.DataAs<float>());
-	case DataType::Double:
-		return std::to_string(var.DataAs<double>());
 	case DataType::Bool:
 		return (var.DataAs<bool>()) ? "true" : "false";
 	case DataType::Char:
@@ -241,35 +185,11 @@ void Xeph2D::Serializer::DataParse(VarEntry& entry, std::string& data)
 	std::string cell;
 	switch (entry.type)
 	{
-	case DataType::UInt8:
-		entry.data = (uint8_t)std::stoi(data);
-		break;
-	case DataType::UInt16:
-		entry.data = (uint16_t)std::stoi(data);
-		break;
-	case DataType::UInt32:
-		entry.data = (uint32_t)std::stol(data);
-		break;
-	case DataType::UInt64:
-		entry.data = (uint64_t)std::stoul(data);
-		break;
-	case DataType::Int8:
-		entry.data = (int8_t)std::stoi(data);
-		break;
-	case DataType::Int16:
-		entry.data = (int16_t)std::stoi(data);
-		break;
-	case DataType::Int32:
-		entry.data = (int32_t)std::stoi(data);
-		break;
-	case DataType::Int64:
-		entry.data = (int64_t)std::stol(data);
+	case DataType::Int:
+		entry.data = (int)std::stoi(data);
 		break;
 	case DataType::Float:
 		entry.data = (float)std::stof(data);
-		break;
-	case DataType::Double:
-		entry.data = (double)std::stod(data);
 		break;
 	case DataType::Bool:
 		entry.data = (data == "true");
@@ -321,7 +241,7 @@ void Xeph2D::Serializer::_SaveToFile(const std::string& scene)
 {
 	if (!std::filesystem::exists("Assets/Scenes"))
 		std::filesystem::create_directories("Assets/Scenes");
-	std::ofstream file("Assets/Scenes/" + scene + ".txt");
+	std::ofstream file("Assets/Scenes/" + scene + ".x2dsc");
 	for (auto& obj : _manifest)
 	{
 		file << "inst=" << std::setw(8) << std::setfill('0') << std::hex << obj.first << std::dec << std::endl;
@@ -335,10 +255,10 @@ void Xeph2D::Serializer::_SaveToFile(const std::string& scene)
 
 void Xeph2D::Serializer::_LoadFromFile(const std::string& scene)
 {
-	std::ifstream file("Assets/Scenes/" + scene + ".txt");
+	std::ifstream file("Assets/Scenes/" + scene + ".x2dsc");
 	if (!file.is_open())
 	{
-		Debug::LogWarn("Serializer::LoadFromFile -> No file to load: %s", (scene + ".txt").c_str());
+		Debug::LogWarn("Serializer::LoadFromFile -> No file to load: %s", (scene + ".x2dsc").c_str());
 		return;
 	}
 

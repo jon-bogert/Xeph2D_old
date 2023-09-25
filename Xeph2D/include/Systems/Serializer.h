@@ -12,15 +12,7 @@ namespace Xeph2D
     class Serializer final
     {
     public:
-        enum class DataType {
-            UInt8, UInt16, UInt32, UInt64, Int8, Int16, Int32, Int64,
-            Float, Double, Bool, Char, String, Vector2, Color, Transform, Pointer
-        };
-
-    private:
-        Serializer() {}
-        static Serializer& Get();
-
+        enum class DataType { Int, Float, Bool, Char, String, Vector2, Color, Transform };
         struct VarEntry
         {
             DataType type;
@@ -45,6 +37,10 @@ namespace Xeph2D
         using VarMap = std::unordered_map<std::string, VarEntry>;
         using ObjMap = std::unordered_map<uint32_t, VarMap>;
 
+    private:
+        Serializer() {}
+        static Serializer& Get();
+
         ObjMap _manifest;
 
     public:
@@ -58,6 +54,8 @@ namespace Xeph2D
         static void Register(const uint32_t instID, const uint32_t typeID, DataType type, void* ptr, const std::string& name);
         static void SaveToFile(const std::string& scene) { Get()._SaveToFile(scene); };
         static void LoadFromFile(const std::string& scene) { Get()._LoadFromFile(scene); };
+
+        static VarMap* GetDataFromInstance(uint32_t instID);
 
     private:
         void DataImport(VarEntry& iter, void*& ptr);

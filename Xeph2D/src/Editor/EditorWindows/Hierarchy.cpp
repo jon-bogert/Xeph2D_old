@@ -3,6 +3,9 @@
 
 #include "Systems/Debug.h"
 #include "Systems/SceneManager.h"
+#include "Systems/Serializer.h"
+
+#include "Editor/Editor.h"
 
 #include <string>
 #include <vector>
@@ -36,9 +39,8 @@ void Hierarchy::OnGUI()
 		itemNames.push_back(obj->name);
 	if (ImGui::ListBox("##HItems", &_selectionIndex, CStrVect(itemNames).data(), itemNames.size()))
 	{
-		Debug::Log("%s Selected", itemNames[_selectionIndex].c_str());
+		Editor::GetInspectorWindow()->SetGameObject(objects[_selectionIndex]);
 	}
-	
 }
 
 #endif //_EDITOR
