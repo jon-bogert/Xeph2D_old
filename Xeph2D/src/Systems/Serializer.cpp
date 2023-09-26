@@ -35,33 +35,81 @@ void Xeph2D::Serializer::Register(const uint32_t instID, DataType type, void* pt
 			{
 				Debug::LogWarn("Serializer::Register -> Missmatched type on Register, Changing to new type");
 				field->second.type = type;
-				Get().DataImport(field->second, ptr);
-				field->second.ptr = ptr;
+				Get().DataImport(field->second, ptr); // second is VarEntry, first is field name; obj.first is object id
+#ifdef _EDITOR
+				Get().EditorAdd(instID, field->first, field->second, ptr);
+#endif //_EDITOR
 				return;
 			}
 			//Good Type
 			Get().DataExport(field->second, ptr);
-			field->second.ptr = ptr;
+#ifdef _EDITOR
+			Get().EditorAdd(instID, field->first, field->second, ptr);
+#endif //_EDITOR
 			return;
 		}
 		// No Field
 		auto& inst = obj->second[name];
 		inst.type = type;
 		Get().DataImport(inst, ptr);
-		inst.ptr = ptr;
+#ifdef _EDITOR
+		Get().EditorAdd(instID, field->first, field->second, ptr);
+#endif //_EDITOR
 		return;
 	}
 	// No Object
 	auto& inst = s._manifest[instID][name];
 	inst.type = type;
 	Get().DataImport(inst, ptr);
-	inst.ptr = ptr;
+#ifdef _EDITOR
+	Get().EditorAdd(instID, name, inst, ptr);
+#endif //_EDITOR
 }
 
-Xeph2D::Serializer::VarMap* Xeph2D::Serializer::GetDataFromInstance(uint32_t instID)
+#ifdef _EDITOR
+void Xeph2D::Serializer::EditorAdd(uint32_t instID, const std::string& fieldName, const VarEntry& entry, void* ptr)
 {
-	auto it = Get()._manifest.find(instID);
-	if (it == Get()._manifest.end())
+	if (fieldName.substr(0, 3) == "go_") // Game Object Variable
+	{
+		EdVarEntry& newEntry = _editorManifest[instID].go_variables.emplace_back();
+		newEntry.type = entry.type;
+		newEntry.data = entry.data;
+		newEntry.name = fieldName.substr(3);
+		newEntry.ptr = ptr;
+		return;
+	}
+	//Component Variable
+	uint32_t compID;
+	std::stringstream compIDStr;
+	compIDStr << std::hex << fieldName.substr(0, 8);
+	compIDStr >> compID;
+
+	EdComponent* comp = nullptr;
+	for (EdComponent& x : _editorManifest[instID].components)
+	{
+		if (x.id == compID)
+		{
+			comp = &x;
+			return;
+		}
+	}
+	if (comp == nullptr)
+	{
+		comp = &_editorManifest[instID].components.emplace_back();
+		comp->id = compID;
+	}
+
+	EdVarEntry& newEntry = comp->variables.emplace_back();
+	newEntry.type = entry.type;
+	newEntry.data = entry.data;
+	newEntry.name = fieldName.substr(8);
+	newEntry.ptr = ptr;
+}
+
+Xeph2D::Serializer::EdObject* Xeph2D::Serializer::GetDataFromInstance(uint32_t instID)
+{
+	auto it = Get()._editorManifest.find(instID);
+	if (it == Get()._editorManifest.end())
 	{
 		std::stringstream idStr;
 		idStr << std::hex << std::setfill('0') << instID;
@@ -71,6 +119,7 @@ Xeph2D::Serializer::VarMap* Xeph2D::Serializer::GetDataFromInstance(uint32_t ins
 
 	return &it->second;
 }
+#endif //_EDITOR
 
 void Xeph2D::Serializer::DataImport(VarEntry& iter, void*& ptr)
 {

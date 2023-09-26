@@ -12,61 +12,44 @@ void Xeph2D::Edit::Inspector::Initialize()
 
 void Xeph2D::Edit::Inspector::OnGUI()
 {
-	for (VarEntry& entry : _varList)
+	if (_objectInfo == nullptr)
+		return;
+	VarEntry entry;
+	//Game Object Variables
+	for (Serializer::EdVarEntry e : _objectInfo->go_variables)
 	{
-		switch (entry.serialized->type)
+		entry.displayName = Var2DisplayName(e.name);
+		entry.serialized = &e;
+		entry.instanced = e.ptr;
+		DrawVar(entry);
+	}
+	for (Serializer::EdComponent comp : _objectInfo->components)
+	{
+		ImGui::NewLine();
+		if (ImGui::CollapsingHeader((std::to_string(comp.id) + "##Comp").c_str(), ImGuiTreeNodeFlags_DefaultOpen)) // TODO - Get Component Name
 		{
-		case Serializer::DataType::Int:
-			DrawInt(entry);
-			break;
-		case Serializer::DataType::Float:
-			DrawFloat(entry);
-			break;
-		case Serializer::DataType::Bool:
-			DrawBool(entry);
-			break;
-		case Serializer::DataType::Char:
-			DrawChar(entry);
-			break;
-		case Serializer::DataType::String:
-			DrawString(entry);
-			break;
-		case Serializer::DataType::Vector2:
-			DrawVec2(entry);
-			break;
-		case Serializer::DataType::Color:
-			DrawColor(entry);
-			break;
-		case Serializer::DataType::Transform:
-			DrawTransform(entry);
-			break;
-		default:
-			Debug::LogErr("Inspector::OnGUI -> Data Type not supported");
-			break;
+			for (Serializer::EdVarEntry e : comp.variables)
+			{
+				entry.displayName = Var2DisplayName(e.name);
+				entry.serialized = &e;
+				entry.instanced = e.ptr;
+				DrawVar(entry);
+			}
 		}
 	}
 }
 void Xeph2D::Edit::Inspector::SetGameObject(GameObject* obj)
 {
 	_currObject = obj;
-	_varList.clear();
 
 	if (_currObject == nullptr)
 		return;
 
 	uint32_t instID = _currObject->instID;
-	auto* fields = Serializer::GetDataFromInstance(instID);
-	if (fields == nullptr)
+	_objectInfo = Serializer::GetDataFromInstance(instID);
+	if (_objectInfo == nullptr)
 	{
 		Debug::LogErr("Inspector::SetGameObject -> could not get variable data from Serializer, See serializer Error");
-		return;
-	}
-	for (auto& f : *fields)
-	{
-		VarEntry& entry = _varList.emplace_back();
-		entry.serialized = &f.second;
-		entry.displayName = Var2DisplayName(f.first);
-		entry.instanced = entry.serialized->ptr;
 	}
 }
 
@@ -75,15 +58,15 @@ void Xeph2D::Edit::Inspector::SetGameObject(GameObject* obj)
 std::string Xeph2D::Edit::Inspector::Var2DisplayName(std::string varName)
 {
 	bool spaceLast = false;
-	if (varName.substr(0, 3) == "go_")
-		varName = varName.substr(3);
-	else if (varName.size() > 8)
-		varName = varName.substr(8); // removes component id;
-	else
-	{
-		printf("Inspector::Var2DisplayName -> variable name was empty or invalid");
-		return "<invalid name>";
-	}
+	//if (varName.substr(0, 3) == "go_")
+	//	varName = varName.substr(3);
+	//else if (varName.size() > 8)
+	//	varName = varName.substr(8); // removes component id;
+	//else
+	//{
+	//	printf("Inspector::Var2DisplayName -> variable name was empty or invalid");
+	//	return "<invalid name>";
+	//}
 	if (varName.size() <= 2)
 		return varName;
 
@@ -135,6 +118,40 @@ std::string Xeph2D::Edit::Inspector::Var2DisplayName(std::string varName)
 	}
 
 	return varName;
+}
+
+void Xeph2D::Edit::Inspector::DrawVar(VarEntry& entry)
+{
+	switch (entry.serialized->type)
+	{
+	case Serializer::DataType::Int:
+		DrawInt(entry);
+		break;
+	case Serializer::DataType::Float:
+		DrawFloat(entry);
+		break;
+	case Serializer::DataType::Bool:
+		DrawBool(entry);
+		break;
+	case Serializer::DataType::Char:
+		DrawChar(entry);
+		break;
+	case Serializer::DataType::String:
+		DrawString(entry);
+		break;
+	case Serializer::DataType::Vector2:
+		DrawVec2(entry);
+		break;
+	case Serializer::DataType::Color:
+		DrawColor(entry);
+		break;
+	case Serializer::DataType::Transform:
+		DrawTransform(entry);
+		break;
+	default:
+		Debug::LogErr("Inspector::OnGUI -> Data Type not supported");
+		break;
+	}
 }
 
 void Xeph2D::Edit::Inspector::DrawInt(VarEntry& entry)

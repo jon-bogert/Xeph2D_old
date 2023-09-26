@@ -17,7 +17,7 @@ namespace Xeph2D
         {
             DataType type;
             std::any data;
-            void* ptr;
+            //void* ptr;
 
             template <typename T>
             T DataAs()
@@ -37,11 +37,35 @@ namespace Xeph2D
         using VarMap = std::unordered_map<std::string, VarEntry>;
         using ObjMap = std::unordered_map<uint32_t, VarMap>;
 
+#ifdef _EDITOR
+
+        struct EdVarEntry : public VarEntry
+        {
+            std::string name;
+            void* ptr;
+        };
+        struct EdComponent
+        {
+            uint32_t id;
+            std::vector<EdVarEntry> variables;
+        };
+        struct EdObject
+        {
+            std::vector<EdVarEntry> go_variables;
+            std::vector<EdComponent> components;
+        };
+        using EdMap = std::unordered_map<uint32_t, EdObject>;
+#endif //_EDITOR
+
     private:
         Serializer() {}
         static Serializer& Get();
 
         ObjMap _manifest;
+#ifdef _EDITOR
+        EdMap _editorManifest;
+        void EditorAdd(uint32_t instID, const std::string& fieldName, const VarEntry& entry, void* ptr);
+#endif //_EDITOR
 
     public:
         ~Serializer() = default;
@@ -54,8 +78,9 @@ namespace Xeph2D
         static void Register(const uint32_t instID, const uint32_t typeID, DataType type, void* ptr, const std::string& name);
         static void SaveToFile(const std::string& scene) { Get()._SaveToFile(scene); };
         static void LoadFromFile(const std::string& scene) { Get()._LoadFromFile(scene); };
-
-        static VarMap* GetDataFromInstance(uint32_t instID);
+#ifdef _EDITOR
+        static EdObject* GetDataFromInstance(uint32_t instID);
+#endif //_EDITOR
 
     private:
         void DataImport(VarEntry& iter, void*& ptr);

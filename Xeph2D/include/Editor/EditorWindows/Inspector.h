@@ -15,12 +15,13 @@ namespace Xeph2D::Edit
 		struct VarEntry
 		{
 			std::string displayName;
-			Serializer::VarEntry* serialized = nullptr;
+			Serializer::EdVarEntry* serialized = nullptr;
 			void* instanced = nullptr;
 		};
 	private:
 		GameObject* _currObject = nullptr;
-		std::vector<VarEntry> _varList;
+		Serializer::EdObject* _objectInfo = nullptr;
+		//std::vector<VarEntry> _varList;
 
 	public:
 		void Initialize() override;
@@ -31,6 +32,7 @@ namespace Xeph2D::Edit
 	private:
 		std::string Var2DisplayName(std::string varName);
 
+		void DrawVar(VarEntry& entry);
 		void DrawInt(VarEntry& entry);
 		void DrawFloat(VarEntry& entry);
 		void DrawBool(VarEntry& entry);
