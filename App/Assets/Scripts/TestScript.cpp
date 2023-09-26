@@ -5,6 +5,7 @@ using namespace Xeph2D;
 void TestScript::Serializables()
 {
 	SERIALIZE_DEFAULT;
+	SERIALIZE_BOOL(_showDebug);
 }
 
 void TestScript::Start()
@@ -34,6 +35,8 @@ void TestScript::Update()
 
 void Xeph2D::TestScript::DebugDraw()
 {
+	if (!_showDebug)
+		return;
 	Color c = Color::Red;
 	c.a = .5f;
 	Debug::DrawCircleFilled(transform->position, 0.5f, c);

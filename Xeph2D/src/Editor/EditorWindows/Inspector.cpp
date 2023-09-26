@@ -1,5 +1,6 @@
 #ifdef _EDITOR
 #include "Editor/EditorWindows/Inspector.h"
+#include "Editor/Editor.h"
 
 #include <GameObject.h>
 
@@ -16,19 +17,19 @@ void Xeph2D::Edit::Inspector::OnGUI()
 		return;
 	VarEntry entry;
 	//Game Object Variables
-	for (Serializer::EdVarEntry e : _objectInfo->go_variables)
+	for (Serializer::EdVarEntry& e : _objectInfo->go_variables)
 	{
 		entry.displayName = Var2DisplayName(e.name);
 		entry.serialized = &e;
 		entry.instanced = e.ptr;
 		DrawVar(entry);
 	}
-	for (Serializer::EdComponent comp : _objectInfo->components)
+	for (Serializer::EdComponent& comp : _objectInfo->components)
 	{
 		ImGui::NewLine();
-		if (ImGui::CollapsingHeader((std::to_string(comp.id) + "##Comp").c_str(), ImGuiTreeNodeFlags_DefaultOpen)) // TODO - Get Component Name
+		if (ImGui::CollapsingHeader((_compNames[comp.id] + "##Comp").c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			for (Serializer::EdVarEntry e : comp.variables)
+			for (Serializer::EdVarEntry& e : comp.variables)
 			{
 				entry.displayName = Var2DisplayName(e.name);
 				entry.serialized = &e;
@@ -53,20 +54,16 @@ void Xeph2D::Edit::Inspector::SetGameObject(GameObject* obj)
 	}
 }
 
+void Xeph2D::Edit::Inspector::RegisterComponentNames(std::function<std::unordered_map<uint32_t, std::string>(void)> callback)
+{
+	_compNames = callback();
+}
+
 #define __CAP_OFFSET 32
 
 std::string Xeph2D::Edit::Inspector::Var2DisplayName(std::string varName)
 {
 	bool spaceLast = false;
-	//if (varName.substr(0, 3) == "go_")
-	//	varName = varName.substr(3);
-	//else if (varName.size() > 8)
-	//	varName = varName.substr(8); // removes component id;
-	//else
-	//{
-	//	printf("Inspector::Var2DisplayName -> variable name was empty or invalid");
-	//	return "<invalid name>";
-	//}
 	if (varName.size() <= 2)
 		return varName;
 
@@ -159,6 +156,7 @@ void Xeph2D::Edit::Inspector::DrawInt(VarEntry& entry)
 	if (ImGui::InputInt((entry.displayName + "##Insp").c_str(), (int*)entry.instanced))
 	{
 		entry.serialized->data = *(int*)entry.instanced;
+		Editor::SetHasSaved(false);
 	}
 }
 
@@ -167,6 +165,7 @@ void Xeph2D::Edit::Inspector::DrawFloat(VarEntry& entry)
 	if (ImGui::InputFloat((entry.displayName + "##Insp").c_str(), (float*)entry.instanced))
 	{
 		entry.serialized->data = *(float*)entry.instanced;
+		Editor::SetHasSaved(false);
 	}
 }
 
@@ -175,6 +174,7 @@ void Xeph2D::Edit::Inspector::DrawBool(VarEntry& entry)
 	if (ImGui::Checkbox((entry.displayName + "##Insp").c_str(), (bool*)entry.instanced))
 	{
 		entry.serialized->data = *(float*)entry.instanced;
+		Editor::SetHasSaved(false);
 	}
 }
 
@@ -185,6 +185,7 @@ void Xeph2D::Edit::Inspector::DrawChar(VarEntry& entry)
 	{
 		*(char*)entry.instanced = buff;
 		entry.serialized->data = *(float*)entry.instanced;
+		Editor::SetHasSaved(false);
 	}
 }
 
@@ -192,10 +193,11 @@ void Xeph2D::Edit::Inspector::DrawString(VarEntry& entry)
 {
 	char buff[1024];
 	strcpy(buff, (*(std::string*)entry.instanced).c_str());
-	if (ImGui::InputText((entry.displayName + "##Insp").c_str(), buff, 1024))
+	if (ImGui::InputText((entry.displayName + "##Insp").c_str(), buff, 1024, ImGuiInputTextFlags_EnterReturnsTrue))
 	{
 		*(std::string*)entry.instanced = buff;
 		entry.serialized->data = *(std::string*)entry.instanced;
+		Editor::SetHasSaved(false);
 	}
 }
 
@@ -204,6 +206,7 @@ void Xeph2D::Edit::Inspector::DrawVec2(VarEntry& entry)
 	if (ImGui::InputFloat2((entry.displayName + "##Insp").c_str(), (float*)entry.instanced))
 	{
 		entry.serialized->data = *(Vector2*)entry.instanced;
+		Editor::SetHasSaved(false);
 	}
 }
 
@@ -212,6 +215,7 @@ void Xeph2D::Edit::Inspector::DrawColor(VarEntry& entry)
 	if (ImGui::ColorPicker4((entry.displayName + "##Insp").c_str(), (float*)entry.instanced))
 	{
 		entry.serialized->data = *(Color*)entry.instanced;
+		Editor::SetHasSaved(false);
 	}
 }
 
@@ -221,16 +225,19 @@ void Xeph2D::Edit::Inspector::DrawTransform(VarEntry& entry)
 	if (ImGui::DragFloat2(("Position##" + entry.displayName + "Insp").c_str(), (float*)&((Transform*)entry.instanced)->position))
 	{
 		entry.serialized->data = *(Transform*)entry.instanced;
+		Editor::SetHasSaved(false);
 	}
 	float rotation = ((Transform*)entry.instanced)->rotation.GetDeg();
 	if (ImGui::DragFloat(("Rotation##" + entry.displayName + "Insp").c_str(), &rotation))
 	{
 		((Transform*)entry.instanced)->rotation.SetDeg(rotation);
 		entry.serialized->data = *(Transform*)entry.instanced;
+		Editor::SetHasSaved(false);
 	}
 	if (ImGui::DragFloat2(("Scale##" + entry.displayName + "Insp").c_str(), (float*)&((Transform*)entry.instanced)->scale))
 	{
 		entry.serialized->data = *(Transform*)entry.instanced;
+		Editor::SetHasSaved(false);
 	}
 }
 

@@ -50,7 +50,11 @@ void SpriteRenderer::LoadTextureByTag(const std::string& tag)
 	if (tex == nullptr)
 	{
 		Debug::LogErr("SpriteRenderer %s tried to get texture '%s'", gameObject->name.c_str(), tag.c_str());
+#ifdef _EDITOR
+		tex = AssetManager::GetTexture("__no-image");
+#else
 		return;
+#endif // _EDITOR
 	}
 	_sprite->setTexture(*tex);
 

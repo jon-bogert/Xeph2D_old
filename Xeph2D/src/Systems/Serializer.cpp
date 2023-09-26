@@ -53,7 +53,7 @@ void Xeph2D::Serializer::Register(const uint32_t instID, DataType type, void* pt
 		inst.type = type;
 		Get().DataImport(inst, ptr);
 #ifdef _EDITOR
-		Get().EditorAdd(instID, field->first, field->second, ptr);
+		Get().EditorAdd(instID, name, inst, ptr);
 #endif //_EDITOR
 		return;
 	}
@@ -196,6 +196,7 @@ std::string Xeph2D::Serializer::DataStr(VarEntry& var) const
 	Vector2 v2{};
 	Color c{};
 	Transform t{};
+	std::string str;
 	switch (var.type)
 	{
 	case DataType::Int:
@@ -207,6 +208,7 @@ std::string Xeph2D::Serializer::DataStr(VarEntry& var) const
 	case DataType::Char:
 		return std::to_string(var.DataAs<char>());
 	case DataType::String:
+		str = var.DataAs<std::string>();
 		return var.DataAs<std::string>();
 	case DataType::Vector2:
 		v2 = var.DataAs<Vector2>();
@@ -286,21 +288,30 @@ void Xeph2D::Serializer::DataParse(VarEntry& entry, std::string& data)
 	}
 }
 
+#ifdef _EDITOR
 void Xeph2D::Serializer::_SaveToFile(const std::string& scene)
 {
 	if (!std::filesystem::exists("Assets/Scenes"))
 		std::filesystem::create_directories("Assets/Scenes");
 	std::ofstream file("Assets/Scenes/" + scene + ".x2dsc");
-	for (auto& obj : _manifest)
+	for (auto& obj : _editorManifest)
 	{
 		file << "inst=" << std::setw(8) << std::setfill('0') << std::hex << obj.first << std::dec << std::endl;
-		for (auto& field : obj.second)
+		for (auto& goField : obj.second.go_variables)
 		{
-			file << "    " << (int)field.second.type << ' ' << field.first << '=' << DataStr(field.second) << std::endl;
+			file << "    " << (int)goField.type << " go_" << goField.name << '=' << DataStr(goField) << std::endl;
+		}
+		for (auto& comp : obj.second.components)
+		{
+			for (auto& compField : comp.variables)
+			{
+				file << "    " << (int)compField.type << ' ' << std::setw(8) << std::setfill('0') << std::hex << comp.id << std::dec << compField.name << '=' << DataStr(compField) << std::endl;
+			}
 		}
 	}
 	file.close();
 }
+#endif //_EDITOR
 
 void Xeph2D::Serializer::_LoadFromFile(const std::string& scene)
 {

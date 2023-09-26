@@ -3,7 +3,6 @@
 #include <Xeph2D.h>
 #include <imgui.h>
 #include <imgui-SFML.h>
-//#include "Editor/EditorWindow.h"
 
 #include "Editor/EditorWindows/Viewport.h"
 #include "Editor/EditorWindows/Inspector.h"
@@ -19,20 +18,21 @@ using namespace Xeph2D;
 
 void Xeph2D::Edit::Editor::Initialize()
 {
-    Get()._window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Xeph2D Editor");
+	Get()._window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Xeph2D Editor");
 	Get()._hwnd = (void*)FindWindowA(NULL, "Xeph2D Editor");
-    ImGui::SFML::Init(*Get()._window);
+	ImGui::SFML::Init(*Get()._window);
 
-    ImGuiIO& io = ImGui::GetIO();
+	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-    Get().SetUIStyle();
+	Get().SetUIStyle();
 
 	Get()._viewportWindow =
 		(Viewport*)Get()._editorWindows.emplace_back(std::make_unique<Viewport>()).get();
-	Get()._inspector = 
+	Get()._inspector =
 		(Inspector*)Get()._editorWindows.emplace_back(std::make_unique<Inspector>()).get();
-	Get()._editorWindows.emplace_back(std::make_unique<Hierarchy>());
+	Get()._hierarchyWindow =
+		(Hierarchy*)Get()._editorWindows.emplace_back(std::make_unique<Hierarchy>()).get();
 
 	for (auto& window : Get()._editorWindows)
 		window->Initialize();
@@ -40,16 +40,16 @@ void Xeph2D::Edit::Editor::Initialize()
 
 void Xeph2D::Edit::Editor::CheckWindowEvents()
 {
-    sf::Event winEvent{};
-    while (Get()._window->pollEvent(winEvent))
-    {
-        ImGui::SFML::ProcessEvent(*Get()._window, winEvent);
+	sf::Event winEvent{};
+	while (Get()._window->pollEvent(winEvent))
+	{
+		ImGui::SFML::ProcessEvent(*Get()._window, winEvent);
 
-        if (winEvent.type == sf::Event::Closed)
-        {
-            Get()._window->close();
-        }
-    }
+		if (winEvent.type == sf::Event::Closed)
+		{
+			Close();
+		}
+	}
 }
 
 void Xeph2D::Edit::Editor::InputProc()
@@ -65,20 +65,69 @@ void Xeph2D::Edit::Editor::InputProc()
 			Get()._viewportTransform.position.y += WindowManager::PixelToUnit(delta).y;
 		}
 	}
+	if (InputSystem::GetKeyHold(Key::Ctrl))
+	{
+		if (InputSystem::GetKeyDown(Key::S))
+		{
+			Serializer::SaveToFile(SceneManager::GetCurrentName());
+			Get()._hasSaved = true;
+		}
+		if (InputSystem::GetKeyDown(Key::Q))
+		{
+			Close();
+		}
+	}
 }
 
 void Xeph2D::Edit::Editor::Update()
 {
-    ImGui::SFML::Update(*Get()._window, Get()._frameTimer.restart());
+	ImGui::SFML::Update(*Get()._window, Get()._frameTimer.restart());
 }
 
 void Xeph2D::Edit::Editor::OnGUI()
 {
 	Get().ViewportGUI();
 	ImGui::BeginMainMenuBar();
-	ImGui::MenuItem("File##MainMenu");
-	ImGui::MenuItem("Edit##MainMenu");
-	ImGui::MenuItem("View##MainMenu");
+	if (ImGui::BeginMenu("File##MainMenu"))
+	{
+		if (ImGui::MenuItem("Save", "Ctrl+S"))
+		{
+			Serializer::SaveToFile(SceneManager::GetCurrentName());
+			Get()._hasSaved = true;
+		}
+		if (ImGui::MenuItem("Close", "Ctrl+Q"))
+		{
+			Editor::Close();
+		}
+		ImGui::EndMenu();
+	}
+	if (ImGui::BeginMenu("Edit##MainMenu"))
+	{
+		if (ImGui::MenuItem("EditStuff", nullptr, nullptr, false))
+		{
+		}
+		ImGui::EndMenu();
+	}
+	if (ImGui::BeginMenu("View##MainMenu"))
+	{
+		if (ImGui::BeginMenu("Windows##MainMenu"))
+		{
+			if (ImGui::MenuItem("Hierarchy"))
+			{
+				Get()._hierarchyWindow->Open();
+			}
+			if (ImGui::MenuItem("Inspector"))
+			{
+				Get()._inspector->Open();
+			}
+			if (ImGui::MenuItem("Viewport"))
+			{
+				Get()._viewportWindow->Open();
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenu();
+	}
 	ImGui::EndMainMenuBar();
 	ImGui::DockSpaceOverViewport();
 	for (auto& window : Get()._editorWindows)
@@ -91,23 +140,84 @@ void Xeph2D::Edit::Editor::OnGUI()
 		window->OnGUI();
 		ImGui::End();
 	}
+	if (Get()._showSaveWindow)
+	{
+		ImGui::Begin("Save Your Progress?", &Get()._showSaveWindow,
+			ImGuiWindowFlags_AlwaysAutoResize |
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoDocking |
+			ImGuiWindowFlags_NoCollapse |
+			ImGuiWindowFlags_NoMove);
+		ImGui::SetWindowPos({ (ImGui::GetMainViewport()->Size.x - ImGui::GetWindowWidth()) * 0.5f, (ImGui::GetMainViewport()->Size.y - ImGui::GetWindowHeight()) * 0.5f });
+		ImGui::Text("Would you like to save the Active Scene?");
+		ImGui::NewLine();
+		if (ImGui::Button("Save"))
+		{
+			Get()._hasSaved = true;
+			Serializer::SaveToFile(SceneManager::GetCurrentName());
+			Close();
+			Get()._showSaveWindow = false;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Don't Save"))
+		{
+			Get()._hasSaved = true;
+			Close();
+			Get()._showSaveWindow = false;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel"))
+		{
+			Get()._showSaveWindow = false;
+		}
+		ImGui::End();
+	}
 }
 
 void Xeph2D::Edit::Editor::Draw()
 {
-    Get()._window->clear({ 5, 5, 5, 255 });
-    ImGui::SFML::Render(*Get()._window);
-    Get()._window->display();
+	Get()._window->clear({ 5, 5, 5, 255 });
+	ImGui::SFML::Render(*Get()._window);
+	Get()._window->display();
 }
 
 void Xeph2D::Edit::Editor::Shutdown()
 {
-    ImGui::SFML::Shutdown();
+	ImGui::SFML::Shutdown();
 }
 
 bool Xeph2D::Edit::Editor::IsOpen()
 {
-    return Get()._window->isOpen();
+	return Get()._window->isOpen();
+}
+
+void Xeph2D::Edit::Editor::Close()
+{
+	bool hs = Get()._hasSaved;
+	if (Get()._hasSaved)
+		Get()._window->close();
+	else
+		Get()._showSaveWindow = true;
+}
+
+bool Xeph2D::Edit::Editor::GetHasSaved()
+{
+	return Get()._hasSaved;
+}
+
+void Xeph2D::Edit::Editor::SetHasSaved(const bool hasSaved)
+{
+	Get()._hasSaved = hasSaved;
+}
+
+void Xeph2D::Edit::Editor::RegisterComponentNames(std::function<std::unordered_map<uint32_t, std::string>(void)> callback)
+{
+	if (Get()._inspector == nullptr)
+	{
+		Debug::LogErr("Editor -> Inspector window is null, could not register component names");
+		return;
+	}
+	Get()._inspector->RegisterComponentNames(callback);
 }
 
 Transform* Xeph2D::Edit::Editor::GetViewportTransform()
@@ -128,8 +238,8 @@ void Xeph2D::Edit::Editor::ViewportGUI()
 	Vector2 y0_min = Vector2(0, WindowManager::WorldWindowMinimum().y);
 	Vector2 y0_max = Vector2(0, WindowManager::WorldWindowMaximum().y);
 
-	Color worldOriginColor = {0.75, 0.75, 0.75, 1.f};
-	Color worldUnitColor = {0.2, 0.2, 0.2, 1.f};
+	Color worldOriginColor = { 0.75, 0.75, 0.75, 1.f };
+	Color worldUnitColor = { 0.2, 0.2, 0.2, 1.f };
 
 	Debug::DrawLine(x0_min, x0_max, worldOriginColor);
 	Debug::DrawLine(y0_min, y0_max, worldOriginColor);
@@ -160,17 +270,8 @@ void Xeph2D::Edit::Editor::SetUIStyle()
 {
 	ImGuiStyle& style = ImGui::GetStyle();
 
-	// Modify the style colors
-	//style.Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);             // Text color
-	//style.Colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);         // Window background color
-	//style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.07f, 0.07f, 0.07f, 1.00f);          // Title background color
-	//style.Colors[ImGuiCol_Button] = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);            // Button background color
-	//style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);     // Button hover color
-	//style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);      // Button active color
-
-	style.WindowRounding = 4.0f;  // Set window corner rounding to 4 pixels
-	//style.FrameRounding = 2.0f;   // Set frame corner rounding to 2 pixels
-	style.ScrollbarSize = 10.0f;  // Set scrollbar size to 10 pixels
+	style.WindowRounding = 4.0f;
+	style.ScrollbarSize = 10.0f;
 
 	style.Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);
 	style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
@@ -210,7 +311,7 @@ void Xeph2D::Edit::Editor::SetUIStyle()
 	style.Colors[ImGuiCol_TabActive] = ImVec4(0.23f, 0.23f, 0.24f, 1.00f);
 	style.Colors[ImGuiCol_TabUnfocused] = ImVec4(0.08f, 0.08f, 0.09f, 1.00f);
 	style.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.13f, 0.14f, 0.15f, 1.00f);
-	style.Colors[ImGuiCol_DockingPreview] = ImVec4(0.26f, 0.59f, 0.98f, 0.70f);
+	style.Colors[ImGuiCol_DockingPreview] = ImVec4(0.7f, 0.7f, 0.7f, 0.70f);
 	style.Colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
 	style.Colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
 	style.Colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
@@ -227,16 +328,14 @@ void Xeph2D::Edit::Editor::SetUIStyle()
 	//Font
 	ImGuiIO& io = ImGui::GetIO();
 	ImFontAtlas* fontAtlas = io.Fonts;
-	//res::JetBrainsMono_ttf(Get()._fontData, Get()._fontDataLength);
 	res::BasierSquare_Medium_otf(Get()._fontData, Get()._fontDataLength);
 	ImFontConfig fontConfig;
-	fontConfig.FontDataOwnedByAtlas = false; // Important: Set to false so ImGui doesn't try to free the memory
-	ImWchar defaultRange[] = { 0x0020, 0x00FF, 0x0100, 0x017F, 0 }; // Specify the character ranges you want to support
+	fontConfig.FontDataOwnedByAtlas = false;
+	ImWchar defaultRange[] = { 0x0020, 0x00FF, 0x0100, 0x017F, 0 };
 	ImFont* font = fontAtlas->AddFontFromMemoryTTF((void*)Get()._fontData.get(), Get()._fontDataLength, 16, &fontConfig, defaultRange);
-	//ImFont* font = fontAtlas->AddFontFromFileTTF("JetBrainsMono.ttf", 16, &fontConfig, defaultRange);
 	fontAtlas->Build();
 	io.FontDefault = font;
-	
+
 	ImGui::SFML::UpdateFontTexture();
 }
 

@@ -21,13 +21,14 @@ namespace Xeph2D::Edit
 	private:
 		GameObject* _currObject = nullptr;
 		Serializer::EdObject* _objectInfo = nullptr;
-		//std::vector<VarEntry> _varList;
+		std::unordered_map<uint32_t, std::string> _compNames;
 
 	public:
 		void Initialize() override;
 		void OnGUI() override;
 
 		void SetGameObject(GameObject* obj);
+		void RegisterComponentNames(std::function<std::unordered_map<uint32_t, std::string>(void)> callback);
 
 	private:
 		std::string Var2DisplayName(std::string varName);

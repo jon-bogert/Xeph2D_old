@@ -1,7 +1,22 @@
 #include "Systems/AssetManager.h"
 #include "Systems/Debug.h"
 
+#ifdef _EDITOR
+#include "../res/no_image_png.h"
+#endif //_EDITOR
+
 using namespace Xeph2D;
+
+Xeph2D::AssetManager::AssetManager()
+{
+#ifdef _EDITOR
+	size_t size = 0;
+	res::no_image_png(_emptyImageData, size);
+	sf::Texture tex;
+	tex.loadFromMemory(_emptyImageData.get(), size);
+	_textures["__no-image"] = tex;
+#endif //_EDITOR
+}
 
 AssetManager& AssetManager::Get()
 {
@@ -19,6 +34,7 @@ sf::Texture* Xeph2D::AssetManager::LoadTextureFromFile(const std::string& filena
 	if (!tex.loadFromFile(fullpath))
 	{
 		Debug::LogErr("Could not open file at path: %s", fullpath.c_str());
+		Get()._textures.erase(tag);
 		return nullptr;
 	}
 	return &tex;

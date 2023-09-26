@@ -8,6 +8,7 @@ namespace Xeph2D
 		AudioSource* audioSource = nullptr;
 		float speed = 10.f;
 		Vector2 moveAxis = {};
+		bool _showDebug = true;
 
 	public:
 		COMP_HEADER_STD(25);

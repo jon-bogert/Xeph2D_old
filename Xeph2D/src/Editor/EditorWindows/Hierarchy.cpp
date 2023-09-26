@@ -33,6 +33,10 @@ void Hierarchy::Initialize()
 
 void Hierarchy::OnGUI()
 {
+	std::string sceneName = SceneManager::GetCurrentName();
+	if (!Editor::GetHasSaved())
+		sceneName += " - (not saved)";
+	ImGui::Text(sceneName.c_str());
 	std::vector<GameObject*> objects = SceneManager::GetCurrentScene()->GetAllObjects();
 	std::vector<std::string> itemNames;
 	for (GameObject*& obj : objects)

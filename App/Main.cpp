@@ -16,16 +16,18 @@ using namespace Xeph2D::Edit;
 #ifdef _EDITOR
 void EditMain()
 {
+	EditorSplash::Begin();
 	//---- MOVE TO SCENE LOAD
-	AssetManager::LoadTextureFromFile("test.png");
 	AssetManager::LoadTextureFromFile("test2.png");
 	AssetManager::LoadAudioDataFromFile("gun-shot.wav", false);
 	AssetManager::LoadAudioDataFromFile("music.ogg", false);
 	//----
 	Editor::Initialize();
+	Editor::RegisterComponentNames(__X2D_REGISTER_COMP_NAMES);
 	WindowManager::Initialize(1280, 720);
 	InputSystem::Initialize(WindowManager::GetHandle(), __X2D_LOAD_INPUTACTIONS);
 	SceneManager::Initialize(__X2D_LOAD_SCENES);
+	EditorSplash::End();
 	SceneManager::Serializables();
 	SceneManager::EditorInit();
 	while (Editor::IsOpen())
@@ -53,7 +55,6 @@ void EditMain()
 void BuildMain()
 {
 	//---- MOVE TO SCENE LOAD
-	AssetManager::LoadTextureFromFile("test.png");
 	AssetManager::LoadTextureFromFile("test2.png");
 	AssetManager::LoadAudioDataFromFile("gun-shot.wav", false);
 	AssetManager::LoadAudioDataFromFile("music.ogg", false);

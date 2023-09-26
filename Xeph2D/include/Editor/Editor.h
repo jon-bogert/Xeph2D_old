@@ -7,6 +7,8 @@
 #include "Xeph2D.h"
 #include "Editor/EditorWindows/Viewport.h"
 #include "Editor/EditorWindows/Inspector.h"
+#include "Editor/EditorWindows/Hierarchy.h"
+#include "Editor/EditorSplash.h"
 
 namespace Xeph2D::Edit
 {
@@ -29,6 +31,10 @@ namespace Xeph2D::Edit
         Transform _viewportTransform{};
         Viewport* _viewportWindow = nullptr;
         Inspector* _inspector = nullptr;
+        Hierarchy* _hierarchyWindow = nullptr;
+
+        bool _hasSaved = true;
+        bool _showSaveWindow = false;
 
     public:
         ~Editor() = default;
@@ -46,6 +52,12 @@ namespace Xeph2D::Edit
         static void Shutdown();
 
         static bool IsOpen();
+        static void Close();
+
+        static bool GetHasSaved();
+        static void SetHasSaved(const bool hasSaved);
+
+        static void RegisterComponentNames(std::function<std::unordered_map<uint32_t, std::string>(void)> callback);
 
         static Transform* GetViewportTransform();
         static Inspector* GetInspectorWindow();

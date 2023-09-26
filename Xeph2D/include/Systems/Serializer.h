@@ -76,9 +76,9 @@ namespace Xeph2D
 
         static void Register(const uint32_t instID, DataType type, void* ptr, const std::string& name);
         static void Register(const uint32_t instID, const uint32_t typeID, DataType type, void* ptr, const std::string& name);
-        static void SaveToFile(const std::string& scene) { Get()._SaveToFile(scene); };
         static void LoadFromFile(const std::string& scene) { Get()._LoadFromFile(scene); };
 #ifdef _EDITOR
+        static void SaveToFile(const std::string& scene) { Get()._SaveToFile(scene); };
         static EdObject* GetDataFromInstance(uint32_t instID);
 #endif //_EDITOR
 
@@ -87,8 +87,9 @@ namespace Xeph2D
         void DataExport(VarEntry& iter, void*& ptr);
         std::string DataStr(VarEntry& var) const;
         void DataParse(VarEntry& entry, std::string& data);
-
+#ifdef _EDITOR
         void _SaveToFile(const std::string& scene);
+#endif //_EDITOR
         void _LoadFromFile(const std::string& scene);
     };
 

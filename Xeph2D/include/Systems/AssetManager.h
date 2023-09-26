@@ -9,9 +9,12 @@ namespace Xeph2D
 {
 	class AssetManager final
 	{
+#ifdef _EDITOR
+		std::unique_ptr<unsigned char[]> _emptyImageData;
+#endif //_EDITOR
 		std::unordered_map<std::string, sf::Texture> _textures;
 		std::unordered_map<std::string, AudioData> _audioSources;
-		AssetManager() {}
+		AssetManager();
 		static AssetManager& Get();
 
 		const std::string assetPath = "Assets/";

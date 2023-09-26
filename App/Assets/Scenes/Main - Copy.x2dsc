@@ -1,0 +1,12 @@
+inst=00000000
+    4 00000003_dataKey=gun-shot
+    7 go_transform=12.000000,27.000000,0.000000,1.000000,1.000000
+    4 go_name=Player
+    4 00000002_textureKey=test
+inst=00000001
+    7 go_transform=0.000000,0.000000,0.000000,1.000000,1.000000
+    4 go_name=Camera
+inst=00000002
+    4 00000003_dataKey=music
+    7 go_transform=0.000000,0.000000,0.000000,1.000000,1.000000
+    4 go_name=MusicManager
