@@ -9,6 +9,7 @@
 #include "Editor/EditorWindows/Inspector.h"
 #include "Editor/EditorWindows/Hierarchy.h"
 #include "Editor/EditorSplash.h"
+#include "Editor/TransformGizmo.h"
 
 namespace Xeph2D::Edit
 {
@@ -36,6 +37,8 @@ namespace Xeph2D::Edit
         bool _hasSaved = true;
         bool _showSaveWindow = false;
 
+        TransformGizmo _transformGizmo;
+
     public:
         ~Editor() = default;
         Editor(const Editor& other) = delete;
@@ -61,6 +64,7 @@ namespace Xeph2D::Edit
 
         static Transform* GetViewportTransform();
         static Inspector* GetInspectorWindow();
+        static TransformGizmo* GetTransformGizmo();
 
     private:
         void ViewportGUI();

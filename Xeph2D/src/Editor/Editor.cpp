@@ -65,6 +65,21 @@ void Xeph2D::Edit::Editor::InputProc()
 			Get()._viewportTransform.position.y += WindowManager::PixelToUnit(delta).y;
 		}
 	}
+	if (Get()._viewportWindow->IsFocused())
+	{
+		if (InputSystem::GetKeyDown(Key::W))
+		{
+			Get()._transformGizmo.SetMode(TransformGizmo::Mode::Position);
+		}
+		if (InputSystem::GetKeyDown(Key::E))
+		{
+			Get()._transformGizmo.SetMode(TransformGizmo::Mode::Rotation);
+		}
+		if (InputSystem::GetKeyDown(Key::R))
+		{
+			Get()._transformGizmo.SetMode(TransformGizmo::Mode::Scale);
+		}
+	}
 	if (InputSystem::GetKeyHold(Key::Ctrl))
 	{
 		if (InputSystem::GetKeyDown(Key::S))
@@ -230,6 +245,11 @@ Xeph2D::Edit::Inspector* Xeph2D::Edit::Editor::GetInspectorWindow()
 	return Get()._inspector;
 }
 
+Edit::TransformGizmo* Xeph2D::Edit::Editor::GetTransformGizmo()
+{
+	return &Get()._transformGizmo;
+}
+
 void Xeph2D::Edit::Editor::ViewportGUI()
 {
 	//TODO Guard against min max of longlong
@@ -264,6 +284,7 @@ void Xeph2D::Edit::Editor::ViewportGUI()
 		Vector2 max = Vector2(x, WindowManager::WorldWindowMaximum().y);
 		Debug::DrawLine(min, max, worldUnitColor);
 	}
+	_transformGizmo.Draw();
 }
 
 void Xeph2D::Edit::Editor::SetUIStyle()

@@ -242,6 +242,7 @@ void Debug::DrawChainLine(const VertexChain& vertBuffer, Color color, bool isWor
         chain[i].position = (isWorldSpace) ? WindowManager::WorldToPixel(vertBuffer[i]) : WindowManager::ScreenToPixel(vertBuffer[i]);
         chain[i].color = color;
     }
+    Get()._lineBuffer.push_back(chain);
 #endif // _DEBUG
 }
 

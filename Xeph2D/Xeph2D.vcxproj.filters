@@ -26,6 +26,7 @@
     <ClCompile Include="src\Systems\Serializer.cpp" />
     <ClCompile Include="src\Editor\EditorWindows\Hierarchy.cpp" />
     <ClCompile Include="src\Editor\EditorSplash.cpp" />
+    <ClCompile Include="src\Editor\TransformGizmo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Component.h" />
@@ -56,5 +57,6 @@
     <ClInclude Include="include\Systems\Serializer.macros.h" />
     <ClInclude Include="include\Editor\EditorWindows\Hierarchy.h" />
     <ClInclude Include="include\Editor\EditorSplash.h" />
+    <ClInclude Include="include\Editor\TransformGizmo.h" />
   </ItemGroup>
 </Project>

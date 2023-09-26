@@ -365,6 +365,7 @@
     <ClInclude Include="include\Editor\Editor.h" />
     <ClInclude Include="include\Editor\EditorWindows\Hierarchy.h" />
     <ClInclude Include="include\Editor\EditorWindows\Viewport.h" />
+    <ClInclude Include="include\Editor\TransformGizmo.h" />
     <ClInclude Include="include\GameObject.h" />
     <ClInclude Include="include\Editor\EditorSplash.h" />
     <ClInclude Include="include\Scene.h" />
@@ -387,6 +388,7 @@
     <ClInclude Include="src\Systems\InputSystem\KeyHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Editor\TransformGizmo.cpp" />
     <ClCompile Include="src\AudioData.cpp" />
     <ClCompile Include="src\Components\AudioSource.cpp" />
     <ClCompile Include="src\Editor\Editor.cpp" />
