@@ -45,6 +45,26 @@ void Hierarchy::OnGUI()
 	{
 		Editor::GetInspectorWindow()->SetGameObject(objects[_selectionIndex]);
 	}
+	
+	if (ImGui::Button("+##Hier"))
+	{
+		Debug::Log("Add GameObject");
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("-##Hier"))
+	{
+		Debug::Log("Remove GameObject");
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("^##Hier"))
+	{
+		Debug::Log("GameObject Up");
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("v##Hier"))
+	{
+		Debug::Log("GameObject Down");
+	}
 }
 
 #endif //_EDITOR

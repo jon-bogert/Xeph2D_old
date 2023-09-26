@@ -27,7 +27,7 @@ void Xeph2D::Edit::Inspector::OnGUI()
 	for (Serializer::EdComponent& comp : _objectInfo->components)
 	{
 		ImGui::NewLine();
-		if (ImGui::CollapsingHeader((_compNames[comp.id] + "##Comp").c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+		if (ImGui::CollapsingHeader((_compNames[comp.id] + "##Comp").c_str(),ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			for (Serializer::EdVarEntry& e : comp.variables)
 			{
@@ -37,6 +37,13 @@ void Xeph2D::Edit::Inspector::OnGUI()
 				DrawVar(entry);
 			}
 		}
+	}
+	ImGui::NewLine();
+	ImGui::Separator();
+	ImGui::NewLine();
+	if (ImGui::Button("Edit Components##Insp"))
+	{
+		Debug::Log("Edit Components");
 	}
 }
 void Xeph2D::Edit::Inspector::SetGameObject(GameObject* obj)

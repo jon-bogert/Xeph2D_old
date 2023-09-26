@@ -10,7 +10,7 @@ using namespace Xeph2D;
 void AudioSource::Serializables()
 {
 	SERIALIZE_DEFAULT;
-	SERIALIZE_STRING(_dataKey);
+	SERIALIZE_STRING(_audioDataKey);
 }
 
 void Xeph2D::AudioSource::EditorInit()
@@ -20,7 +20,7 @@ void Xeph2D::AudioSource::EditorInit()
 
 void Xeph2D::AudioSource::Awake()
 {
-	LoadAudioByTag(_dataKey);
+	LoadAudioByTag(_audioDataKey);
 }
 
 void Xeph2D::AudioSource::LoadAudioByTag(const std::string& tag)

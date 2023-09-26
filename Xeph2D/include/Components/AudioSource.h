@@ -8,7 +8,7 @@ namespace Xeph2D
 	{
 		std::unique_ptr<sf::Sound> _sound = nullptr;
 		AudioData* _data = nullptr;
-		std::string _dataKey = "";
+		std::string _audioDataKey = "";
 
 	public:
 		COMP_HEADER_STD(3);
