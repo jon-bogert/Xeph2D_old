@@ -11,9 +11,10 @@ namespace Xeph2D
 
 	public:
 		COMP_HEADER_STD(25);
-		
+
 		void Start() override;
 		void Update() override;
+		void DebugDraw() override;
 		void OnDestroy() override;
 
 	private:

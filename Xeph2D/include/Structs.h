@@ -31,6 +31,10 @@
 
 #include <SFML.hpp>
 
+#ifdef _EDITOR
+#include "../../ImGui/include/imgui.h"
+#endif //_EDITOR
+
 namespace Xeph2D
 {
 	struct Vector2
@@ -38,7 +42,7 @@ namespace Xeph2D
 		float x, y;
 
 		Vector2() : x(0.0f), y(0.0f) {}
-		Vector2(float inX, float inY) : x(inX), y(inY) {}
+		constexpr Vector2(float inX, float inY) : x(inX), y(inY) {}
 
 		static Vector2 Zero() { return Vector2(); }
 		static Vector2 One() { return Vector2(1.0f, 1.0f); }
@@ -55,6 +59,9 @@ namespace Xeph2D
 		Vector2& operator-=(const Vector2& rhs) { x -= rhs.x; y -= rhs.y; return *this; }
 		Vector2& operator*=(float s) { x *= s; y *= s; return *this; }
 		Vector2& operator/=(float s) { x /= s; y /= s; return *this; }
+
+		bool operator==(const Vector2& rhs) { return (x == rhs.x && y == rhs.y); }
+		bool operator!=(const Vector2& rhs) { return (x != rhs.x || y != rhs.y); }
 
 		friend std::ostream& operator<<(std::ostream& os, const Vector2& v2) { os << "X:" << v2.x << " Y:" << v2.y; return os; } // **EDIT**
 		operator sf::Vector2f() const { return { x, y }; };							// **EDIT** Added for SFML Compatibility
@@ -73,6 +80,11 @@ namespace Xeph2D
 		Vector2& operator=(const b2Vec2& rhs) { x = rhs.x; y = rhs.y; return *this; }		// **EDIT** Added for box2D Compatibility
 		Vector2(const b2Vec2& other) : x(other.x), y(other.y) {}							// **EDIT** Added for box2D Compatibility
 #endif
+#ifdef _EDITOR
+		operator ImVec2() const { return { x, y }; };										// **EDIT** Added for ImGui Compatibility
+		Vector2& operator=(const ImVec2& rhs) { x = rhs.x; y = rhs.y; return *this; }		// **EDIT** Added for ImGui Compatibility
+		Vector2(const ImVec2& other) : x(other.x), y(other.y) {}							// **EDIT** Added for ImGui Compatibility
+#endif //_EDITOR
 	};
 	//----------------------------------------------------------------------------------------------------
 

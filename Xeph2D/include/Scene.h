@@ -15,13 +15,21 @@ namespace Xeph2D
 
 		GameObject* AddGameObject(GameObject* parent = nullptr);
 
+		void Serializables();
+
+		void EditorInit();
+		void EditorShutdown();
+
 		void Awake();
 		void Start();
 		void OnEnable();
 		void EarlyUpdate();
 		void Update();
 		void LateUpdate();
+		void DebugDraw();
 		void OnDisable();
 		void OnDestroy();
+
+		std::vector<GameObject*> GetAllObjects();
 	};
 }

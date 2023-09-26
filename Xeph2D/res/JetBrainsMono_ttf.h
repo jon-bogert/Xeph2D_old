@@ -6,7 +6,7 @@
 
 namespace res
 {
-    void JetBrainsMono_ttf(std::unique_ptr<unsigned char[]>& bytes_out, size_t& count_out)
+    inline void JetBrainsMono_ttf(std::unique_ptr<unsigned char[]>& bytes_out, size_t& count_out)
     {
         std::initializer_list<unsigned char> values =
         {

@@ -5,26 +5,31 @@ using namespace Xeph2D;
 using MusicPtr = std::shared_ptr<sf::Music>;
 using SoundBufferPtr = std::shared_ptr<sf::SoundBuffer>;
 
-void AudioData::LoadAssetData(const std::string& filepath)
+bool AudioData::LoadAssetData(const std::string& filepath)
 {
 	_filepath = filepath;
 	if (_isStreamed)
 	{
 		_source = std::make_shared<sf::Music>();
 		sf::Music* source = std::any_cast<MusicPtr>(_source).get();
-		source->openFromFile(filepath);
-		return;
+		if (!source->openFromFile(filepath))
+			return false;
+
+		return true;
 	}
 
 	_source = std::make_shared<sf::SoundBuffer>();
 	sf::SoundBuffer* source = std::any_cast<SoundBufferPtr>(_source).get(); 
-	source->loadFromFile(filepath);
+	if (!source->loadFromFile(filepath))
+		return false;
+
+	return true;
 }
 
-void AudioData::LoadAssetData(const std::string& filepath, bool isStreamed)
+bool AudioData::LoadAssetData(const std::string& filepath, bool isStreamed)
 {
 	_isStreamed = isStreamed;
-	LoadAssetData(filepath);
+	return LoadAssetData(filepath);
 }
 
 void AudioData::SetIsStreamed(const bool isStreamed)

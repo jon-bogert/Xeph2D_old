@@ -38,7 +38,7 @@ void RenderStack::Draw()
 			WindowManager::DrawSprite(i.object, static_cast<sf::Sprite*>(i.data));
 			break;
 		default:
-			Debug::LogErr("RenderStack::Dump -> Type Enum not included");
+			Debug::LogErr("RenderStack::Draw -> Type Enum not included");
 			break;
 		}
 	}

@@ -7,7 +7,8 @@
 
 // VVV Place In Header VVV
 #define COMP_HEADER_STD(id) inline static uint32_t typeID = id; uint32_t GetTypeID() override { return typeID; }\
-void Register(GameObject* gameObject) override { this->gameObject = gameObject; this->transform = &gameObject->transform; }
+void Register(GameObject* gameObject) override { this->gameObject = gameObject; this->transform = &gameObject->transform; }\
+void Serializables() override
 
 namespace Xeph2D
 {
@@ -30,12 +31,18 @@ namespace Xeph2D
 	public:
 		virtual void Register(GameObject* gameObject) = 0;
 
+		virtual void EditorInit() {};
+		virtual void EditorShutdown() {};
+
+		virtual void Serializables() {};
+
 		virtual void Awake() {}
 		virtual void Start() {}
 		virtual void OnEnable() {}
 		virtual void EarlyUpdate() {}
 		virtual void Update() {}
 		virtual void LateUpdate() {}
+		virtual void DebugDraw() {}
 		virtual void OnDisable() {}
 		virtual void OnDestroy() {}
 

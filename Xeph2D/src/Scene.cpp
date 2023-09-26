@@ -14,11 +14,27 @@ GameObject* Xeph2D::Scene::AddGameObject(GameObject* parent)
 	return obj;
 }
 
-void Scene::Awake()			{ __CALLONALL(Awake) }
-void Scene::Start()			{ __CALLONALL(Start) }
-void Scene::OnEnable()		{ __CALLONALL(OnEnable) }
-void Scene::EarlyUpdate()	{ __CALLONALL(EarlyUpdate) }
-void Scene::Update()		{ __CALLONALL(Update) }
-void Scene::LateUpdate()	{ __CALLONALL(LateUpdate) }
-void Scene::OnDisable()		{ __CALLONALL(OnDisable) }
-void Scene::OnDestroy()		{ __CALLONALL(OnDestroy) }
+void Scene::Serializables()		{ __CALLONALL(Serializables) }
+
+void Scene::EditorInit()		{ __CALLONALL(EditorInit) }
+void Scene::EditorShutdown()	{ __CALLONALL(EditorShutdown) }
+
+void Scene::Awake()				{ __CALLONALL(Awake) }
+void Scene::Start()				{ __CALLONALL(Start) }
+void Scene::OnEnable()			{ __CALLONALL(OnEnable) }
+void Scene::EarlyUpdate()		{ __CALLONALL(EarlyUpdate) }
+void Scene::Update()			{ __CALLONALL(Update) }
+void Scene::LateUpdate()		{ __CALLONALL(LateUpdate) }
+void Scene::DebugDraw()			{ __CALLONALL(DebugDraw) }
+void Scene::OnDisable()			{ __CALLONALL(OnDisable) }
+void Scene::OnDestroy()			{ __CALLONALL(OnDestroy) }
+
+std::vector<GameObject*> Xeph2D::Scene::GetAllObjects()
+{
+	std::vector<GameObject*> objs;
+
+	for (auto& ptr : _gameObjects)
+		objs.push_back(ptr.get());
+
+	return objs;
+}

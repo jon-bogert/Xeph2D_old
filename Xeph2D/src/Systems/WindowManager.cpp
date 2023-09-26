@@ -3,11 +3,37 @@
 
 using namespace Xeph2D;
 
+#ifdef _EDITOR
+#include "Editor/Editor.h"
+#define __CAMERA Edit::Editor::GetViewportTransform()
+#else
+#define __CAMERA Get()._camera->transform
+#endif //_EDITOR
+
 WindowManager& WindowManager::Get()
 {
 	static WindowManager instance;
 	return instance;
 }
+
+#ifdef _EDITOR
+void Xeph2D::WindowManager::__UpdateViewportSize(Vector2 size)
+{
+	float windRatio = size.x / size.y;
+	if (windRatio > Get()._aspect)
+	{
+		Get()._width = size.y * Get()._aspect;
+		Get()._height = size.y;
+	}
+	else
+	{
+		Get()._width = size.x;
+		Get()._height = size.x / Get()._aspect;
+	}
+	Get()._resScale = Get()._height / static_cast<float>(Get()._refHeight);
+	Get()._viewport->create(Get()._width, Get()._height);
+}
+#endif //_EDITOR
 
 void Xeph2D::WindowManager::Initialize(uint32_t width, uint32_t height)
 {
@@ -15,8 +41,13 @@ void Xeph2D::WindowManager::Initialize(uint32_t width, uint32_t height)
 	Get()._height = height;
 	Get()._resScale = Get()._height / static_cast<float>(Get()._refHeight);
 
+#ifdef _EDITOR
+	Get()._viewport = std::make_unique<sf::RenderTexture>();
+	Get()._viewport->create(width, height);
+#else
 	Get()._window = std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), "WindowTitle");
 	Get()._handle = FindWindowA(NULL, "WindowTitle");
+#endif //_EDITOR
 }
 
 void Xeph2D::WindowManager::DrawSprite(const GameObject* gameObject, sf::Sprite* sprite)
@@ -40,14 +71,18 @@ void Xeph2D::WindowManager::DrawSprite(const GameObject* gameObject, sf::Sprite*
 	}
 
 	sprite->setPosition({
-	(finalTransform.position.x * Get()._ppu * Get()._resScale) - (Get()._camera->transform->position.x * Get()._ppu * Get()._resScale),
-	Get()._height - ((finalTransform.position.y * Get()._ppu * Get()._resScale) - (Get()._camera->transform->position.y * Get()._ppu * Get()._resScale)) });
+	(finalTransform.position.x * Get()._ppu * Get()._resScale) - (__CAMERA->position.x * Get()._ppu * Get()._resScale),
+	Get()._height - ((finalTransform.position.y * Get()._ppu * Get()._resScale) - (__CAMERA->position.y * Get()._ppu * Get()._resScale)) });
 	
 	sprite->setScale(finalTransform.scale.x * Get()._resScale, finalTransform.scale.y * Get()._resScale);
 	sprite->setRotation(finalTransform.rotation.GetDeg());
 
 	//sprite->setPosition(finalTransform.position.x, finalTransform.position.y);
+#ifdef _EDITOR
+	Get()._viewport->draw(*sprite);
+#else
 	Get()._window->draw(*sprite);
+#endif // _EDITOR
 }
 
 void Xeph2D::WindowManager::SetCamera(Camera* camera)
@@ -94,12 +129,20 @@ void Xeph2D::WindowManager::CheckWindowEvents()
 
 void Xeph2D::WindowManager::Begin()
 {
+#ifdef _EDITOR
+	Get()._viewport->clear(Color(0.1f, 0.1f, 0.1f, 1.f));
+#else
 	Get()._window->clear(sf::Color::Black);
+#endif //_EDITOR
 }
 
 void Xeph2D::WindowManager::End()
 {
+#ifdef _EDITOR
+	Get()._viewport->display();
+#else
 	Get()._window->display();
+#endif //_EDITOR
 }
 
 bool Xeph2D::WindowManager::IsOpen()
@@ -127,14 +170,24 @@ uint32_t Xeph2D::WindowManager::GetHeightPixels()
 	return Get()._height;
 }
 
-uint32_t Xeph2D::WindowManager::GetWidthUnits()
+float Xeph2D::WindowManager::GetWidthUnits()
 {
 	return PixelToUnit(Get()._width);
 }
 
-uint32_t Xeph2D::WindowManager::GetHeightUnits()
+float Xeph2D::WindowManager::GetHeightUnits()
 {
 	return PixelToUnit(Get()._height);
+}
+
+Vector2 Xeph2D::WindowManager::WorldWindowMinimum()
+{
+	return Vector2(__CAMERA->position.x, __CAMERA->position.y);
+}
+
+Vector2 Xeph2D::WindowManager::WorldWindowMaximum()
+{
+	return Vector2(__CAMERA->position.x + (float)GetWidthUnits(), __CAMERA->position.y + (float)GetHeightUnits());
 }
 
 Vector2 Xeph2D::WindowManager::PixelToScreen(const Vector2 point)
@@ -144,7 +197,7 @@ Vector2 Xeph2D::WindowManager::PixelToScreen(const Vector2 point)
 
 Vector2 Xeph2D::WindowManager::PixelToWorld(const Vector2 point)
 {
-	return PixelToScreen(point) - Get()._camera->transform->position;
+	return PixelToScreen(point) - __CAMERA->position;
 }
 
 Vector2 Xeph2D::WindowManager::ScreenToPixel(const Vector2 point)
@@ -154,7 +207,7 @@ Vector2 Xeph2D::WindowManager::ScreenToPixel(const Vector2 point)
 
 Vector2 Xeph2D::WindowManager::WorldToPixel(const Vector2 point)
 {
-	return Vector2((point.x - Get()._camera->transform->position.x) * Get()._ppu * Get()._resScale, Get()._height - (point.y - Get()._camera->transform->position.y) * Get()._ppu * Get()._resScale);
+	return Vector2((point.x - __CAMERA->position.x) * Get()._ppu * Get()._resScale, Get()._height - (point.y - __CAMERA->position.y) * Get()._ppu * Get()._resScale);
 }
 
 float Xeph2D::WindowManager::PixelToUnit(const float val)
