@@ -1,6 +1,6 @@
 inst=00000000
     4 go_name=MyPlayer
-    7 go_transform=5.000000,7.000000,0.000000,1.000000,1.000000
+    7 go_transform=10.000000,10.000000,0.000000,1.000000,1.000000
     4 00000002_textureKey=test2
     4 00000003_audioDataKey=gun-shot
     2 00000019_showDebug=false

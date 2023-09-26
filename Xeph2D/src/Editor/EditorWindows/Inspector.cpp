@@ -52,11 +52,11 @@ void Xeph2D::Edit::Inspector::SetGameObject(GameObject* obj)
 
 	if (_currObject == nullptr)
 	{
-		Editor::GetTransformGizmo()->SetCurrentTransform(nullptr);
+		Editor::GetTransformGizmo()->SetCurrentObject(nullptr);
 		return;
 	}
 
-	Editor::GetTransformGizmo()->SetCurrentTransform(&obj->transform);
+	Editor::GetTransformGizmo()->SetCurrentObject(obj);
 
 	uint32_t instID = _currObject->instID;
 	_objectInfo = Serializer::GetDataFromInstance(instID);

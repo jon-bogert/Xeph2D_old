@@ -43,6 +43,11 @@ namespace Xeph2D
         {
             std::string name;
             void* ptr;
+            template <typename T>
+            void RefreshData()
+            {
+                data = *(T*)ptr;
+            }
         };
         struct EdComponent
         {

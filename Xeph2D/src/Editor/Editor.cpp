@@ -96,6 +96,7 @@ void Xeph2D::Edit::Editor::InputProc()
 
 void Xeph2D::Edit::Editor::Update()
 {
+	Get()._transformGizmo.UpdateMouse(Get()._viewportWindow->GetMousePos());
 	ImGui::SFML::Update(*Get()._window, Get()._frameTimer.restart());
 }
 

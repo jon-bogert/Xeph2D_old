@@ -3,7 +3,8 @@
 
 namespace Xeph2D
 {
-	class Transform;
+	class GameObject;
+	struct Vector2;
 }
 
 namespace Xeph2D::Edit
@@ -17,13 +18,22 @@ namespace Xeph2D::Edit
 		float _symbolWidth = 15.f;
 		float _centerWidth = 25.f;
 
-		Transform* _currentTransform = nullptr;
+		bool _xSelected = false;
+		bool _ySelected = false;
 
+		bool _applyingTransform = false;
+
+		GameObject* _currentObject = nullptr;
+
+		void UpdateMouse(const Vector2& mousePos);
 		void Draw();
-		void SetCurrentTransform(Transform* transform);
+		void SetCurrentObject(GameObject* gameObject);
 
 		Mode GetMode() const;
 		void SetMode(const Mode mode);
+
+	private:
+		void ApplyTransform();
 	};
 }
 
