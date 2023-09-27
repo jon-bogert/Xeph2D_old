@@ -2,12 +2,17 @@
 
 using namespace Xeph2D;
 
+void @NAME@::Serializables()
+{
+    SERIALIZE_DEFAULT;
+}
+
 void @NAME@::Start()
 {
-	
+    
 }
 
 void @NAME@::Update()
 {
-	
+    
 }

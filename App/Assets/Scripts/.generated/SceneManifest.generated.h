@@ -21,6 +21,8 @@ namespace Xeph2D::Generated
 			_00000000->AddComponent<SpriteRenderer>();
 			_00000000->AddComponent<AudioSource>();
 			_00000000->AddComponent<TestScript>();
+			_00000000->AddComponent<Rigidbody>();
+			_00000000->AddComponent<BoxCollider>();
 			GameObject* _00000001 = scn->AddGameObject();
 			_00000001->instID = 0x00000001;
 			_00000001->AddComponent<Camera>();

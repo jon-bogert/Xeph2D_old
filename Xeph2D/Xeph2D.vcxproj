@@ -281,7 +281,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)ImGui\include\;$(SolutionDir)SFML\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)box2d\include\;$(SolutionDir)ImGui\include\;$(SolutionDir)SFML\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -297,7 +297,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)SFML\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)box2d\include\;$(SolutionDir)SFML\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -313,7 +313,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)SFML\include;$(SolutionDir)ImGui\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)box2d\include\;$(SolutionDir)SFML\include;$(SolutionDir)ImGui\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -329,7 +329,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)SFML\include;$(SolutionDir)ImGui\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)box2d\include\;$(SolutionDir)SFML\include;$(SolutionDir)ImGui\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -347,7 +347,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)SFML\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)box2d\include\;$(SolutionDir)SFML\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -360,7 +360,9 @@
     <ClInclude Include="include\AudioData.h" />
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\Components\AudioSource.h" />
+    <ClInclude Include="include\Components\BoxCollider.h" />
     <ClInclude Include="include\Components\Camera.h" />
+    <ClInclude Include="include\Components\Rigidbody.h" />
     <ClInclude Include="include\Components\SpriteRenderer.h" />
     <ClInclude Include="include\Editor\Editor.h" />
     <ClInclude Include="include\Editor\EditorWindows\Hierarchy.h" />
@@ -372,6 +374,7 @@
     <ClInclude Include="include\Systems\InputSystem\Enums.h" />
     <ClInclude Include="include\Systems\InputSystem\InputActionMap.h" />
     <ClInclude Include="include\Systems\InputSystem\InputSystem.h" />
+    <ClInclude Include="include\Systems\Physics.h" />
     <ClInclude Include="include\Systems\Serializer.macros.h" />
     <ClInclude Include="include\Systems\RenderStack.h" />
     <ClInclude Include="include\Systems\SceneManager.h" />
@@ -388,6 +391,8 @@
     <ClInclude Include="src\Systems\InputSystem\KeyHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Components\BoxCollider.cpp" />
+    <ClCompile Include="src\Components\Rigidbody.cpp" />
     <ClCompile Include="src\Editor\TransformGizmo.cpp" />
     <ClCompile Include="src\AudioData.cpp" />
     <ClCompile Include="src\Components\AudioSource.cpp" />
@@ -402,6 +407,7 @@
     <ClCompile Include="src\Systems\InputSystem\InputActionMap.cpp" />
     <ClCompile Include="src\Systems\InputSystem\InputSystem.cpp" />
     <ClCompile Include="src\Systems\InputSystem\KeyHandler.cpp" />
+    <ClCompile Include="src\Systems\Physics.cpp" />
     <ClCompile Include="src\Systems\RenderStack.cpp" />
     <ClCompile Include="src\Systems\Serializer.cpp" />
     <ClCompile Include="src\Systems\Time.cpp" />
