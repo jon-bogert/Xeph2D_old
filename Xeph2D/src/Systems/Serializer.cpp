@@ -90,7 +90,7 @@ void Xeph2D::Serializer::EditorAdd(uint32_t instID, const std::string& fieldName
 		if (x.id == compID)
 		{
 			comp = &x;
-			return;
+			break;
 		}
 	}
 	if (comp == nullptr)
