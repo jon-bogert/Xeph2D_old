@@ -69,6 +69,7 @@ void BuildMain()
 		WindowManager::CheckWindowEvents();
 		Time::Update();
 		Debug::Update();
+		Physics::Update();
 		SceneManager::Update();
 #ifdef _DEBUG
 		SceneManager::DebugDraw();

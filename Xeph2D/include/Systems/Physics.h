@@ -34,6 +34,9 @@ namespace Xeph2D
             bool isExit;
         };
 
+        int _velIter = 6;
+        int _posIter = 2;
+
         b2Vec2 _gravity = { 0.f, -10.f };
         b2World _world = b2World(_gravity);
         std::vector<Rigidbody*> _rigidbodies;
@@ -48,7 +51,7 @@ namespace Xeph2D
         Physics operator=(const Physics& other) = delete;
         Physics operator=(const Physics&& other) = delete;
 
-        static void Update(const float& deltaTime, int velIter, int posItr);
+        static void Update();
 
     public:
         void RegisterRigidbody(Rigidbody* rb);

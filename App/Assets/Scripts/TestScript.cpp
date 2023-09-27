@@ -18,6 +18,8 @@ void TestScript::Start()
 	
 	move->performed.Subscribe(XEInputActionCallback(TestScript::MoveInput));
 	onSpace->performed.Subscribe(XEInputActionCallback(TestScript::OnSpace));
+
+	Time::SetTimeScale(0.25f);
 }
 
 void TestScript::Update()
@@ -40,7 +42,7 @@ void Xeph2D::TestScript::DebugDraw()
 	Color c = Color::Red;
 	c.a = .5f;
 	Debug::DrawCircleFilled(transform->position, 0.5f, c);
-	Debug::DrawBoxOutline(transform->position, { 1, 1 }, Color::Green);
+	Debug::DrawBoxOutline(transform->position, { 1, 1 }, transform->rotation.GetDeg(), Color::Green);
 	Debug::DrawLine(transform->position, Vector2::Zero(), Color::Green);
 }
 

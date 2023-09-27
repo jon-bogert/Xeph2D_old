@@ -31,6 +31,10 @@ namespace Xeph2D::Generated
 			_00000002->instID = 0x00000002;
 			_00000002->AddComponent<AudioSource>();
 			_00000002->AddComponent<MusicManager>();
+			GameObject* _00000005 = scn->AddGameObject();
+			_00000005->instID = 0x00000005;
+			_00000005->AddComponent<Rigidbody>();
+			_00000005->AddComponent<BoxCollider>();
 		}
 		else if (num == 1)
 		{

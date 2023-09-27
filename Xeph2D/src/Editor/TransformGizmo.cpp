@@ -112,7 +112,7 @@ void TransformGizmo::Draw()
 		vertChain.push_back(_currentObject->transform.position + out);
 		Debug::DrawChainLine(vertChain, yColor);
 
-		Debug::DrawBoxFilled(_currentObject->transform.position + cwUnit * 0.5f, cwUnit, bothColor);
+		Debug::DrawBoxFilled(_currentObject->transform.position + cwUnit * 0.5f, cwUnit, 0.f, bothColor);
 		break;
 	case Mode::Rotation:
 		Debug::DrawCircleOutline(_currentObject->transform.position, WindowManager::PixelToUnit(_radius), zColor);
@@ -141,7 +141,7 @@ void TransformGizmo::Draw()
 		vertChain.push_back(_currentObject->transform.position + out);
 		Debug::DrawChainLine(vertChain, yColor);
 
-		Debug::DrawBoxFilled(_currentObject->transform.position + cwUnit * 0.5f, cwUnit, bothColor);
+		Debug::DrawBoxFilled(_currentObject->transform.position + cwUnit * 0.5f, cwUnit, 0.f, bothColor);
 		break;
 	default:
 		Debug::LogErr("TransfromGizmo::Draw -> Enum type not supported");

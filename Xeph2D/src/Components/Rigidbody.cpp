@@ -8,6 +8,8 @@ using namespace Xeph2D;
 void Rigidbody::Serializables()
 {
 	SERIALIZE_DEFAULT;
+	SERIALIZE_INT(_typeAsInt);
+	_type = (Type)_typeAsInt;
 }
 
 void Rigidbody::Awake()

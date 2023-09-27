@@ -18,6 +18,7 @@ namespace Xeph2D
 	private:
 		Type _type = Type::Static;
 		b2Body* _body = nullptr;
+		int _typeAsInt = 0;
 
 	public:
 		COMP_HEADER_STD(4);

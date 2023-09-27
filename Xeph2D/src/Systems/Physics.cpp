@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 #include "Components/Rigidbody.h"
+#include "Systems/Time.h"
 
 using namespace Xeph2D;
 
@@ -10,9 +11,9 @@ Physics::Physics()
 	_world.SetContactListener(&_listener);
 }
 
-void Physics::Update(const float& deltaTime, int velIter, int posItr)
+void Physics::Update()
 {
-	Get()._world.Step(deltaTime, velIter, posItr);
+	Get()._world.Step(Time::DeltaTime(), Get()._velIter, Get()._posIter);
 	for (Rigidbody* rb : Get()._rigidbodies)
 		rb->UpdateTransform();
 	Get().CallCollisionCallbacks();
@@ -25,11 +26,14 @@ void Xeph2D::Physics::RegisterRigidbody(Rigidbody* rb)
 
 void Xeph2D::Physics::UnregisterRigidbody(Rigidbody* rb)
 {
-	auto it = std::find(_rigidbodies.begin(),
-		_rigidbodies.end(),
-		[=](const Rigidbody* r) { return r == rb; });
-	if (it != _rigidbodies.end())
-		_rigidbodies.erase(it);
+	for (auto it = _rigidbodies.begin(); it != _rigidbodies.end(); it++)
+	{
+		if (*it == rb)
+		{
+			_rigidbodies.erase(it);
+			return;
+		}
+	}
 }
 
 void Physics::CallCollisionCallbacks()

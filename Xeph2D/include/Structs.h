@@ -30,6 +30,7 @@
 #include <assert.h>
 
 #include <SFML.hpp>
+#include <box2d/box2d.h>
 
 #ifdef _EDITOR
 #include "../../ImGui/include/imgui.h"

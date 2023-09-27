@@ -76,8 +76,8 @@ namespace Xeph2D
 
 		static void DrawLine(Vector2 start, Vector2 end, Color color = Color::White, bool isWorldSpace = true);
 		static void DrawChainLine(const VertexChain& vertBuffer, Color color = Color::White, bool isWorldSpace = true);
-		static void DrawBoxOutline(Vector2 center, Vector2 span, Color color = Color::White, bool isWorldSpace = true);
-		static void DrawBoxFilled(Vector2 center, Vector2 span, Color color = Color::White, bool isWorldSpace = true);
+		static void DrawBoxOutline(Vector2 center, Vector2 span, float rotation = 0.f, Color color = Color::White, bool isWorldSpace = true);
+		static void DrawBoxFilled(Vector2 center, Vector2 span, float rotation = 0.f, Color color = Color::White, bool isWorldSpace = true);
 		static void DrawCircleOutline(Vector2 center, float radius, Color color = Color::White, bool isWorldSpace = true);
 		static void DrawCircleFilled(Vector2 center, float radius, Color color = Color::White, bool isWorldSpace = true);
 

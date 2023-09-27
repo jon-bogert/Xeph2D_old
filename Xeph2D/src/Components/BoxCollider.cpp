@@ -11,6 +11,7 @@ void BoxCollider::Serializables()
 	SERIALIZE_DEFAULT;
 	SERIALIZE_VEC2(_dimensions);
 	SERIALIZE_BOOL(_isTrigger);
+	SERIALIZE_BOOL(_showCollider);
 }
 
 void Xeph2D::BoxCollider::Awake()
@@ -33,4 +34,12 @@ void Xeph2D::BoxCollider::Awake()
 	fixDef.userData.pointer = (uintptr_t)_rigidbody;
 
 	_rigidbody->_body->CreateFixture(&fixDef);
+}
+
+void Xeph2D::BoxCollider::DebugDraw()
+{
+	if (_showCollider)
+	{
+		Debug::DrawBoxOutline(transform->position, _dimensions, transform->rotation.GetDeg(), Color::LightGreen);
+	}
 }

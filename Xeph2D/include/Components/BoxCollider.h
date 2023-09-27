@@ -14,9 +14,12 @@ namespace Xeph2D
 		Rigidbody* _rigidbody = nullptr;
 		bool _isTrigger;
 
+		bool _showCollider = true;
+
 	public:
 		COMP_HEADER_STD(5);
 
 		void Awake() override;
+		void DebugDraw() override;
 	};
 }
