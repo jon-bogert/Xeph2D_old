@@ -1,0 +1,5 @@
+00000000 SpriteRenderer <engine>
+00000001 Camera <engine>
+00000002 AudioSource <engine>
+000000fe TestScript Assets/Scripts/
+000000ff CameraController Assets/Scripts/

@@ -33,6 +33,8 @@ void Xeph2D::Edit::Editor::Initialize()
 		(Inspector*)Get()._editorWindows.emplace_back(std::make_unique<Inspector>()).get();
 	Get()._hierarchyWindow =
 		(Hierarchy*)Get()._editorWindows.emplace_back(std::make_unique<Hierarchy>()).get();
+	Get()._scriptManager =
+		(ScriptManager*)Get()._editorWindows.emplace_back(std::make_unique<ScriptManager>()).get();
 
 	for (auto& window : Get()._editorWindows)
 		window->Initialize();

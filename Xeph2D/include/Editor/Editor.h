@@ -8,6 +8,7 @@
 #include "Editor/EditorWindows/Viewport.h"
 #include "Editor/EditorWindows/Inspector.h"
 #include "Editor/EditorWindows/Hierarchy.h"
+#include "Editor/EditorWindows/ScriptManager.h"
 #include "Editor/EditorSplash.h"
 #include "Editor/TransformGizmo.h"
 
@@ -33,6 +34,8 @@ namespace Xeph2D::Edit
         Viewport* _viewportWindow = nullptr;
         Inspector* _inspector = nullptr;
         Hierarchy* _hierarchyWindow = nullptr;
+        ScriptManager* _scriptManager = nullptr;
+        
 
         bool _hasSaved = true;
         bool _showSaveWindow = false;

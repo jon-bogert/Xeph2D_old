@@ -11,6 +11,7 @@
 inline std::unordered_map<uint32_t, std::string> __RegisterComponentNames()
 {
 	std::unordered_map<uint32_t, std::string> names;
+
 	names[1] = "Camera";
 	names[2] = "SpriteRenderer";
 	names[3] = "AudioSource";
