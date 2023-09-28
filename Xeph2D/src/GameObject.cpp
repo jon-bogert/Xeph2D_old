@@ -7,6 +7,11 @@
 
 using namespace Xeph2D;
 
+std::unique_ptr<Component>& Xeph2D::GameObject::__GetNewEmptyComponentPtr()
+{
+    return _components.emplace_back(nullptr);
+}
+
 void Xeph2D::GameObject::Serializables()
 {
     Serializer::Register(instID, Serializer::DataType::String, &name, "go_name");

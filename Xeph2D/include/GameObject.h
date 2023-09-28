@@ -24,6 +24,8 @@ namespace Xeph2D
 		template <typename _Component>
 		_Component* GetComponent();
 
+		std::unique_ptr<Component>& __GetNewEmptyComponentPtr();
+
 		void Serializables();
 
 		void EditorInit();

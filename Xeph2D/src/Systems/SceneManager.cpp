@@ -3,6 +3,10 @@
 #include "Systems/Debug.h"
 #include "Systems/Serializer.h"
 
+#include <unordered_set>
+#include <string>
+#include <fstream>
+#include <sstream>
 
 using namespace Xeph2D;
 
@@ -12,11 +16,13 @@ SceneManager& SceneManager::Get()
     return instance;
 }
 
-void SceneManager::Initialize(std::function<void(SceneManager*, int, bool)> loadCallback)
+void SceneManager::Initialize(std::function<void(std::unique_ptr<Component>& ptr, uint32_t compID)> scriptCallback)
 {
-    Get()._loadCallback = loadCallback;
+    Get()._scriptCallback = scriptCallback;
     Get()._currIndex = 0;
-    Get()._loadCallback(&Get(), Get()._currIndex, true);
+    AddScene("Main"); // TODO - Find some way to add this from settings file;
+    //Get()._scriptCallback(&Get(), Get()._currIndex, true);
+    Get().DoSceneLoading();
     Serializer::LoadFromFile(GetCurrentName());
 }
 
@@ -93,7 +99,8 @@ void Xeph2D::SceneManager::HandleSceneChange()
     Get()._currScene->OnDestroy();
 
     Debug::ClearMonitorBuffer();
-    Get()._loadCallback(&Get(), Get()._nextIndex, false);
+    //Get()._scriptCallback(&Get(), Get()._nextIndex, false);
+    Get().DoSceneLoading();
     Get()._currIndex = Get()._nextIndex;
 
     Get()._currScene->Awake();
@@ -133,4 +140,58 @@ void Xeph2D::SceneManager::Shutdown()
 
     Get()._currScene->OnDisable();
     Get()._currScene->OnDestroy();
+}
+
+void Xeph2D::SceneManager::DoSceneLoading()
+{
+    std::string scene = GetCurrentName();
+
+    std::ifstream file("Assets/Scenes/" + scene + ".x2dsc");
+    if (!file.is_open())
+    {
+        Debug::LogWarn("Serializer::LoadFromFile -> No file to load: %s", (scene + ".x2dsc").c_str());
+        return;
+    }
+
+    std::unordered_set<uint32_t> compAdded;
+    GameObject* gameObject = nullptr;
+    NewScene();
+
+    std::string line;
+    while (std::getline(file, line))
+    {
+        if (line.substr(0, 5) == "inst=")
+        {
+            std::stringstream id;
+            uint32_t inst;
+            id << std::hex << line.substr(5);
+            id >> inst;
+            gameObject = _currScene->AddGameObject();
+            gameObject->instID = inst;
+            compAdded.clear();
+            continue;
+        }
+        if (line.substr(0, 4) != "    ")
+        {
+            Debug::LogErr("SceneManager::DoSceneLoading -> Bad Formatting: %s", line.c_str());
+            continue;
+        }
+        std::stringstream linestream(line.substr(4));
+        std::string key;
+        std::getline(linestream, key, ' ');
+        std::getline(linestream, key, '=');
+        if (key.substr(0, 2) == "go")
+            continue;
+        std::stringstream id;
+        uint32_t type;
+        id << std::hex << key.substr(0, 8);
+        id >> type;
+        if (compAdded.find(type) != compAdded.end())
+            continue;
+        std::unique_ptr<Component>& compPtr = gameObject->__GetNewEmptyComponentPtr();
+        _scriptCallback(compPtr, type);
+        compPtr->Register(gameObject);
+        compAdded.insert(type);
+    }
+    file.close();
 }

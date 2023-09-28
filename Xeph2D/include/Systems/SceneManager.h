@@ -15,7 +15,7 @@ namespace Xeph2D
 		int _currIndex = -1;
 		int _nextIndex = 0;
 		bool _doLoadScene = false;
-		std::function<void(SceneManager*, int, bool)> _loadCallback;
+		std::function<void(std::unique_ptr<Component>& ptr, uint32_t compID)> _scriptCallback;
 
 	public:
 		~SceneManager() = default;
@@ -24,7 +24,7 @@ namespace Xeph2D
 		SceneManager operator=(const SceneManager& other) = delete;
 		SceneManager operator=(const SceneManager&& other) = delete;
 
-		static void Initialize(std::function<void(SceneManager*, int, bool)> loadCallback);
+		static void Initialize(std::function<void(std::unique_ptr<Component>& ptr, uint32_t compID)> scriptCallback);
 		static Scene* NewScene();
 
 		static void AddScene(const std::string& name);
@@ -46,5 +46,8 @@ namespace Xeph2D
 		static void DebugDraw();
 		static void HandleSceneChange();
 		static void Shutdown();
+
+	private:
+		void DoSceneLoading();
 	};
 }

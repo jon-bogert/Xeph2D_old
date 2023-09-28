@@ -76,16 +76,25 @@ void ScriptManager::Save()
 
 	file << "#pragma once\n\n";
 	file << "//ScriptManifest.h is Auto-Generated and managed by the Xeph2D Editor.\n//Use the Editor to add or remove scripts\n\n";
+	file << "#include <Xeph2D.h>\n\n";
 	file << "#include <memory>\n#include <unordered_map>\n#include <cstdint>\n\n";
-	file << "#define __X2D_REGISTER_COMP_NAMES &__RegisterComponentNames\n";
+	for (auto& script : _manifest)
+	{
+		if (script.second.path == "<engine>")
+			continue;
+
+		file << "#include \"" << script.second.path.substr(15) << script.second.name << ".h\"\n"; //substr to remove "Assets/Scripts/
+	}
+
+	file << "\n#define __X2D_REGISTER_COMP_NAMES &__RegisterComponentNames\n";
 	file << "#define __X2D_POPULATE_COMP_PTR &__PopulateComponentPtr\n\n";
 	file << "namespace Xeph2D\n{\n";
-	file << TAB << "std::unordered_map<uint32_t, std:string> __RegisterComponentNames()\n    {\n";
+	file << TAB << "std::unordered_map<uint32_t, std::string> __RegisterComponentNames()\n    {\n";
 	file << TAB << TAB << "return{\n";
 	size_t index = 0;
 	for (auto& script : _manifest)
 	{
-		file << TAB << TAB << "{0x" << std::setw(8) << std::setfill('0') << std::hex << script.first << "," << script.second.name << "}";
+		file << TAB << TAB << "{0x" << std::setw(8) << std::setfill('0') << std::hex << script.first << ",\"" << script.second.name << "\"}";
 		if (++index == _manifest.size())
 			file << "};\n    };\n\n";
 		else
