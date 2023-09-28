@@ -1,8 +1,11 @@
 inst=00000000
     4 go_name=MyPlayer
     7 go_transform=10.000000,10.000000,0.000000,1.000000,1.000000
+    2 00000002enabled=true
     4 00000002_textureKey=test2
+    2 00000003enabled=true
     4 00000003_audioDataKey=gun-shot
+    2 00000019enabled=true
     2 00000019_showDebug=false
 inst=00000001
     4 go_name=Camera
@@ -10,4 +13,5 @@ inst=00000001
 inst=00000002
     4 go_name=MusicManager
     7 go_transform=0.000000,0.000000,0.000000,1.000000,1.000000
+    2 00000003enabled=true
     4 00000003_audioDataKey=music

@@ -8,4 +8,4 @@
 #define SERIALIZE_COLOR(var)	Serializer::Register(gameObject->instID, typeID, Serializer::DataType::Color, &var, #var)
 #define SERIALIZE_TRANSF(var)	Serializer::Register(gameObject->instID, typeID, Serializer::DataType::Transform, var, #var)
 
-#define SERIALIZE_DEFAULT
+#define SERIALIZE_DEFAULT SERIALIZE_BOOL(enabled)
