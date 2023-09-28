@@ -171,12 +171,12 @@ void Xeph2D::SceneManager::DoSceneLoading()
             compAdded.clear();
             continue;
         }
-        if (line.substr(0, 4) != "    ")
+        if (line[0] != '\t' && line.substr(0, 4) != "    ")
         {
-            Debug::LogErr("SceneManager::DoSceneLoading -> Bad Formatting: %s", line.c_str());
+            Debug::LogErr("Serializer::LoadFromFile -> Bad Formatting: %s", line.c_str());
             continue;
         }
-        std::stringstream linestream(line.substr(4));
+        std::stringstream linestream((line[0] == '\t') ? line.substr(1) : line.substr(4));
         std::string key;
         std::getline(linestream, key, ' ');
         std::getline(linestream, key, '=');
@@ -194,4 +194,13 @@ void Xeph2D::SceneManager::DoSceneLoading()
         compAdded.insert(type);
     }
     file.close();
+}
+
+void Xeph2D::SceneManager::__AddComponentByID(GameObject* obj, uint32_t id)
+{
+    std::unique_ptr<Component>& compPtr = obj->__GetNewEmptyComponentPtr();
+    _scriptCallback(compPtr, id);
+    compPtr->Register(obj);
+    compPtr->Serializables();
+    compPtr->EditorInit();
 }

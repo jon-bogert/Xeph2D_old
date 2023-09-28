@@ -1,5 +1,8 @@
 #pragma once
 #include "Scene.h"
+#ifdef _EDITOR
+#include "Editor/EditorWindows/Inspector.h"
+#endif //_EDITOR
 
 #include <functional>
 
@@ -49,5 +52,9 @@ namespace Xeph2D
 
 	private:
 		void DoSceneLoading();
+#ifdef _EDITOR
+		friend class Edit::Inspector;
+		void __AddComponentByID(GameObject* obj, uint32_t id);
+#endif //_EDITOR
 	};
 }

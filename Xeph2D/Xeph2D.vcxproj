@@ -382,6 +382,7 @@
     <ClInclude Include="include\Systems\Serializer.h" />
     <ClInclude Include="include\Systems\Time.h" />
     <ClInclude Include="include\Systems\WindowManager.h" />
+    <ClInclude Include="include\Utility.h" />
     <ClInclude Include="include\Xeph2D.h" />
     <ClInclude Include="include\Editor\EditorWindow.h" />
     <ClInclude Include="include\Editor\EditorWindows\Inspector.h" />

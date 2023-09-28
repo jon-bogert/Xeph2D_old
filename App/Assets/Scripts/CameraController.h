@@ -8,7 +8,7 @@ namespace Xeph2D
 		float _speed = 5.f;
 
 	public:
-		COMP_HEADER_STD(26);
+		COMP_HEADER_STD(0x0000001a);
 		
 		void Start() override;
 		void Update() override;

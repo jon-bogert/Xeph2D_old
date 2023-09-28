@@ -23,6 +23,11 @@ namespace Xeph2D::Edit
 		Serializer::EdObject* _objectInfo = nullptr;
 		std::unordered_map<uint32_t, std::string> _compNames;
 
+		bool _showEdit = false;
+		bool _showAdd = false;
+		char _editSearchBuff[256];
+		int _editSelection = -1;
+
 	public:
 		void Initialize() override;
 		void OnGUI() override;
@@ -42,5 +47,7 @@ namespace Xeph2D::Edit
 		void DrawVec2(VarEntry& entry);
 		void DrawColor(VarEntry& entry);
 		void DrawTransform(VarEntry& entry);
+
+		void ShowEdit();
 	};
 }

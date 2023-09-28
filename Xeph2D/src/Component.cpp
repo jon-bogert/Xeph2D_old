@@ -12,3 +12,8 @@ void Component::SetEnabled(const bool enabled)
 	else
 		OnDisable();
 }
+
+void Xeph2D::Component::RemoveFromObject()
+{
+	gameObject->RemoveComponent(this);
+}

@@ -50,6 +50,8 @@ namespace Xeph2D
 		bool GetEnabled() const { return enabled; }
 		bool IsActiveAndEnabled() const { return true; } // TODO
 
+		void RemoveFromObject();
+
 		virtual uint32_t GetTypeID() = 0;
 	};
 }

@@ -18,6 +18,10 @@ void TestScript::Start()
 	
 	move->performed.Subscribe(XEInputActionCallback(TestScript::MoveInput));
 	onSpace->performed.Subscribe(XEInputActionCallback(TestScript::OnSpace));
+
+
+	Debug::LogColor(Color::Green);
+	Debug::Log("TestScript.Start");
 }
 
 void TestScript::Update()

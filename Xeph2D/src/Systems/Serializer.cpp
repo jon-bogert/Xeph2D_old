@@ -333,12 +333,12 @@ void Xeph2D::Serializer::_LoadFromFile(const std::string& scene)
 			id >> inst;
 			continue;
 		}
-		if (line.substr(0, 4) != "    ")
+		if (line[0] != '\t' && line.substr(0, 4) != "    ")
 		{
 			Debug::LogErr("Serializer::LoadFromFile -> Bad Formatting: %s", line.c_str());
 			continue;
 		}
-		std::stringstream linestream(line.substr(4));
+		std::stringstream linestream((line[0] == '\t') ? line.substr(1) : line.substr(4));
 		std::string cell;
 		VarEntry entry;
 		std::string key;

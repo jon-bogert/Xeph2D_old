@@ -60,5 +60,6 @@
     <ClInclude Include="include\Editor\EditorSplash.h" />
     <ClInclude Include="include\Editor\TransformGizmo.h" />
     <ClInclude Include="include\Editor\EditorWindows\ScriptManager.h" />
+    <ClInclude Include="include\Utility.h" />
   </ItemGroup>
 </Project>
