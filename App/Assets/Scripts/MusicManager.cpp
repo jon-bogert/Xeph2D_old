@@ -10,5 +10,7 @@ void MusicManager::Serializables()
 void MusicManager::Start()
 {
 	audio = gameObject->GetComponent<AudioSource>();
+	Debug::LogColor(Color::Purple);
+	Debug::Log("MusicManager.Start");
 	//audio->Play();
 }

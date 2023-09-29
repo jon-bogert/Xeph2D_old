@@ -1,5 +1,8 @@
 #pragma once
 #include "Scene.h"
+#ifdef _EDITOR
+#include "Editor/EditorWindows/Inspector.h"
+#endif //_EDITOR
 
 #include <functional>
 
@@ -15,7 +18,7 @@ namespace Xeph2D
 		int _currIndex = -1;
 		int _nextIndex = 0;
 		bool _doLoadScene = false;
-		std::function<void(SceneManager*, int, bool)> _loadCallback;
+		std::function<void(std::unique_ptr<Component>& ptr, uint32_t compID)> _scriptCallback;
 
 	public:
 		~SceneManager() = default;
@@ -24,7 +27,7 @@ namespace Xeph2D
 		SceneManager operator=(const SceneManager& other) = delete;
 		SceneManager operator=(const SceneManager&& other) = delete;
 
-		static void Initialize(std::function<void(SceneManager*, int, bool)> loadCallback);
+		static void Initialize(std::function<void(std::unique_ptr<Component>& ptr, uint32_t compID)> scriptCallback);
 		static Scene* NewScene();
 
 		static void AddScene(const std::string& name);
@@ -46,5 +49,12 @@ namespace Xeph2D
 		static void DebugDraw();
 		static void HandleSceneChange();
 		static void Shutdown();
+
+	private:
+		void DoSceneLoading();
+#ifdef _EDITOR
+		friend class Edit::Inspector;
+		void __AddComponentByID(GameObject* obj, uint32_t id);
+#endif //_EDITOR
 	};
 }

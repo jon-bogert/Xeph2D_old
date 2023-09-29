@@ -23,12 +23,18 @@ namespace Xeph2D::Edit
 		Serializer::EdObject* _objectInfo = nullptr;
 		std::unordered_map<uint32_t, std::string> _compNames;
 
+		bool _showEdit = false;
+		bool _showAdd = false;
+		char _editSearchBuff[256];
+		int _editSelection = -1;
+
 	public:
 		void Initialize() override;
 		void OnGUI() override;
 
 		void SetGameObject(GameObject* obj);
 		void RegisterComponentNames(std::function<std::unordered_map<uint32_t, std::string>(void)> callback);
+		bool CompNamesContains(uint32_t id);
 
 	private:
 		std::string Var2DisplayName(std::string varName);
@@ -42,5 +48,7 @@ namespace Xeph2D::Edit
 		void DrawVec2(VarEntry& entry);
 		void DrawColor(VarEntry& entry);
 		void DrawTransform(VarEntry& entry);
+
+		void ShowEdit();
 	};
 }

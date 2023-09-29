@@ -25,8 +25,8 @@ namespace Xeph2D
 		};
 		Properties properties = {};
 
-	private:
-		bool _enabled;
+	protected:
+		bool enabled = true;
 
 	public:
 		virtual void Register(GameObject* gameObject) = 0;
@@ -47,8 +47,10 @@ namespace Xeph2D
 		virtual void OnDestroy() {}
 
 		void SetEnabled(const bool enabled);
-		bool GetEnabled() const { return _enabled; }
+		bool GetEnabled() const { return enabled; }
 		bool IsActiveAndEnabled() const { return true; } // TODO
+
+		void RemoveFromObject();
 
 		virtual uint32_t GetTypeID() = 0;
 	};

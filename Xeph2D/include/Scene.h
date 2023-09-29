@@ -30,6 +30,12 @@ namespace Xeph2D
 		void OnDisable();
 		void OnDestroy();
 
+		void Destroy(GameObject* obj);
+
 		std::vector<GameObject*> GetAllObjects();
+#ifdef _EDITOR
+		void MoveUp(size_t index);
+		void MoveDown(size_t index);
+#endif //_EDITOR
 	};
 }

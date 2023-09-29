@@ -5,7 +5,7 @@
 #ifdef _EDITOR
 #include "Editor/Editor.h"
 #endif //_EDITOR
-#include "Assets/Scripts/.generated/SceneManifest.generated.h"
+#include "Assets/Scripts/.generated/ScriptManifest.generated.h"
 #include "Assets/Scripts/.generated/InputActions.generated.h"
 
 using namespace Xeph2D;
@@ -26,7 +26,7 @@ void EditMain()
 	Editor::RegisterComponentNames(__X2D_REGISTER_COMP_NAMES);
 	WindowManager::Initialize(1280, 720);
 	InputSystem::Initialize(WindowManager::GetHandle(), __X2D_LOAD_INPUTACTIONS);
-	SceneManager::Initialize(__X2D_LOAD_SCENES);
+	SceneManager::Initialize(__X2D_POPULATE_COMP_PTR);
 	EditorSplash::End();
 	SceneManager::Serializables();
 	SceneManager::EditorInit();
@@ -60,7 +60,7 @@ void BuildMain()
 	//----
 	WindowManager::Initialize(1280, 720);
 	InputSystem::Initialize(WindowManager::GetHandle(), __X2D_LOAD_INPUTACTIONS);
-	SceneManager::Initialize(__X2D_LOAD_SCENES);
+	SceneManager::Initialize(__X2D_POPULATE_COMP_PTR);
 	SceneManager::Serializables();
 	SceneManager::Startup();
 	while (WindowManager::IsOpen())
