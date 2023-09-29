@@ -196,6 +196,7 @@ void Xeph2D::SceneManager::DoSceneLoading()
     file.close();
 }
 
+#ifdef _EDITOR
 void Xeph2D::SceneManager::__AddComponentByID(GameObject* obj, uint32_t id)
 {
     std::unique_ptr<Component>& compPtr = obj->__GetNewEmptyComponentPtr();
@@ -204,3 +205,4 @@ void Xeph2D::SceneManager::__AddComponentByID(GameObject* obj, uint32_t id)
     compPtr->Serializables();
     compPtr->EditorInit();
 }
+#endif // _EDITOR
