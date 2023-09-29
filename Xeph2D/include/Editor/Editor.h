@@ -70,6 +70,7 @@ namespace Xeph2D::Edit
         static Transform* GetViewportTransform();
         static Inspector* GetInspectorWindow();
         static ScriptManager* GetScriptManager();
+        static ScriptCreator* GetScriptCreator();
         static TransformGizmo* GetTransformGizmo();
 
     private:

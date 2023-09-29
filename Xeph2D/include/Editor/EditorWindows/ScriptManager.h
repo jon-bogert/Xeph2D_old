@@ -25,6 +25,10 @@ namespace Xeph2D::Edit
 
 		std::map<uint32_t, Entry> _manifest;
 
+		int _editSelection = -1;
+
+		bool _isRemoving = false;
+
 	public:
 		void Initialize() override;
 		void OnGUI() override;

@@ -358,7 +358,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Assets\Scripts\CameraController.cpp" />
-    <ClCompile Include="Assets\Scripts\CoolBro.cpp" />
     <ClCompile Include="Assets\Scripts\MusicManager.cpp" />
     <ClCompile Include="Assets\Scripts\TestScript.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -372,7 +371,6 @@
     <ClInclude Include="Assets\Scripts\.generated\InputActions.generated.h" />
     <ClInclude Include="Assets\Scripts\.generated\ScriptManifest.generated.h" />
     <ClInclude Include="Assets\Scripts\CameraController.h" />
-    <ClInclude Include="Assets\Scripts\CoolBro.h" />
     <ClInclude Include="Assets\Scripts\MusicManager.h" />
     <ClInclude Include="Assets\Scripts\TestScript.h" />
     <ClInclude Include="ScriptManifest.h" />

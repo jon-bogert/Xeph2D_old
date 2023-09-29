@@ -92,6 +92,7 @@ namespace Xeph2D
 #ifdef _EDITOR
         static void SaveToFile(const std::string& scene) { Get()._SaveToFile(scene); };
         static EdObject* GetDataFromInstance(uint32_t instID);
+        static void RemoveAllComponents(uint32_t id);
 #endif //_EDITOR
 
     private:

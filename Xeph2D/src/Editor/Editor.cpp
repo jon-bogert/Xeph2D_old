@@ -270,6 +270,11 @@ Xeph2D::Edit::ScriptManager* Xeph2D::Edit::Editor::GetScriptManager()
 	return Get()._scriptManager;
 }
 
+Xeph2D::Edit::ScriptCreator* Xeph2D::Edit::Editor::GetScriptCreator()
+{
+	return Get()._scriptCreator;
+}
+
 Edit::TransformGizmo* Xeph2D::Edit::Editor::GetTransformGizmo()
 {
 	return &Get()._transformGizmo;

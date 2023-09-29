@@ -139,6 +139,21 @@ Xeph2D::Serializer::EdObject* Xeph2D::Serializer::GetDataFromInstance(uint32_t i
 
 	return &it->second;
 }
+void Xeph2D::Serializer::RemoveAllComponents(uint32_t id)
+{
+	for (auto& obj : Get()._editorManifest)
+	{
+		for (auto it = obj.second.components.begin(); it != obj.second.components.end();)
+		{
+			if (it->id == id)
+			{
+				it = obj.second.components.erase(it);
+			}
+			else
+				it++;
+		}
+	}
+}
 #endif //_EDITOR
 
 void Xeph2D::Serializer::DataImport(VarEntry& iter, void*& ptr)

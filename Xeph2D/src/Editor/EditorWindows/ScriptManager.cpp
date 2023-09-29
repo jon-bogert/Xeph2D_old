@@ -3,6 +3,7 @@
 #include "Editor/Editor.h"
 
 #include "Structs.h"
+#include "Utility.h"
 
 #include <fstream>
 #include <sstream>
@@ -46,19 +47,82 @@ void ScriptManager::Initialize()
 
 void ScriptManager::OnGUI()
 {
+	//for (auto& script : _manifest)
+	//{
+	//	if (script.second.path == "<engine>")
+	//		continue;
+	//	std::stringstream idStr;
+	//	idStr << std::setw(8) << std::setfill('0') << std::hex << script.first;
+	//	ImGui::Text((idStr.str() + ": " + script.second.name + " " + script.second.path).c_str());
+	//}
+
+	std::vector<uint32_t> ids;
+	std::vector<std::string> names;
+
 	for (auto& script : _manifest)
 	{
 		if (script.second.path == "<engine>")
 			continue;
-		std::stringstream idStr;
-		idStr << std::setw(8) << std::setfill('0') << std::hex << script.first;
-		ImGui::Text((idStr.str() + ": " + script.second.name + " " + script.second.path).c_str());
+		ids.push_back(script.first);
+		names.push_back(script.second.name);
+	}
+	if (ImGui::ListBox("##HItems", &_editSelection, Utility::CStrVect(names).data(), names.size()))
+	{
+		_isRemoving = false;
 	}
 
 	ImGui::NewLine();
-	if (ImGui::Button("Save"))
+	if (ImGui::Button("Add##Script"))
 	{
-		Save();
+		Editor::GetScriptCreator()->Open();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Remove##Script"))
+	{
+		if (_editSelection >= 0)
+		{
+			_isRemoving = true;
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Edit##Script"))
+	{
+
+	}
+
+	if (_isRemoving)
+	{
+		ImGui::SetNextWindowPos({ (ImGui::GetMainViewport()->Size.x - ImGui::GetWindowWidth()) * 0.5f, (ImGui::GetMainViewport()->Size.y - ImGui::GetWindowHeight()) * 0.5f });
+		ImGui::Begin("Confirm Remove##Script", &_isRemoving,
+			ImGuiWindowFlags_AlwaysAutoResize |
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoCollapse |
+			ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoDecoration);
+
+		ImGui::Text(("Are you sure you want to remove " + names[_editSelection] + "?").c_str());
+		ImGui::TextColored({ 0.5f, 0.5f, 0.5f, 1.0f }, "Notes: ");
+		ImGui::TextColored({ 0.5f, 0.5f, 0.5f, 1.0f }, " - Your current scene will also be saved.");
+		ImGui::TextColored({ 0.5f, 0.5f, 0.5f, 1.0f }, " - Remember to remove the script file references\nfrom your Visual Studio Project.");
+		if (ImGui::Button("Confirm##RemoveScript"))
+		{
+			
+			std::filesystem::remove(_manifest[ids[_editSelection]].path + names[_editSelection] + ".h");
+			std::filesystem::remove(_manifest[ids[_editSelection]].path + names[_editSelection] + ".cpp");
+			_manifest.erase(ids[_editSelection]);
+			Serializer::RemoveAllComponents(ids[_editSelection]);
+			Serializer::SaveToFile(SceneManager::GetCurrentName());
+			Save();
+			_editSelection = -1;
+			_isRemoving = false;
+			Editor::Close();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel"))
+		{
+			_isRemoving = false;
+		}
+		ImGui::End();
 	}
 }
 
@@ -119,9 +183,9 @@ void ScriptManager::Save()
 
 void Xeph2D::Edit::ScriptManager::CreateNew(const std::string& name, std::string& path)
 {
-	if (!path.empty())
+	if (path != "")
 	{
-		if (path.back() != '/' || path.back() != '\\')
+		if (path.back() != '/' && path.back() != '\\')
 			path.push_back('/');
 
 		for (size_t i = 0; i < path.length(); ++i)

@@ -57,9 +57,6 @@ void Xeph2D::Edit::Inspector::OnGUI()
 		if (_showEdit)
 			_editSelection = -1;
 	}
-
-	if (_showEdit)
-		ShowEdit();
 }
 void Xeph2D::Edit::Inspector::SetGameObject(GameObject* obj)
 {
