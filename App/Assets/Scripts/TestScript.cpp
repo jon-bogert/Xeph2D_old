@@ -6,11 +6,14 @@ void TestScript::Serializables()
 {
 	SERIALIZE_DEFAULT;
 	SERIALIZE_BOOL(_showDebug);
+	SERIALIZE_FLOAT(speed);
+	SERIALIZE_FLOAT(jumpForce);
 }
 
 void TestScript::Start()
 {	
 	audioSource = gameObject->GetComponent<AudioSource>();
+	_rigidbody = gameObject->GetComponent<Rigidbody>();
 
 	InputActionMap* map = InputSystem::FindInputActionMap("Player");
 	InputAction* move = map->FindInputAction("Move");
@@ -22,8 +25,10 @@ void TestScript::Start()
 
 void TestScript::Update()
 {
-	transform->position.x += speed * moveAxis.x * Time::DeltaTime();
-	transform->position.y += speed * moveAxis.y * Time::DeltaTime();
+	//transform->position.x += speed * moveAxis.x * Time::DeltaTime();
+	//transform->position.y += speed * moveAxis.y * Time::DeltaTime();
+	_rigidbody->SetVelocity({ moveAxis.x * speed, _rigidbody->GetVelocity().y });
+
 
 	Debug::Monitor("Player Position", "X: " + std::to_string(transform->position.x) + " Y: " + std::to_string(transform->position.y));
 
@@ -61,6 +66,7 @@ void Xeph2D::TestScript::MoveInput(InputAction* ctx)
 
 void Xeph2D::TestScript::OnSpace(InputAction* ctx)
 {
-	Debug::Log("Space Pressed");
+	_rigidbody->AddForce(Vector2::YAxis() * jumpForce);
+	//Debug::Log("Space Pressed");
 	//audioSource->Play();
 }

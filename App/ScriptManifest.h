@@ -17,6 +17,7 @@ inline std::unordered_map<uint32_t, std::string> __RegisterComponentNames()
 	names[3] = "AudioSource";
 	names[4] = "Rigidbody";
 	names[5] = "BoxCollider";
+	names[5] = "CircleCollider";
 
 	//--
 	names[25] = "TestScript";

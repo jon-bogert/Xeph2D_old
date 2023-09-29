@@ -362,6 +362,7 @@
     <ClInclude Include="include\Components\AudioSource.h" />
     <ClInclude Include="include\Components\BoxCollider.h" />
     <ClInclude Include="include\Components\Camera.h" />
+    <ClInclude Include="include\Components\CircleCollider.h" />
     <ClInclude Include="include\Components\Rigidbody.h" />
     <ClInclude Include="include\Components\SpriteRenderer.h" />
     <ClInclude Include="include\Editor\Editor.h" />
@@ -394,6 +395,7 @@
     <ClInclude Include="src\Systems\InputSystem\KeyHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Components\CircleCollider.cpp" />
     <ClCompile Include="src\Components\BoxCollider.cpp" />
     <ClCompile Include="src\Components\Rigidbody.cpp" />
     <ClCompile Include="src\Editor\EditorWindows\ScriptCreator.cpp" />

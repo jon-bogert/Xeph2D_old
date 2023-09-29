@@ -6,7 +6,9 @@ namespace Xeph2D
 	{
 		SpriteRenderer* renderer = nullptr;
 		AudioSource* audioSource = nullptr;
+		Rigidbody* _rigidbody = nullptr;
 		float speed = 10.f;
+		float jumpForce = 10.f;
 		Vector2 moveAxis = {};
 		bool _showDebug = true;
 

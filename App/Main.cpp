@@ -19,6 +19,7 @@ void EditMain()
 	EditorSplash::Begin();
 	//---- MOVE TO SCENE LOAD
 	AssetManager::LoadTextureFromFile("test2.png");
+	AssetManager::LoadTextureFromFile("test2-round.png");
 	AssetManager::LoadAudioDataFromFile("gun-shot.wav", false);
 	AssetManager::LoadAudioDataFromFile("music.ogg", false);
 	//----
@@ -55,6 +56,7 @@ void BuildMain()
 {
 	//---- MOVE TO SCENE LOAD
 	AssetManager::LoadTextureFromFile("test2.png");
+	AssetManager::LoadTextureFromFile("test2-round.png");
 	AssetManager::LoadAudioDataFromFile("gun-shot.wav", false);
 	AssetManager::LoadAudioDataFromFile("music.ogg", false);
 	//----

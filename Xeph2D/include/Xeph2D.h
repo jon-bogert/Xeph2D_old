@@ -22,5 +22,6 @@
 #include "Components/AudioSource.h"
 #include "Components/BoxCollider.h"
 #include "Components/Camera.h"
+#include "Components/CircleCollider.h"
 #include "Components/Rigidbody.h"
 #include "Components/SpriteRenderer.h"

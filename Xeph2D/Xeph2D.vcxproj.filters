@@ -32,6 +32,7 @@
     <ClCompile Include="src\Systems\Physics.cpp" />
     <ClCompile Include="src\Components\BoxCollider.cpp" />
     <ClCompile Include="src\Components\Rigidbody.cpp" />
+    <ClCompile Include="src\Components\CircleCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Component.h" />
@@ -69,5 +70,6 @@
     <ClInclude Include="include\Components\BoxCollider.h" />
     <ClInclude Include="include\Components\Rigidbody.h" />
     <ClInclude Include="include\Systems\Physics.h" />
+    <ClInclude Include="include\Components\CircleCollider.h" />
   </ItemGroup>
 </Project>

@@ -177,13 +177,7 @@ namespace Xeph2D
 	constexpr Color Color::Yellow{ 1.000000000f, 1.000000000f, 0.000000000f, 1.000000000f };
 	constexpr Color Color::YellowGreen{ 0.603921592f, 0.803921640f, 0.196078449f, 1.000000000f };
 
-	const float kPi = 3.14159265358979f;
-	const float kTwoPi = 6.28318530717958f;
-	const float kPiByTwo = 1.57079632679489f;
-	const float kRootTwo = 1.41421356237309f;
-	const float kRootThree = 1.73205080756887f;
-	const float kDegToRad = kPi / 180.0f;
-	const float kRadToDeg = 180.0f / kPi;
+	
 
 	//====================================================================================================
 	// Function Definitions
@@ -290,8 +284,8 @@ namespace Xeph2D
 		Quaternion q;
 		float sx, sy, sz;
 		float cx, cy, cz;
-		sx = sinf(x * kDegToRad * 0.5f); sy = sinf(y * kDegToRad * 0.5f); sz = sinf(z * kDegToRad * 0.5f);
-		cx = cosf(x * kDegToRad * 0.5f); cy = cosf(y * kDegToRad * 0.5f); cz = cosf(z * kDegToRad * 0.5f);
+		sx = sinf(x * Math::kDegToRad * 0.5f); sy = sinf(y * Math::kDegToRad * 0.5f); sz = sinf(z * Math::kDegToRad * 0.5f);
+		cx = cosf(x * Math::kDegToRad * 0.5f); cy = cosf(y * Math::kDegToRad * 0.5f); cz = cosf(z * Math::kDegToRad * 0.5f);
 
 		q.w = (cx * cy * cz) + (sx * sy * sz);
 		q.x = (sx * cy * cz) + (cx * sy * sz);
@@ -314,23 +308,23 @@ namespace Xeph2D
 		// roll (z-axis rotation)
 		float sinr = +2.0f * (q.w * q.x + q.y * q.z);
 		float cosr = +1.0f - 2.0f * (q.x * q.x + q.y * q.y);
-		eulerAngles.z = atan2(sinr, cosr) * kRadToDeg;
+		eulerAngles.z = atan2(sinr, cosr) * Math::kRadToDeg;
 
 		// pitch (x-axis rotation)
 		double sinp = +2.0 * (q.w * q.y - q.z * q.x);
 		if (fabs(sinp) >= 1)
 		{
-			eulerAngles.x = static_cast<float>(copysign(kPi * 0.5f, sinp)) * kRadToDeg; // use 90 degrees if out of range
+			eulerAngles.x = static_cast<float>(copysign(Math::kPi * 0.5f, sinp)) * Math::kRadToDeg; // use 90 degrees if out of range
 		}
 		else
 		{
-			eulerAngles.x = static_cast<float>(asin(sinp)) * kRadToDeg;
+			eulerAngles.x = static_cast<float>(asin(sinp)) * Math::kRadToDeg;
 		}
 
 		// yaw (y-axis rotation)
 		float siny = +2.0f * (q.w * q.z + q.x * q.y);
 		float cosy = +1.0f - 2.0f * (q.y * q.y + q.z * q.z);
-		eulerAngles.y = atan2(siny, cosy) * kRadToDeg;
+		eulerAngles.y = atan2(siny, cosy) * Math::kRadToDeg;
 
 
 		return eulerAngles;
@@ -425,7 +419,7 @@ namespace Xeph2D
 	Quaternion QuaternionFromAxisAngle(const Vector3& axis, float angleDegrees)
 	{
 		Quaternion q;
-		float angleRadians = angleDegrees * kDegToRad;
+		float angleRadians = angleDegrees * Math::kDegToRad;
 		float s = sin(angleRadians * 0.5f);
 
 		q.x = axis.x * s;

@@ -12,6 +12,7 @@ namespace Xeph2D
 	{
 		friend class Physics;
 		friend class BoxCollider;
+		friend class CircleCollider;
 	public:
 		enum Type { Static, Dynamic, Kinematic };
 
@@ -19,6 +20,7 @@ namespace Xeph2D
 		Type _type = Type::Static;
 		b2Body* _body = nullptr;
 		int _typeAsInt = 0;
+		bool _lockRotation = false;
 
 	public:
 		COMP_HEADER_STD(0x00000004);
@@ -51,6 +53,27 @@ namespace Xeph2D
 
 		void Awake() override;
 		void OnDestroy() override;
+
+		Vector2 GetPosition() const;
+		void SetPosition(const Vector2);
+
+		Rotation GetRotation() const;
+		void SetRotation(const Rotation rotation);
+		void SetRotation(const float degrees);
+
+		Vector2 GetVelocity() const;
+		void SetVelocity(const Vector2 velocity);
+
+		float GetAngularVelocity() const;
+		void SetAngularVelocity(const float angularVel);
+
+		void AddForce(const Vector2 force);
+		void AddForceToPoint(const Vector2 force, const Vector2 point);
+		void AddImpulse(const Vector2 impulse);
+		void AddImpulseToPoint(const Vector2 impulse, const Vector2 point);
+
+		void SetLockRotation(const float doLock);
+		float GetLockRotation() const;
 
 	private:
 		void UpdateTransform();

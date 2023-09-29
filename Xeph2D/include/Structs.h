@@ -787,13 +787,13 @@ namespace Xeph2D
 	{
 		//----------------------------------------------------------------------------------------------------
 
-		extern const float kPi;
-		extern const float kTwoPi;
-		extern const float kPiByTwo;
-		extern const float kRootTwo;
-		extern const float kRootThree;
-		extern const float kDegToRad;
-		extern const float kRadToDeg;
+		inline const float kPi = 3.14159265358979f;
+		inline const float kTwoPi = 6.28318530717958f;
+		inline const float kPiByTwo = 1.57079632679489f;
+		inline const float kRootTwo = 1.41421356237309f;
+		inline const float kRootThree = 1.73205080756887f;
+		inline const float kDegToRad = kPi / 180.0f;
+		inline const float kRadToDeg = 180.0f / kPi;
 
 		//----------------------------------------------------------------------------------------------------
 
