@@ -1069,6 +1069,7 @@ namespace Xeph2D
 		public:
 			static int Range(int lower, int upper, float increment = 1);
 			static float Range(float lower, float upper, float increment);
+			static uint32_t UInt32();
 		};
 	}//namespace Math
 }

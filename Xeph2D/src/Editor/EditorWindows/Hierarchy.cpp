@@ -37,22 +37,40 @@ void Hierarchy::OnGUI()
 	
 	if (ImGui::Button("+##Hier"))
 	{
-		Debug::Log("Add GameObject");
+		GameObject* obj = SceneManager::GetCurrentScene()->AddGameObject();
+		Serializer::Get().EditorAddGameObject(obj);
+		Editor::SetHasSaved(false);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("-##Hier"))
 	{
-		Debug::Log("Remove GameObject");
+		if (_selectionIndex >= 0)
+		{
+			Serializer::Get().EditorRemoveGameObject(objects[_selectionIndex]);
+			SceneManager::GetCurrentScene()->Destroy(objects[_selectionIndex]);
+			Editor::GetInspectorWindow()->SetGameObject(nullptr);
+			Editor::SetHasSaved(false);
+		}
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("^##Hier"))
 	{
-		Debug::Log("GameObject Up");
+		if (_selectionIndex > 0)
+		{
+			SceneManager::GetCurrentScene()->MoveUp(_selectionIndex);
+			Editor::SetHasSaved(false);
+			--_selectionIndex;
+		}
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("v##Hier"))
 	{
-		Debug::Log("GameObject Down");
+		if (_selectionIndex < objects.size() - 1 && _selectionIndex >= 0)
+		{
+			SceneManager::GetCurrentScene()->MoveDown(_selectionIndex);
+			Editor::SetHasSaved(false);
+			++_selectionIndex;
+		}
 	}
 }
 

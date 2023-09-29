@@ -67,6 +67,7 @@ void Xeph2D::Edit::Inspector::SetGameObject(GameObject* obj)
 
 	if (_currObject == nullptr)
 	{
+		_objectInfo = nullptr;
 		Editor::GetTransformGizmo()->SetCurrentObject(nullptr);
 		return;
 	}
@@ -308,7 +309,7 @@ void Xeph2D::Edit::Inspector::ShowEdit()
 	ImGui::SameLine();
 	if (ImGui::Button("v##Insp"))
 	{
-		if (_editSelection < itemNames.size() - 1)
+		if (_editSelection < itemNames.size() - 1 && _editSelection >= 0)
 		{
 			_currObject->MoveDown(_editSelection);
 			std::swap(_objectInfo->components[_editSelection], _objectInfo->components[_editSelection + 1]);

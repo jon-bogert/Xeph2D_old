@@ -1,5 +1,8 @@
 #pragma once
 #include "Systems/Debug.h"
+#ifdef _EDITOR
+#include "Editor/EditorWindows/Hierarchy.h"
+#endif //_EDITOR
 
 #include <string>
 #include <unordered_map>
@@ -9,6 +12,7 @@
 
 namespace Xeph2D
 {
+    class GameObject;
     class Serializer final
     {
     public:
@@ -68,8 +72,11 @@ namespace Xeph2D
 
         ObjMap _manifest;
 #ifdef _EDITOR
+        friend class Edit::Hierarchy;
         EdMap _editorManifest;
         void EditorAdd(uint32_t instID, const std::string& fieldName, const VarEntry& entry, void* ptr);
+        void EditorAddGameObject(GameObject* obj);
+        void EditorRemoveGameObject(GameObject* obj);
 #endif //_EDITOR
 
     public:

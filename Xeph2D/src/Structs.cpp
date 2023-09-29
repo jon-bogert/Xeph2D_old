@@ -27,6 +27,7 @@
 
 #include <iostream>
 #include <math.h>
+#include <random>
 
 namespace Xeph2D
 {
@@ -931,7 +932,16 @@ namespace Xeph2D
 		}
 		int intLow = static_cast<int>(lower * 10 * decPoint) / intInc;
 		int intUp = static_cast<int>(upper * 10 * decPoint) / intInc;
-
+	
 		return (((rand() % (intUp - intLow)) + intUp) * intInc) / (10.f * decPoint);
 	}
+
+	uint32_t Math::Random::UInt32()
+	{
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_int_distribution<uint32_t> dis(0, UINT32_MAX);
+		return dis(gen);
+	}
+
 }

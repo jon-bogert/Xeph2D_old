@@ -14,6 +14,7 @@ using namespace Xeph2D::Edit;
 void ScriptManager::Initialize()
 {
 	name = "Script Manager";
+	isOpen = false;
 
 	std::ifstream file(_dataFilePath + _dataFileName);
 	if (!file.is_open())

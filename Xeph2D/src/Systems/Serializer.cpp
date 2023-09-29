@@ -1,4 +1,5 @@
 #include "Systems/Serializer.h"
+#include "GameObject.h"
 
 #include <sstream>
 #include <iomanip>
@@ -104,6 +105,25 @@ void Xeph2D::Serializer::EditorAdd(uint32_t instID, const std::string& fieldName
 	newEntry.data = entry.data;
 	newEntry.name = fieldName.substr(8);
 	newEntry.ptr = ptr;
+}
+
+void Xeph2D::Serializer::EditorAddGameObject(GameObject* obj)
+{
+	uint32_t newID;
+	bool isUsed = true;
+	while (isUsed)
+	{
+		newID = Math::Random::UInt32();
+		isUsed = (_editorManifest.find(newID) != _editorManifest.end());
+	}
+	obj->instID = newID;
+	_editorManifest[newID];
+	obj->Serializables();
+}
+
+void Xeph2D::Serializer::EditorRemoveGameObject(GameObject* obj)
+{
+	_editorManifest.erase(obj->instID);
 }
 
 Xeph2D::Serializer::EdObject* Xeph2D::Serializer::GetDataFromInstance(uint32_t instID)

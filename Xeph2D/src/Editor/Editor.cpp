@@ -138,6 +138,10 @@ void Xeph2D::Edit::Editor::OnGUI()
 			{
 				Get()._inspector->Open();
 			}
+			if (ImGui::MenuItem("Script Manager"))
+			{
+				Get()._scriptManager->Open();
+			}
 			if (ImGui::MenuItem("Viewport"))
 			{
 				Get()._viewportWindow->Open();
