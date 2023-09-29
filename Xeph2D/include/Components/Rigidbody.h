@@ -21,7 +21,7 @@ namespace Xeph2D
 		int _typeAsInt = 0;
 
 	public:
-		COMP_HEADER_STD(4);
+		COMP_HEADER_STD(0x00000004);
 		class EventCallback
 		{
 			friend class Physics;

@@ -18,8 +18,6 @@ void TestScript::Start()
 	
 	move->performed.Subscribe(XEInputActionCallback(TestScript::MoveInput));
 	onSpace->performed.Subscribe(XEInputActionCallback(TestScript::OnSpace));
-
-	Time::SetTimeScale(0.25f);
 }
 
 void TestScript::Update()

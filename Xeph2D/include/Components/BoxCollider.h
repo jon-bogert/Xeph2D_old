@@ -17,7 +17,7 @@ namespace Xeph2D
 		bool _showCollider = true;
 
 	public:
-		COMP_HEADER_STD(5);
+		COMP_HEADER_STD(0x00000005);
 
 		void Awake() override;
 		void DebugDraw() override;
