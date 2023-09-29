@@ -28,6 +28,9 @@ namespace Xeph2D::Edit
 		int _editSelection = -1;
 
 		bool _isRemoving = false;
+		bool _isEditing = false;
+		char _nameBuffer[256];
+		char _pathBuffer[1024];
 
 	public:
 		void Initialize() override;
@@ -38,6 +41,7 @@ namespace Xeph2D::Edit
 
 	private:
 		void GenerateNewFiles(const std::string& name, const std::string& path, uint32_t newID);
+		bool EditScript(uint32_t id);
 	};
 }
 

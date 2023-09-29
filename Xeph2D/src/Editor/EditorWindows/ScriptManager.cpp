@@ -12,6 +12,8 @@
 #include <iomanip>
 #include <filesystem>
 
+#pragma warning (disable : 4996)
+
 #define TAB "    "
 
 using namespace Xeph2D::Edit;
@@ -47,15 +49,6 @@ void ScriptManager::Initialize()
 
 void ScriptManager::OnGUI()
 {
-	//for (auto& script : _manifest)
-	//{
-	//	if (script.second.path == "<engine>")
-	//		continue;
-	//	std::stringstream idStr;
-	//	idStr << std::setw(8) << std::setfill('0') << std::hex << script.first;
-	//	ImGui::Text((idStr.str() + ": " + script.second.name + " " + script.second.path).c_str());
-	//}
-
 	std::vector<uint32_t> ids;
 	std::vector<std::string> names;
 
@@ -87,7 +80,10 @@ void ScriptManager::OnGUI()
 	ImGui::SameLine();
 	if (ImGui::Button("Edit##Script"))
 	{
-
+		if (_editSelection >= 0)
+		{
+			_isEditing = true;
+		}
 	}
 
 	if (_isRemoving)
@@ -121,6 +117,61 @@ void ScriptManager::OnGUI()
 		if (ImGui::Button("Cancel"))
 		{
 			_isRemoving = false;
+		}
+		ImGui::End();
+	}
+
+	if (_isEditing)
+	{
+		ImGui::SetNextWindowPos({ (ImGui::GetMainViewport()->Size.x - ImGui::GetWindowWidth()) * 0.5f, (ImGui::GetMainViewport()->Size.y - ImGui::GetWindowHeight()) * 0.5f });
+		ImGui::Begin("Edit##Script", &_isRemoving,
+			ImGuiWindowFlags_AlwaysAutoResize |
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoCollapse |
+			ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoDecoration);
+
+		if (InputSystem::GetMouseDown(Mouse::Button::Left) && !ImGui::IsWindowHovered())
+		{
+			_isEditing = false;
+			strcpy(_nameBuffer, "");
+			strcpy(_pathBuffer, "");
+		}
+
+		ImGui::Text(("Editing: " + names[_editSelection]).c_str());
+		std::stringstream id;
+		id << "Component ID: " << std::setw(8) << std::setfill('0') << std::hex << ids[_editSelection];
+		ImGui::TextColored({ 0.5f, 0.5f, 0.5f, 1.0f }, id.str().c_str());
+		ImGui::NewLine();
+		ImGui::Text("Name:");
+		ImGui::InputText("##Name", _nameBuffer, 256);
+		ImGui::NewLine();
+		ImGui::Text("Path:");
+		ImGui::SameLine();
+		ImGui::TextColored({ 0.5f, 0.5f, 0.5f, 1.f }, "(optional)");
+		ImGui::TextColored({ 0.5f, 0.5f, 0.5f, 1.f }, "Assets/Scripts/");
+		ImGui::SameLine();
+		ImGui::InputText("##Path", _pathBuffer, 1024);
+		ImGui::NewLine();
+		if (ImGui::Button("Save##Script"))
+		{
+			bool wasChanged = EditScript(ids[_editSelection]);
+			if (wasChanged)
+			{
+				Save();
+				_isEditing = false;
+				strcpy(_nameBuffer, "");
+				strcpy(_pathBuffer, "");
+				_editSelection = -1;
+				Editor::Close();
+			}
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel##Script"))
+		{
+			_isEditing = false;
+			strcpy(_nameBuffer, "");
+			strcpy(_pathBuffer, "");
 		}
 		ImGui::End();
 	}
@@ -248,6 +299,71 @@ void ScriptManager::GenerateNewFiles(const std::string& name, const std::string&
 
 	fileIn.close();
 	fileOut.close();
+}
+
+bool Xeph2D::Edit::ScriptManager::EditScript(uint32_t id)
+{
+	std::string path("Assets/Scripts/");
+	path.append(_pathBuffer);
+	std::string newName(_nameBuffer);
+
+	if (path != "")
+	{
+		if (path.back() != '/' && path.back() != '\\')
+			path.push_back('/');
+
+		for (size_t i = 0; i < path.length(); ++i)
+		{
+			if (path[i] == '\\')
+				path[i] = '/';
+		}
+	}
+
+	bool doChangePath = (path != _manifest[id].path);
+	bool doChangeName = (newName != _manifest[id].name);
+
+	if (!doChangeName && !doChangeName)
+		return false;
+
+	std::ifstream headerIn(_manifest[id].path + _manifest[id].name + ".h");
+	std::ifstream cppIn(_manifest[id].path + _manifest[id].name + ".cpp");
+	std::stringstream headerTemp;
+	std::stringstream cppTemp;
+	headerTemp << headerIn.rdbuf();
+	cppTemp << cppIn.rdbuf();
+	headerIn.close();
+	cppIn.close();
+	std::filesystem::remove(_manifest[id].path + _manifest[id].name + ".h");
+	std::filesystem::remove(_manifest[id].path + _manifest[id].name + ".cpp");
+
+	if (!std::filesystem::exists(path))
+		std::filesystem::create_directories(path);
+	std::ofstream out(path + newName + ".h");
+	std::string line;
+	std::regex pattern(_manifest[id].name);
+	while (std::getline(headerTemp, line))
+	{
+		line = std::regex_replace(line, pattern, newName);
+		out << line << std::endl;
+	}
+	out.close();
+	out.open(path + newName + ".cpp");
+	while (std::getline(cppTemp, line))
+	{
+		if (line == "#include \"" + _manifest[id].path.substr(15) + _manifest[id].name + ".h\"")
+		{
+			out << "#include \"" + path.substr(15) + newName + ".h\"" << std::endl;
+			continue;
+		}
+		line = std::regex_replace(line, pattern, newName);
+		out << line << std::endl;
+	}
+	out.close();
+
+	_manifest[id].path = path;
+	_manifest[id].name = newName;
+
+	return true;
 }
 
 #endif //_EDITOR
