@@ -87,6 +87,11 @@ void Xeph2D::Edit::Inspector::RegisterComponentNames(std::function<std::unordere
 	_compNames = callback();
 }
 
+bool Xeph2D::Edit::Inspector::CompNamesContains(uint32_t id)
+{
+	return (_compNames.find(id) != _compNames.end());
+}
+
 #define __CAP_OFFSET 32
 
 std::string Xeph2D::Edit::Inspector::Var2DisplayName(std::string varName)

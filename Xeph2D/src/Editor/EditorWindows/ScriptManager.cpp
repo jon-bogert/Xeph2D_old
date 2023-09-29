@@ -1,9 +1,13 @@
 #ifdef _EDITOR
 #include "Editor/EditorWindows/ScriptManager.h"
+#include "Editor/Editor.h"
+
+#include "Structs.h"
 
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <regex>
 #include <iomanip>
 #include <filesystem>
 
@@ -111,6 +115,75 @@ void ScriptManager::Save()
 	file << TAB << TAB << "}\n" << TAB << "}\n}\n";
 
 	file.close();
+}
+
+void Xeph2D::Edit::ScriptManager::CreateNew(const std::string& name, std::string& path)
+{
+	if (!path.empty())
+	{
+		if (path.back() != '/' || path.back() != '\\')
+			path.push_back('/');
+
+		for (size_t i = 0; i < path.length(); ++i)
+		{
+			if (path[i] == '\\')
+				path[i] = '/';
+		}
+	}
+
+	Inspector* insp = Editor::GetInspectorWindow();
+	uint32_t newID;
+	bool isUsed = true;
+	while (isUsed)
+	{
+		newID = Math::Random::UInt32();
+		isUsed = insp->CompNamesContains(newID);
+	}
+
+	_manifest[newID] = { name, path };
+
+	GenerateNewFiles(name, path, newID);
+	Save();
+}
+
+void ScriptManager::GenerateNewFiles(const std::string& name, const std::string& path, uint32_t newID)
+{
+	if (!std::filesystem::exists(path))
+		std::filesystem::create_directories(path);
+
+	std::stringstream id;
+	id << std::setw(8) << std::setfill('0') << std::hex << newID;
+
+	std::ifstream fileIn("template/comp_h.template");
+	std::ofstream fileOut(path + name + ".h");
+	std::string line;
+	std::regex pattern;
+	while (std::getline(fileIn, line))
+	{
+		pattern = "@NAME@";
+		line = std::regex_replace(line, pattern, name);
+		pattern = "@ID@";
+		line = std::regex_replace(line, pattern, "0x" + id.str());
+
+		fileOut << line << std::endl;
+	}
+
+	fileIn.close();
+	fileOut.close();
+	fileIn.open("template/comp_cpp.template");
+	fileOut.open(path + name + ".cpp");
+	while (std::getline(fileIn, line))
+	{
+		pattern = "@NAME@";
+		line = std::regex_replace(line, pattern, name);
+		pattern = "@ID@";
+		line = std::regex_replace(line, pattern, "0x" + id.str());
+
+		fileOut << line << std::endl;
+	}
+
+	fileIn.close();
+	fileOut.close();
 }
 
 #endif //_EDITOR

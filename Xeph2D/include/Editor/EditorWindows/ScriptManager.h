@@ -30,6 +30,10 @@ namespace Xeph2D::Edit
 		void OnGUI() override;
 
 		void Save();
+		void CreateNew(const std::string& name, std::string& path);
+
+	private:
+		void GenerateNewFiles(const std::string& name, const std::string& path, uint32_t newID);
 	};
 }
 

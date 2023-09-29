@@ -276,7 +276,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -364,6 +364,7 @@
     <ClInclude Include="include\Components\SpriteRenderer.h" />
     <ClInclude Include="include\Editor\Editor.h" />
     <ClInclude Include="include\Editor\EditorWindows\Hierarchy.h" />
+    <ClInclude Include="include\Editor\EditorWindows\ScriptCreator.h" />
     <ClInclude Include="include\Editor\EditorWindows\ScriptManager.h" />
     <ClInclude Include="include\Editor\EditorWindows\Viewport.h" />
     <ClInclude Include="include\Editor\TransformGizmo.h" />
@@ -390,6 +391,7 @@
     <ClInclude Include="src\Systems\InputSystem\KeyHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Editor\EditorWindows\ScriptCreator.cpp" />
     <ClCompile Include="src\Editor\EditorWindows\ScriptManager.cpp" />
     <ClCompile Include="src\Editor\TransformGizmo.cpp" />
     <ClCompile Include="src\AudioData.cpp" />

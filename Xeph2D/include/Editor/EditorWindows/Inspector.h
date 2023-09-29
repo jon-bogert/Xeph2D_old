@@ -34,6 +34,7 @@ namespace Xeph2D::Edit
 
 		void SetGameObject(GameObject* obj);
 		void RegisterComponentNames(std::function<std::unordered_map<uint32_t, std::string>(void)> callback);
+		bool CompNamesContains(uint32_t id);
 
 	private:
 		std::string Var2DisplayName(std::string varName);

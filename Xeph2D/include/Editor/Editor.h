@@ -8,6 +8,7 @@
 #include "Editor/EditorWindows/Viewport.h"
 #include "Editor/EditorWindows/Inspector.h"
 #include "Editor/EditorWindows/Hierarchy.h"
+#include "Editor/EditorWindows/ScriptCreator.h"
 #include "Editor/EditorWindows/ScriptManager.h"
 #include "Editor/EditorSplash.h"
 #include "Editor/TransformGizmo.h"
@@ -35,6 +36,7 @@ namespace Xeph2D::Edit
         Inspector* _inspector = nullptr;
         Hierarchy* _hierarchyWindow = nullptr;
         ScriptManager* _scriptManager = nullptr;
+        ScriptCreator* _scriptCreator = nullptr;
         
 
         bool _hasSaved = true;
@@ -67,6 +69,7 @@ namespace Xeph2D::Edit
 
         static Transform* GetViewportTransform();
         static Inspector* GetInspectorWindow();
+        static ScriptManager* GetScriptManager();
         static TransformGizmo* GetTransformGizmo();
 
     private:
