@@ -24,6 +24,16 @@ namespace Xeph2D
 		template <typename _Component>
 		_Component* GetComponent();
 
+		void RemoveComponent(Component* comp);
+		void RemoveComponent(uint32_t compID);
+
+#ifdef _EDITOR
+		void MoveUp(size_t index);
+		void MoveDown(size_t index);
+#endif //_EDITOR
+
+		std::unique_ptr<Component>& __GetNewEmptyComponentPtr();
+
 		void Serializables();
 
 		void EditorInit();

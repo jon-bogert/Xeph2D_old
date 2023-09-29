@@ -11,7 +11,7 @@ namespace Xeph2D
 		bool _showDebug = true;
 
 	public:
-		COMP_HEADER_STD(25);
+		COMP_HEADER_STD(0x00000019);
 
 		void Start() override;
 		void Update() override;

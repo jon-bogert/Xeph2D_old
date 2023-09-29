@@ -1,4 +1,5 @@
 #include "Systems/Serializer.h"
+#include "GameObject.h"
 
 #include <sstream>
 #include <iomanip>
@@ -106,6 +107,25 @@ void Xeph2D::Serializer::EditorAdd(uint32_t instID, const std::string& fieldName
 	newEntry.ptr = ptr;
 }
 
+void Xeph2D::Serializer::EditorAddGameObject(GameObject* obj)
+{
+	uint32_t newID;
+	bool isUsed = true;
+	while (isUsed)
+	{
+		newID = Math::Random::UInt32();
+		isUsed = (_editorManifest.find(newID) != _editorManifest.end());
+	}
+	obj->instID = newID;
+	_editorManifest[newID];
+	obj->Serializables();
+}
+
+void Xeph2D::Serializer::EditorRemoveGameObject(GameObject* obj)
+{
+	_editorManifest.erase(obj->instID);
+}
+
 Xeph2D::Serializer::EdObject* Xeph2D::Serializer::GetDataFromInstance(uint32_t instID)
 {
 	auto it = Get()._editorManifest.find(instID);
@@ -118,6 +138,21 @@ Xeph2D::Serializer::EdObject* Xeph2D::Serializer::GetDataFromInstance(uint32_t i
 	}
 
 	return &it->second;
+}
+void Xeph2D::Serializer::RemoveAllComponents(uint32_t id)
+{
+	for (auto& obj : Get()._editorManifest)
+	{
+		for (auto it = obj.second.components.begin(); it != obj.second.components.end();)
+		{
+			if (it->id == id)
+			{
+				it = obj.second.components.erase(it);
+			}
+			else
+				it++;
+		}
+	}
 }
 #endif //_EDITOR
 
@@ -333,12 +368,12 @@ void Xeph2D::Serializer::_LoadFromFile(const std::string& scene)
 			id >> inst;
 			continue;
 		}
-		if (line.substr(0, 4) != "    ")
+		if (line[0] != '\t' && line.substr(0, 4) != "    ")
 		{
 			Debug::LogErr("Serializer::LoadFromFile -> Bad Formatting: %s", line.c_str());
 			continue;
 		}
-		std::stringstream linestream(line.substr(4));
+		std::stringstream linestream((line[0] == '\t') ? line.substr(1) : line.substr(4));
 		std::string cell;
 		VarEntry entry;
 		std::string key;

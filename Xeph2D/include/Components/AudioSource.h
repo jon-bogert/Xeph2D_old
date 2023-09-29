@@ -11,7 +11,7 @@ namespace Xeph2D
 		std::string _audioDataKey = "";
 
 	public:
-		COMP_HEADER_STD(3);
+		COMP_HEADER_STD(0x00000003);
 
 		void EditorInit() override;
 		void Awake() override;

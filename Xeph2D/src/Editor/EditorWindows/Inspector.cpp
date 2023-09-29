@@ -3,6 +3,9 @@
 #include "Editor/Editor.h"
 
 #include <GameObject.h>
+#include "Utility.h"
+
+#include <regex>
 
 #pragma warning(disable : 4996)
 
@@ -15,6 +18,13 @@ void Xeph2D::Edit::Inspector::OnGUI()
 {
 	if (_objectInfo == nullptr)
 		return;
+
+	if (_showEdit)
+	{
+		ShowEdit();
+		return;
+	}
+
 	VarEntry entry;
 	//Game Object Variables
 	for (Serializer::EdVarEntry& e : _objectInfo->go_variables)
@@ -43,7 +53,9 @@ void Xeph2D::Edit::Inspector::OnGUI()
 	ImGui::NewLine();
 	if (ImGui::Button("Edit Components##Insp"))
 	{
-		Debug::Log("Edit Components");
+		_showEdit = !_showEdit;
+		if (_showEdit)
+			_editSelection = -1;
 	}
 }
 void Xeph2D::Edit::Inspector::SetGameObject(GameObject* obj)
@@ -52,6 +64,7 @@ void Xeph2D::Edit::Inspector::SetGameObject(GameObject* obj)
 
 	if (_currObject == nullptr)
 	{
+		_objectInfo = nullptr;
 		Editor::GetTransformGizmo()->SetCurrentObject(nullptr);
 		return;
 	}
@@ -69,6 +82,11 @@ void Xeph2D::Edit::Inspector::SetGameObject(GameObject* obj)
 void Xeph2D::Edit::Inspector::RegisterComponentNames(std::function<std::unordered_map<uint32_t, std::string>(void)> callback)
 {
 	_compNames = callback();
+}
+
+bool Xeph2D::Edit::Inspector::CompNamesContains(uint32_t id)
+{
+	return (_compNames.find(id) != _compNames.end());
 }
 
 #define __CAP_OFFSET 32
@@ -250,6 +268,87 @@ void Xeph2D::Edit::Inspector::DrawTransform(VarEntry& entry)
 	{
 		entry.serialized->data = *(Transform*)entry.instanced;
 		Editor::SetHasSaved(false);
+	}
+}
+
+void Xeph2D::Edit::Inspector::ShowEdit()
+{
+	std::vector<std::string> itemNames;
+	for (const Serializer::EdComponent& c : _objectInfo->components)
+	{
+		itemNames.push_back(_compNames[c.id]);
+	}
+	if (ImGui::ListBox("##HItems", &_editSelection, Utility::CStrVect(itemNames).data(), itemNames.size()))
+	{
+	
+	}
+	if (ImGui::Button("+##Insp"))
+	{
+		_showAdd = !_showAdd;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("-##Insp"))
+	{
+		if (_editSelection >= 0)
+		{
+			Serializer::EdComponent& comp = _objectInfo->components[_editSelection];
+			_currObject->RemoveComponent(comp.id);
+			_objectInfo->components.erase(_objectInfo->components.begin() + _editSelection);
+			Editor::SetHasSaved(false);
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("^##Insp"))
+	{
+		if (_editSelection > 0)
+		{
+			_currObject->MoveUp(_editSelection);
+			std::swap(_objectInfo->components[_editSelection], _objectInfo->components[_editSelection - 1]);
+			Editor::SetHasSaved(false);
+			--_editSelection;
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("v##Insp"))
+	{
+		if (_editSelection < itemNames.size() - 1 && _editSelection >= 0)
+		{
+			_currObject->MoveDown(_editSelection);
+			std::swap(_objectInfo->components[_editSelection], _objectInfo->components[_editSelection + 1]);
+			Editor::SetHasSaved(false);
+			++_editSelection;
+		}
+	}
+	if (_showAdd)
+	{
+		ImVec2 nextPos = (Vector2)ImGui::GetCursorPos() + ImGui::GetWindowPos();
+		ImGui::SetNextWindowPos(nextPos);
+		ImGui::Begin("Add Component##Insp", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
+		if (InputSystem::GetMouseDown(Mouse::Button::Left) && !ImGui::IsWindowHovered())
+			_showAdd = false;
+
+		ImGui::InputText("##SearchAddComp", _editSearchBuff, 256);
+		for (auto& comp : _compNames)
+		{
+			if (!std::regex_search(comp.second, std::regex(_editSearchBuff)))
+				continue;
+			if (ImGui::MenuItem((comp.second + "##AddComp").c_str()))
+			{
+				SceneManager::Get().__AddComponentByID(_currObject, comp.first);
+				Editor::SetHasSaved(false);
+				_showAdd = false;
+				break;
+			}
+		}
+		ImGui::End();
+	}
+
+	ImGui::NewLine();
+	ImGui::Separator();
+	ImGui::NewLine();
+	if (ImGui::Button("Show Components##Insp"))
+	{
+		_showEdit = !_showEdit;
 	}
 }
 

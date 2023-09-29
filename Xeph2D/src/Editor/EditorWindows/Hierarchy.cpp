@@ -7,24 +7,13 @@
 
 #include "Editor/Editor.h"
 
+#include "Utility.h"
+
 #include <string>
 #include <vector>
 
 using namespace Xeph2D;
 using namespace Xeph2D::Edit;
-
-namespace
-{
-	std::vector<const char*> CStrVect(const std::vector<std::string>& input)
-	{
-		std::vector<const char*> inputCStr;
-		for (const std::string& item : input)
-		{
-			inputCStr.push_back(item.c_str());
-		}
-		return inputCStr;
-	}
-}
 
 void Hierarchy::Initialize()
 {
@@ -41,29 +30,47 @@ void Hierarchy::OnGUI()
 	std::vector<std::string> itemNames;
 	for (GameObject*& obj : objects)
 		itemNames.push_back(obj->name);
-	if (ImGui::ListBox("##HItems", &_selectionIndex, CStrVect(itemNames).data(), itemNames.size()))
+	if (ImGui::ListBox("##HItems", &_selectionIndex, Utility::CStrVect(itemNames).data(), itemNames.size()))
 	{
 		Editor::GetInspectorWindow()->SetGameObject(objects[_selectionIndex]);
 	}
 	
 	if (ImGui::Button("+##Hier"))
 	{
-		Debug::Log("Add GameObject");
+		GameObject* obj = SceneManager::GetCurrentScene()->AddGameObject();
+		Serializer::Get().EditorAddGameObject(obj);
+		Editor::SetHasSaved(false);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("-##Hier"))
 	{
-		Debug::Log("Remove GameObject");
+		if (_selectionIndex >= 0)
+		{
+			Serializer::Get().EditorRemoveGameObject(objects[_selectionIndex]);
+			SceneManager::GetCurrentScene()->Destroy(objects[_selectionIndex]);
+			Editor::GetInspectorWindow()->SetGameObject(nullptr);
+			Editor::SetHasSaved(false);
+		}
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("^##Hier"))
 	{
-		Debug::Log("GameObject Up");
+		if (_selectionIndex > 0)
+		{
+			SceneManager::GetCurrentScene()->MoveUp(_selectionIndex);
+			Editor::SetHasSaved(false);
+			--_selectionIndex;
+		}
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("v##Hier"))
 	{
-		Debug::Log("GameObject Down");
+		if (_selectionIndex < objects.size() - 1 && _selectionIndex >= 0)
+		{
+			SceneManager::GetCurrentScene()->MoveDown(_selectionIndex);
+			Editor::SetHasSaved(false);
+			++_selectionIndex;
+		}
 	}
 }
 

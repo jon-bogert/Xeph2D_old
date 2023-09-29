@@ -33,6 +33,10 @@ void Xeph2D::Edit::Editor::Initialize()
 		(Inspector*)Get()._editorWindows.emplace_back(std::make_unique<Inspector>()).get();
 	Get()._hierarchyWindow =
 		(Hierarchy*)Get()._editorWindows.emplace_back(std::make_unique<Hierarchy>()).get();
+	Get()._scriptManager =
+		(ScriptManager*)Get()._editorWindows.emplace_back(std::make_unique<ScriptManager>()).get();
+	Get()._scriptCreator =
+		(ScriptCreator*)Get()._editorWindows.emplace_back(std::make_unique<ScriptCreator>()).get();
 
 	for (auto& window : Get()._editorWindows)
 		window->Initialize();
@@ -82,14 +86,24 @@ void Xeph2D::Edit::Editor::InputProc()
 	}
 	if (InputSystem::GetKeyHold(Key::Ctrl))
 	{
-		if (InputSystem::GetKeyDown(Key::S))
+		if (InputSystem::GetKeyHold(Key::Shift))
 		{
-			Serializer::SaveToFile(SceneManager::GetCurrentName());
-			Get()._hasSaved = true;
+			if (InputSystem::GetKeyDown(Key::N))
+			{
+				Get()._scriptCreator->Open();
+			}
 		}
-		if (InputSystem::GetKeyDown(Key::Q))
+		else //============
 		{
-			Close();
+			if (InputSystem::GetKeyDown(Key::S))
+			{
+				Serializer::SaveToFile(SceneManager::GetCurrentName());
+				Get()._hasSaved = true;
+			}
+			if (InputSystem::GetKeyDown(Key::Q))
+			{
+				Close();
+			}
 		}
 	}
 }
@@ -119,8 +133,9 @@ void Xeph2D::Edit::Editor::OnGUI()
 	}
 	if (ImGui::BeginMenu("Edit##MainMenu"))
 	{
-		if (ImGui::MenuItem("EditStuff", nullptr, nullptr, false))
+		if (ImGui::MenuItem("Create New Script", "Ctrl+Shift+N"))
 		{
+			Get()._scriptCreator->Open();
 		}
 		ImGui::EndMenu();
 	}
@@ -135,6 +150,10 @@ void Xeph2D::Edit::Editor::OnGUI()
 			if (ImGui::MenuItem("Inspector"))
 			{
 				Get()._inspector->Open();
+			}
+			if (ImGui::MenuItem("Script Manager"))
+			{
+				Get()._scriptManager->Open();
 			}
 			if (ImGui::MenuItem("Viewport"))
 			{
@@ -244,6 +263,16 @@ Transform* Xeph2D::Edit::Editor::GetViewportTransform()
 Xeph2D::Edit::Inspector* Xeph2D::Edit::Editor::GetInspectorWindow()
 {
 	return Get()._inspector;
+}
+
+Xeph2D::Edit::ScriptManager* Xeph2D::Edit::Editor::GetScriptManager()
+{
+	return Get()._scriptManager;
+}
+
+Xeph2D::Edit::ScriptCreator* Xeph2D::Edit::Editor::GetScriptCreator()
+{
+	return Get()._scriptCreator;
 }
 
 Edit::TransformGizmo* Xeph2D::Edit::Editor::GetTransformGizmo()

@@ -21,10 +21,10 @@
     <ClCompile Include="Assets\Scripts\TestScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Assets\Scripts\CameraController.cpp">
+    <ClCompile Include="Assets\Scripts\MusicManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Assets\Scripts\MusicManager.cpp">
+    <ClCompile Include="Assets\Scripts\CameraController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,19 +32,19 @@
     <ClInclude Include="Assets\Scripts\TestScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Assets\Scripts\CameraController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Assets\Scripts\MusicManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Assets\Scripts\.generated\SceneManifest.generated.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScriptManifest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Assets\Scripts\.generated\InputActions.generated.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Assets\Scripts\.generated\ScriptManifest.generated.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Assets\Scripts\CameraController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

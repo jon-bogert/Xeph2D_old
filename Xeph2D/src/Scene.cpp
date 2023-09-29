@@ -29,6 +29,25 @@ void Scene::DebugDraw()			{ __CALLONALL(DebugDraw) }
 void Scene::OnDisable()			{ __CALLONALL(OnDisable) }
 void Scene::OnDestroy()			{ __CALLONALL(OnDestroy) }
 
+void Xeph2D::Scene::Destroy(GameObject* obj)
+{
+	//TODO - Destroy Children
+	for (auto it = _gameObjects.begin(); it != _gameObjects.end(); it++)
+	{
+		if ((*it).get() == obj)
+		{
+#ifdef _EDITOR
+			(*it)->EditorShutdown();
+#else
+			(*it)->OnDisable();
+			(*it)->OnDestroy();
+#endif //_EDITOR
+			_gameObjects.erase(it);
+			return;
+		}
+	}
+}
+
 std::vector<GameObject*> Xeph2D::Scene::GetAllObjects()
 {
 	std::vector<GameObject*> objs;
@@ -38,3 +57,15 @@ std::vector<GameObject*> Xeph2D::Scene::GetAllObjects()
 
 	return objs;
 }
+
+#ifdef _EDITOR
+void Xeph2D::Scene::MoveUp(size_t index)
+{
+	std::swap(_gameObjects[index], _gameObjects[index - 1]);
+}
+
+void Xeph2D::Scene::MoveDown(size_t index)
+{
+	std::swap(_gameObjects[index], _gameObjects[index + 1]);
+}
+#endif //_EDITOR

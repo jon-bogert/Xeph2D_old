@@ -14,7 +14,7 @@ namespace Xeph2D
 		std::unique_ptr<sf::Sprite> _sprite = nullptr;
 		std::string _textureKey = "";
 	public:
-		COMP_HEADER_STD(2);
+		COMP_HEADER_STD(0x00000002);
 
 		int order = 0;
 

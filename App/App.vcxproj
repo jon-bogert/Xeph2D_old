@@ -276,10 +276,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)ImGui\include\;$(SolutionDir)Xeph2D\include;$(SolutionDir)SFML\include;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Assets/Scripts;$(SolutionDir)ImGui\include\;$(SolutionDir)Xeph2D\include;$(SolutionDir)SFML\include;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -295,7 +295,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Xeph2D\include;$(SolutionDir)SFML\include;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Assets/Scripts;$(SolutionDir)Xeph2D\include;$(SolutionDir)SFML\include;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -311,7 +311,7 @@
       <PreprocessorDefinitions>_DEBUG;_EDITOR;_CONSOLE;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Xeph2D\include;$(SolutionDir)SFML\include;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Assets/Scripts;$(SolutionDir)Xeph2D\include;$(SolutionDir)SFML\include;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -327,7 +327,7 @@
       <PreprocessorDefinitions>_DEBUG;_EDITOR;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Xeph2D\include;$(SolutionDir)SFML\include;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Assets/Scripts;$(SolutionDir)Xeph2D\include;$(SolutionDir)SFML\include;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -345,7 +345,7 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Xeph2D\include;$(SolutionDir)SFML\include;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Assets/Scripts;$(SolutionDir)Xeph2D\include;$(SolutionDir)SFML\include;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -369,9 +369,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assets\Scripts\.generated\InputActions.generated.h" />
+    <ClInclude Include="Assets\Scripts\.generated\ScriptManifest.generated.h" />
     <ClInclude Include="Assets\Scripts\CameraController.h" />
     <ClInclude Include="Assets\Scripts\MusicManager.h" />
-    <ClInclude Include="Assets\Scripts\.generated\SceneManifest.generated.h" />
     <ClInclude Include="Assets\Scripts\TestScript.h" />
     <ClInclude Include="ScriptManifest.h" />
   </ItemGroup>
