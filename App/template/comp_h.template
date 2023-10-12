@@ -1,13 +1,10 @@
 #include <Xeph2D.h>
 
-namespace Xeph2D
+class @NAME@ : public Component
 {
-	class @NAME@ : public Component
-	{
-	public:
-		COMP_HEADER_STD(@ID@);
-		
-		void Start() override;
-		void Update() override;
-	};
-}
+public:
+    COMP_HEADER_STD(@ID@);
+
+    void Start() override;
+    void Update() override;
+};

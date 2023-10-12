@@ -1,6 +1,9 @@
 00000001 Camera <engine>
 00000002 SpriteRenderer <engine>
 00000003 AudioSource <engine>
+00000004 Rigidbody <engine>
+00000005 BoxCollider <engine>
+00000006 CircleCollider <engine>
 00000019 TestScript Assets/Scripts/
 0000001a CameraController Assets/Scripts/
 0000001b MusicManager Assets/Scripts/

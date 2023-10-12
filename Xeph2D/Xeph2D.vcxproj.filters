@@ -29,6 +29,10 @@
     <ClCompile Include="src\Editor\TransformGizmo.cpp" />
     <ClCompile Include="src\Editor\EditorWindows\ScriptManager.cpp" />
     <ClCompile Include="src\Editor\EditorWindows\ScriptCreator.cpp" />
+    <ClCompile Include="src\Systems\Physics.cpp" />
+    <ClCompile Include="src\Components\BoxCollider.cpp" />
+    <ClCompile Include="src\Components\Rigidbody.cpp" />
+    <ClCompile Include="src\Components\CircleCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Component.h" />
@@ -63,5 +67,9 @@
     <ClInclude Include="include\Editor\EditorWindows\ScriptManager.h" />
     <ClInclude Include="include\Utility.h" />
     <ClInclude Include="include\Editor\EditorWindows\ScriptCreator.h" />
+    <ClInclude Include="include\Components\BoxCollider.h" />
+    <ClInclude Include="include\Components\Rigidbody.h" />
+    <ClInclude Include="include\Systems\Physics.h" />
+    <ClInclude Include="include\Components\CircleCollider.h" />
   </ItemGroup>
 </Project>

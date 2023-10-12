@@ -30,6 +30,7 @@
 #include <assert.h>
 
 #include <SFML.hpp>
+#include <box2d/box2d.h>
 
 #ifdef _EDITOR
 #include "../../ImGui/include/imgui.h"
@@ -75,11 +76,10 @@ namespace Xeph2D
 		Vector2(const sf::Vector2f& other) : x(other.x), y(other.y) {}						// **EDIT** Added for SFML Compatibility
 		Vector2(const sf::Vector2i& other) : x(other.x), y(other.y) {}						// **EDIT** Added for SFML Compatibility
 		Vector2(const sf::Vector2u& other) : x(other.x), y(other.y) {}						// **EDIT** Added for SFML Compatibility
-#ifdef XE_USING_BOX2D
+
 		operator b2Vec2() const { return { x, y }; };										// **EDIT** Added for box2D Compatibility
 		Vector2& operator=(const b2Vec2& rhs) { x = rhs.x; y = rhs.y; return *this; }		// **EDIT** Added for box2D Compatibility
 		Vector2(const b2Vec2& other) : x(other.x), y(other.y) {}							// **EDIT** Added for box2D Compatibility
-#endif
 #ifdef _EDITOR
 		operator ImVec2() const { return { x, y }; };										// **EDIT** Added for ImGui Compatibility
 		Vector2& operator=(const ImVec2& rhs) { x = rhs.x; y = rhs.y; return *this; }		// **EDIT** Added for ImGui Compatibility
@@ -787,13 +787,13 @@ namespace Xeph2D
 	{
 		//----------------------------------------------------------------------------------------------------
 
-		extern const float kPi;
-		extern const float kTwoPi;
-		extern const float kPiByTwo;
-		extern const float kRootTwo;
-		extern const float kRootThree;
-		extern const float kDegToRad;
-		extern const float kRadToDeg;
+		inline const float kPi = 3.14159265358979f;
+		inline const float kTwoPi = 6.28318530717958f;
+		inline const float kPiByTwo = 1.57079632679489f;
+		inline const float kRootTwo = 1.41421356237309f;
+		inline const float kRootThree = 1.73205080756887f;
+		inline const float kDegToRad = kPi / 180.0f;
+		inline const float kRadToDeg = 180.0f / kPi;
 
 		//----------------------------------------------------------------------------------------------------
 

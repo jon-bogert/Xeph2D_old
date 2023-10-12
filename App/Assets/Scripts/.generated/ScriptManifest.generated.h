@@ -24,6 +24,9 @@ namespace Xeph2D
         {0x00000001,"Camera"},
         {0x00000002,"SpriteRenderer"},
         {0x00000003,"AudioSource"},
+        {0x00000004,"Rigidbody"},
+        {0x00000005,"BoxCollider"},
+        {0x00000006,"CircleCollider"},
         {0x00000019,"TestScript"},
         {0x0000001a,"CameraController"},
         {0x0000001b,"MusicManager"}};
@@ -36,6 +39,9 @@ namespace Xeph2D
         case 0x00000001: ptr = std::make_unique<Camera>(); break;
         case 0x00000002: ptr = std::make_unique<SpriteRenderer>(); break;
         case 0x00000003: ptr = std::make_unique<AudioSource>(); break;
+        case 0x00000004: ptr = std::make_unique<Rigidbody>(); break;
+        case 0x00000005: ptr = std::make_unique<BoxCollider>(); break;
+        case 0x00000006: ptr = std::make_unique<CircleCollider>(); break;
         case 0x00000019: ptr = std::make_unique<TestScript>(); break;
         case 0x0000001a: ptr = std::make_unique<CameraController>(); break;
         case 0x0000001b: ptr = std::make_unique<MusicManager>(); break;

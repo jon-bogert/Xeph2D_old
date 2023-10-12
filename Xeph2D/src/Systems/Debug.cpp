@@ -246,7 +246,7 @@ void Debug::DrawChainLine(const VertexChain& vertBuffer, Color color, bool isWor
 #endif // _DEBUG
 }
 
-void Debug::DrawBoxOutline(Vector2 center, Vector2 span, Color color, bool isWorldSpace)
+void Debug::DrawBoxOutline(Vector2 center, Vector2 span, float rotation, Color color, bool isWorldSpace)
 {
 #ifdef _DEBUG
     sf::RectangleShape shape;
@@ -257,11 +257,12 @@ void Debug::DrawBoxOutline(Vector2 center, Vector2 span, Color color, bool isWor
     shape.setSize(size);
     shape.setOrigin(size * 0.5f);
     shape.setPosition((isWorldSpace) ? WindowManager::WorldToPixel(center) : WindowManager::ScreenToPixel(center));
+    shape.setRotation(rotation);
     Get()._rectBuffer.push_back(shape);
 #endif // _DEBUG
 }
 
-void Debug::DrawBoxFilled(Vector2 center, Vector2 span, Color color, bool isWorldSpace)
+void Debug::DrawBoxFilled(Vector2 center, Vector2 span, float rotation, Color color, bool isWorldSpace)
 {
 #ifdef _DEBUG
     sf::RectangleShape shape;
@@ -270,6 +271,7 @@ void Debug::DrawBoxFilled(Vector2 center, Vector2 span, Color color, bool isWorl
     shape.setSize(size);
     shape.setOrigin(size * 0.5f);
     shape.setPosition((isWorldSpace) ? WindowManager::WorldToPixel(center) : WindowManager::ScreenToPixel(center));
+    shape.setRotation(rotation);
     Get()._rectBuffer.insert(Get()._rectBuffer.begin(), shape);
 #endif // _DEBUG
 }
