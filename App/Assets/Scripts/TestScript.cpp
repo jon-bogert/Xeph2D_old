@@ -7,11 +7,13 @@ void TestScript::Serializables()
 	SERIALIZE_DEFAULT;
 	SERIALIZE_BOOL(_showDebug);
 	SERIALIZE_FLOAT(speed);
-	SERIALIZE_FLOAT(jumpForce);
+	SERIALIZE_FLOAT(jumpVelocity);
 }
 
 void TestScript::Start()
 {	
+	//WindowManager::SetTargetFramerate(30);
+
 	audioSource = gameObject->GetComponent<AudioSource>();
 	_rigidbody = gameObject->GetComponent<Rigidbody>();
 
@@ -21,6 +23,8 @@ void TestScript::Start()
 	
 	move->performed.Subscribe(XEInputActionCallback(TestScript::MoveInput));
 	onSpace->performed.Subscribe(XEInputActionCallback(TestScript::OnSpace));
+
+	_rigidbody->onCollisionEnter.Subscribe(RIGIDBODY_CALLBACK(TestScript::OnCollisionEnter));
 }
 
 void TestScript::Update()
@@ -31,6 +35,7 @@ void TestScript::Update()
 
 
 	Debug::Monitor("Player Position", "X: " + std::to_string(transform->position.x) + " Y: " + std::to_string(transform->position.y));
+	Debug::Monitor("Player Velocity", "X: " + std::to_string(_rigidbody->GetVelocity().x) + " Y: " + std::to_string(_rigidbody->GetVelocity().y));
 
 	if (InputSystem::GetKeyDown(Key::E))
 		SceneManager::LoadScene(1);
@@ -54,6 +59,7 @@ void Xeph2D::TestScript::OnDestroy()
 	InputActionMap* map = InputSystem::FindInputActionMap("Player");
 	map->FindInputAction("Move")->performed.UnsubscribeAll(this);
 	map->FindInputAction("Space")->performed.UnsubscribeAll(this);
+	_rigidbody->onCollisionEnter.UnsubscribeAll();
 }
 
 void Xeph2D::TestScript::MoveInput(InputAction* ctx)
@@ -66,7 +72,15 @@ void Xeph2D::TestScript::MoveInput(InputAction* ctx)
 
 void Xeph2D::TestScript::OnSpace(InputAction* ctx)
 {
-	_rigidbody->AddForce(Vector2::YAxis() * jumpForce);
+	//_rigidbody->AddForce(Vector2::YAxis() * jumpForce);
+	_rigidbody->SetVelocity({ _rigidbody->GetVelocity().x, jumpVelocity });
 	//Debug::Log("Space Pressed");
 	//audioSource->Play();
 }
+
+void Xeph2D::TestScript::OnCollisionEnter(Rigidbody* other)
+{
+	Debug::Log("Collision with: %s", other->gameObject->name.c_str());
+}
+
+

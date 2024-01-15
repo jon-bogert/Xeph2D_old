@@ -8,7 +8,7 @@ namespace Xeph2D
 		AudioSource* audioSource = nullptr;
 		Rigidbody* _rigidbody = nullptr;
 		float speed = 10.f;
-		float jumpForce = 10.f;
+		float jumpVelocity = 15.f;
 		Vector2 moveAxis = {};
 		bool _showDebug = true;
 
@@ -23,6 +23,8 @@ namespace Xeph2D
 	private:
 		void MoveInput(InputAction* ctx);
 		void OnSpace(InputAction* ctx);
+
+		void OnCollisionEnter(Rigidbody* other);
 	};
 
 }

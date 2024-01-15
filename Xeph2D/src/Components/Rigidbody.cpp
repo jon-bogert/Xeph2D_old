@@ -121,6 +121,11 @@ float Xeph2D::Rigidbody::GetLockRotation() const
 	return _body->IsFixedRotation();
 }
 
+b2Body* Xeph2D::Rigidbody::__UnWrap()
+{
+	return _body;
+}
+
 void Xeph2D::Rigidbody::UpdateTransform()
 {
 	transform->position = _body->GetPosition();
