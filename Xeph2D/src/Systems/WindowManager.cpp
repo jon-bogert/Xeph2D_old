@@ -230,6 +230,13 @@ Vector2 Xeph2D::WindowManager::UnitToPixel(const Vector2 val)
 	return val * Get()._ppu * Get()._resScale;
 }
 
+void Xeph2D::WindowManager::SetTargetFramerate(uint32_t framerate)
+{
+#ifndef _EDITOR
+	Get()._window->setFramerateLimit(framerate);
+#endif //!_EDITOR
+}
+
 sf::RenderWindow* Xeph2D::WindowManager::__UnWrap()
 {
 	return Get()._window.get();

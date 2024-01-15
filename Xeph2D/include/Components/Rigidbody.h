@@ -6,6 +6,8 @@
 #include <functional>
 #include <vector>
 
+#define RIGIDBODY_CALLBACK(func) std::bind(&func, this, std::placeholders::_1)
+
 namespace Xeph2D
 {
 	class Rigidbody : public Component
@@ -74,6 +76,8 @@ namespace Xeph2D
 
 		void SetLockRotation(const float doLock);
 		float GetLockRotation() const;
+
+		b2Body* __UnWrap();
 
 	private:
 		void UpdateTransform();

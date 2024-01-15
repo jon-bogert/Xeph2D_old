@@ -75,6 +75,8 @@ namespace Xeph2D
 		static float UnitToPixel(const float val);
 		static Vector2 UnitToPixel(const Vector2 val);
 
+		static void SetTargetFramerate(uint32_t framerate);
+
 		static sf::RenderWindow* __UnWrap();
 	};
 }
