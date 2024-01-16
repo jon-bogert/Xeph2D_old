@@ -73,6 +73,8 @@ namespace Xeph2D::Edit
         static ScriptCreator* GetScriptCreator();
         static TransformGizmo* GetTransformGizmo();
 
+        static void RebuildProject();
+
     private:
         void ViewportGUI();
         void SetUIStyle();

@@ -27,7 +27,6 @@
     <ClInclude Include="Assets\Scripts\TestScript.h">
       <Filter>Assets\Scripts</Filter>
     </ClInclude>
-    <ClInclude Include="ScriptManifest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Assets\Scripts\CameraController.cpp">

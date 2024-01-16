@@ -55,6 +55,7 @@ void ScriptCreator::OnGUI()
 			flags |= ImGuiWindowFlags_NoDecoration;
 			std::string pathFull = std::string("Assets/Scripts/") + std::string(_pathBuffer);
 			Editor::GetScriptManager()->CreateNew(_nameBuffer, pathFull);
+			Editor::RebuildProject();
 		}
 	}
 	ImGui::SameLine();

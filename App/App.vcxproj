@@ -219,7 +219,6 @@
     <ClInclude Include="Assets\Scripts\CameraController.h" />
     <ClInclude Include="Assets\Scripts\MusicManager.h" />
     <ClInclude Include="Assets\Scripts\TestScript.h" />
-    <ClInclude Include="ScriptManifest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Assets\Scripts\CameraController.cpp" />

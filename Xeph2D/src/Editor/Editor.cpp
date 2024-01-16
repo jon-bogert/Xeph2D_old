@@ -280,6 +280,13 @@ Edit::TransformGizmo* Xeph2D::Edit::Editor::GetTransformGizmo()
 	return &Get()._transformGizmo;
 }
 
+void Xeph2D::Edit::Editor::RebuildProject()
+{
+	//system("dir");
+	system("..\\premake5.exe vs2022 ..\\premake5.lua");
+	//ShellExecute(NULL, L"open", L"..\\premake5.exe", L"vs2022", NULL, SW_HIDE);
+}
+
 void Xeph2D::Edit::Editor::ViewportGUI()
 {
 	//TODO Guard against min max of longlong
