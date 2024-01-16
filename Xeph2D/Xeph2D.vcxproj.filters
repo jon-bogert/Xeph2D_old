@@ -1,75 +1,267 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\Component.cpp" />
-    <ClCompile Include="src\GameObject.cpp" />
-    <ClCompile Include="src\Scene.cpp" />
-    <ClCompile Include="src\Systems\SceneManager.cpp" />
-    <ClCompile Include="src\Components\SpriteRenderer.cpp" />
-    <ClCompile Include="src\Systems\AssetManager.cpp" />
-    <ClCompile Include="src\Systems\Debug.cpp" />
-    <ClCompile Include="src\Systems\WindowManager.cpp" />
-    <ClCompile Include="src\Components\Camera.cpp" />
-    <ClCompile Include="src\Systems\Time.cpp" />
-    <ClCompile Include="src\Systems\RenderStack.cpp" />
-    <ClCompile Include="src\Systems\InputSystem\GamepadHandler.cpp" />
-    <ClCompile Include="src\Systems\InputSystem\InputActionMap.cpp" />
-    <ClCompile Include="src\Systems\InputSystem\InputSystem.cpp" />
-    <ClCompile Include="src\Systems\InputSystem\KeyHandler.cpp" />
-    <ClCompile Include="src\Structs.cpp" />
-    <ClCompile Include="src\AudioData.cpp" />
-    <ClCompile Include="src\Components\AudioSource.cpp" />
-    <ClCompile Include="src\Editor\Editor.cpp" />
-    <ClCompile Include="src\Editor\EditorWindow.cpp" />
-    <ClCompile Include="src\Editor\EditorWindows\Viewport.cpp" />
-    <ClCompile Include="src\Editor\EditorWindows\Inspector.cpp" />
-    <ClCompile Include="src\Systems\Serializer.cpp" />
-    <ClCompile Include="src\Editor\EditorWindows\Hierarchy.cpp" />
-    <ClCompile Include="src\Editor\EditorSplash.cpp" />
-    <ClCompile Include="src\Editor\TransformGizmo.cpp" />
-    <ClCompile Include="src\Editor\EditorWindows\ScriptManager.cpp" />
-    <ClCompile Include="src\Editor\EditorWindows\ScriptCreator.cpp" />
-    <ClCompile Include="src\Systems\Physics.cpp" />
-    <ClCompile Include="src\Components\BoxCollider.cpp" />
-    <ClCompile Include="src\Components\Rigidbody.cpp" />
-    <ClCompile Include="src\Components\CircleCollider.cpp" />
+    <Filter Include="include">
+      <UniqueIdentifier>{89AF369E-F58E-B539-FEA6-40106A051C9B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Components">
+      <UniqueIdentifier>{FE2CB57C-EA10-76D2-5371-70253F746054}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Editor">
+      <UniqueIdentifier>{9FF868FF-8BC6-5C05-745A-CD2B60C7386A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Editor\EditorWindows">
+      <UniqueIdentifier>{403C9E3A-2CF7-8DE6-D5AE-0631C148D876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Systems">
+      <UniqueIdentifier>{907EE853-FC09-5618-051B-D90C7125B218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Systems\InputSystem">
+      <UniqueIdentifier>{74150939-E022-371F-6909-330AD51503D6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res">
+      <UniqueIdentifier>{4FA5880B-BBAE-887C-442A-9F7CB032947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Components">
+      <UniqueIdentifier>{221ADC4D-0EE8-CF53-F77B-407AE3E8ABB8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor">
+      <UniqueIdentifier>{C3F37E0D-AFAB-C05A-18B3-99B6048A5B4B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor\EditorWindows">
+      <UniqueIdentifier>{64E61AC8-500B-6A48-7956-4FD865DA6866}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Systems">
+      <UniqueIdentifier>{34DEBD24-A093-361A-2988-30F1953C2D1E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Systems\InputSystem">
+      <UniqueIdentifier>{180BC70E-8442-0FA6-8D4C-73C9F902369F}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Component.h" />
-    <ClInclude Include="include\GameObject.h" />
-    <ClInclude Include="include\Scene.h" />
-    <ClInclude Include="include\Systems\SceneManager.h" />
-    <ClInclude Include="include\Structs.h" />
-    <ClInclude Include="include\Components\SpriteRenderer.h" />
-    <ClInclude Include="include\Systems\AssetManager.h" />
-    <ClInclude Include="include\Systems\Debug.h" />
-    <ClInclude Include="include\Systems\WindowManager.h" />
-    <ClInclude Include="include\Components\Camera.h" />
-    <ClInclude Include="include\Systems\Time.h" />
-    <ClInclude Include="include\Xeph2D.h" />
-    <ClInclude Include="include\Systems\RenderStack.h" />
-    <ClInclude Include="include\Systems\InputSystem\Enums.h" />
-    <ClInclude Include="include\Systems\InputSystem\InputActionMap.h" />
-    <ClInclude Include="include\Systems\InputSystem\InputSystem.h" />
-    <ClInclude Include="src\Systems\InputSystem\GamepadHandler.h" />
-    <ClInclude Include="src\Systems\InputSystem\KeyHandler.h" />
-    <ClInclude Include="include\AudioData.h" />
-    <ClInclude Include="include\Components\AudioSource.h" />
-    <ClInclude Include="include\Editor\Editor.h" />
-    <ClInclude Include="include\Editor\EditorWindow.h" />
-    <ClInclude Include="include\Editor\EditorWindows\Viewport.h" />
-    <ClInclude Include="include\Editor\EditorWindows\Inspector.h" />
-    <ClInclude Include="include\Systems\Serializer.h" />
-    <ClInclude Include="include\Systems\Serializer.macros.h" />
-    <ClInclude Include="include\Editor\EditorWindows\Hierarchy.h" />
-    <ClInclude Include="include\Editor\EditorSplash.h" />
-    <ClInclude Include="include\Editor\TransformGizmo.h" />
-    <ClInclude Include="include\Editor\EditorWindows\ScriptManager.h" />
-    <ClInclude Include="include\Utility.h" />
-    <ClInclude Include="include\Editor\EditorWindows\ScriptCreator.h" />
-    <ClInclude Include="include\Components\BoxCollider.h" />
-    <ClInclude Include="include\Components\Rigidbody.h" />
-    <ClInclude Include="include\Systems\Physics.h" />
-    <ClInclude Include="include\Components\CircleCollider.h" />
+    <ClInclude Include="include\AudioData.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Component.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Components\AudioSource.h">
+      <Filter>include\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Components\BoxCollider.h">
+      <Filter>include\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Components\Camera.h">
+      <Filter>include\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Components\CircleCollider.h">
+      <Filter>include\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Components\Rigidbody.h">
+      <Filter>include\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Components\SpriteRenderer.h">
+      <Filter>include\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor\Editor.h">
+      <Filter>include\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor\EditorSplash.h">
+      <Filter>include\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor\EditorWindow.h">
+      <Filter>include\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor\EditorWindows\Hierarchy.h">
+      <Filter>include\Editor\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor\EditorWindows\Inspector.h">
+      <Filter>include\Editor\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor\EditorWindows\ScriptCreator.h">
+      <Filter>include\Editor\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor\EditorWindows\ScriptManager.h">
+      <Filter>include\Editor\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor\EditorWindows\Viewport.h">
+      <Filter>include\Editor\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor\TransformGizmo.h">
+      <Filter>include\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameObject.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Scene.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Structs.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Systems\AssetManager.h">
+      <Filter>include\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Systems\Debug.h">
+      <Filter>include\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Systems\InputSystem\Enums.h">
+      <Filter>include\Systems\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Systems\InputSystem\InputActionMap.h">
+      <Filter>include\Systems\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Systems\InputSystem\InputSystem.h">
+      <Filter>include\Systems\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Systems\Physics.h">
+      <Filter>include\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Systems\RenderStack.h">
+      <Filter>include\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Systems\SceneManager.h">
+      <Filter>include\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Systems\Serializer.h">
+      <Filter>include\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Systems\Serializer.macros.h">
+      <Filter>include\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Systems\Time.h">
+      <Filter>include\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Systems\WindowManager.h">
+      <Filter>include\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utility.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Xeph2D.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="res\BasierSquare_Medium_otf.h">
+      <Filter>res</Filter>
+    </ClInclude>
+    <ClInclude Include="res\JetBrainsMono_ttf.h">
+      <Filter>res</Filter>
+    </ClInclude>
+    <ClInclude Include="res\editor_splash_png.h">
+      <Filter>res</Filter>
+    </ClInclude>
+    <ClInclude Include="res\no_image_png.h">
+      <Filter>res</Filter>
+    </ClInclude>
+    <ClInclude Include="res\x2d_logo_png.h">
+      <Filter>res</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\InputSystem\GamepadHandler.h">
+      <Filter>src\Systems\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\InputSystem\KeyHandler.h">
+      <Filter>src\Systems\InputSystem</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\AudioData.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Component.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Components\AudioSource.cpp">
+      <Filter>src\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Components\BoxCollider.cpp">
+      <Filter>src\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Components\Camera.cpp">
+      <Filter>src\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Components\CircleCollider.cpp">
+      <Filter>src\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Components\Rigidbody.cpp">
+      <Filter>src\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Components\SpriteRenderer.cpp">
+      <Filter>src\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\Editor.cpp">
+      <Filter>src\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\EditorSplash.cpp">
+      <Filter>src\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\EditorWindow.cpp">
+      <Filter>src\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\EditorWindows\Hierarchy.cpp">
+      <Filter>src\Editor\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\EditorWindows\Inspector.cpp">
+      <Filter>src\Editor\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\EditorWindows\ScriptCreator.cpp">
+      <Filter>src\Editor\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\EditorWindows\ScriptManager.cpp">
+      <Filter>src\Editor\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\EditorWindows\Viewport.cpp">
+      <Filter>src\Editor\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\TransformGizmo.cpp">
+      <Filter>src\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Structs.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\AssetManager.cpp">
+      <Filter>src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Debug.cpp">
+      <Filter>src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\InputSystem\GamepadHandler.cpp">
+      <Filter>src\Systems\InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\InputSystem\InputActionMap.cpp">
+      <Filter>src\Systems\InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\InputSystem\InputSystem.cpp">
+      <Filter>src\Systems\InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\InputSystem\KeyHandler.cpp">
+      <Filter>src\Systems\InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Physics.cpp">
+      <Filter>src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\RenderStack.cpp">
+      <Filter>src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\SceneManager.cpp">
+      <Filter>src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Serializer.cpp">
+      <Filter>src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Time.cpp">
+      <Filter>src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\WindowManager.cpp">
+      <Filter>src\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
