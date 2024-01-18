@@ -1,6 +1,6 @@
 #include <Xeph2D.h>
 
-class @NAME@ : public Component
+class @NAME@ : public Xeph2D::Component
 {
 public:
     COMP_HEADER_STD(@ID@);

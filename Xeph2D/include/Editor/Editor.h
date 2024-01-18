@@ -41,6 +41,7 @@ namespace Xeph2D::Edit
 
         bool _hasSaved = true;
         bool _showSaveWindow = false;
+        bool _rebuildProject = false;
 
         TransformGizmo _transformGizmo;
 
@@ -78,6 +79,7 @@ namespace Xeph2D::Edit
     private:
         void ViewportGUI();
         void SetUIStyle();
+        void DoProjectRebuild();
     };
 
 }

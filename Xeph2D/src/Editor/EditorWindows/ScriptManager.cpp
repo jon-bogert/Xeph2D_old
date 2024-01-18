@@ -111,6 +111,7 @@ void ScriptManager::OnGUI()
 			Save();
 			_editSelection = -1;
 			_isRemoving = false;
+			Editor::RebuildProject();
 			Editor::Close();
 		}
 		ImGui::SameLine();
@@ -163,6 +164,7 @@ void ScriptManager::OnGUI()
 				strcpy(_nameBuffer, "");
 				strcpy(_pathBuffer, "");
 				_editSelection = -1;
+				Editor::RebuildProject();
 				Editor::Close();
 			}
 		}

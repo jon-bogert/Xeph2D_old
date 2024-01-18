@@ -219,6 +219,8 @@ void Xeph2D::Edit::Editor::Draw()
 void Xeph2D::Edit::Editor::Shutdown()
 {
 	ImGui::SFML::Shutdown();
+	if (Get()._rebuildProject)
+		Get().DoProjectRebuild();
 }
 
 bool Xeph2D::Edit::Editor::IsOpen()
@@ -282,9 +284,7 @@ Edit::TransformGizmo* Xeph2D::Edit::Editor::GetTransformGizmo()
 
 void Xeph2D::Edit::Editor::RebuildProject()
 {
-	//system("dir");
-	system("..\\premake5.exe vs2022 ..\\premake5.lua");
-	//ShellExecute(NULL, L"open", L"..\\premake5.exe", L"vs2022", NULL, SW_HIDE);
+	Get()._rebuildProject = true;
 }
 
 void Xeph2D::Edit::Editor::ViewportGUI()
@@ -395,6 +395,18 @@ void Xeph2D::Edit::Editor::SetUIStyle()
 	io.FontDefault = font;
 
 	ImGui::SFML::UpdateFontTexture();
+}
+
+void Xeph2D::Edit::Editor::DoProjectRebuild()
+{
+	HWND handle = GetForegroundWindow();
+	int bufsize = GetWindowTextLength(handle) + 1;
+	char* title = new char[bufsize];
+	GetWindowTextA(handle, title, bufsize);
+
+	system((std::string("start ..\\reload-sln.exe \"") + title + "\"").c_str());
+
+	delete[] title;
 }
 
 #endif //_EDITOR
