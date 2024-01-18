@@ -4,6 +4,8 @@
 #include "Editor/EditorWindows/Hierarchy.h"
 #endif //_EDITOR
 
+#include <yaml-cpp/yaml.h>
+
 #include <string>
 #include <unordered_map>
 #include <any>

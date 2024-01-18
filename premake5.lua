@@ -22,6 +22,8 @@ project "Xeph2D"
 	objdir ("%{prj.name}/int/".. outputdir)
 	cppdialect "C++17"
 	staticruntime "Off"
+	
+	defines { "YAML_CPP_STATIC_DEFINE" }
 
 	files
 	{
@@ -33,6 +35,7 @@ project "Xeph2D"
 	{
 		"%{prj.name}/include",
 		"box2d/include",
+		"yaml-cpp/include",
 		"SFML/include"
 	}
 	
@@ -73,6 +76,8 @@ project "App"
 	objdir ("%{prj.name}/int/".. outputdir)
 	cppdialect "C++17"
 	staticruntime "Off"
+	
+	defines { "YAML_CPP_STATIC_DEFINE" }
 
 	files
 	{
@@ -85,6 +90,7 @@ project "App"
 		"%{prj.name}/Assets/Scripts",
 		"box2d/include",
 		"SFML/include",
+		"yaml-cpp/include",
 		"Xeph2D/include"
 	}
 	
@@ -109,7 +115,8 @@ project "App"
 			"sfml-graphics-d.lib",
 			"sfml-window-d.lib",
 			"sfml-audio-d.lib",
-			"sfml-network-d.lib"
+			"sfml-network-d.lib",
+			"yaml-cpp-d.lib"
 		}
 
 	filter "configurations:Debug (Console)"
@@ -123,7 +130,8 @@ project "App"
 			"sfml-graphics-d.lib",
 			"sfml-window-d.lib",
 			"sfml-audio-d.lib",
-			"sfml-network-d.lib"
+			"sfml-network-d.lib",
+			"yaml-cpp-d.lib"
 		}
 		
 	filter "configurations:Editor"
@@ -138,7 +146,8 @@ project "App"
 			"sfml-audio-d.lib",
 			"sfml-network-d.lib",
 			"imgui.lib",
-			"opengl32"
+			"opengl32",
+			"yaml-cpp-d.lib"
 		}
 
 	filter "configurations:Editor (Console)"
@@ -154,7 +163,8 @@ project "App"
 			"sfml-audio-d.lib",
 			"sfml-network-d.lib",
 			"imgui.lib",
-			"opengl32"
+			"opengl32",
+			"yaml-cpp-d.lib"
 		}
 		
 	filter "configurations:Release"
@@ -167,5 +177,6 @@ project "App"
 			"sfml-graphics.lib",
 			"sfml-window.lib",
 			"sfml-audio.lib",
-			"sfml-network.lib"
+			"sfml-network.lib",
+			"yaml-cpp.lib"
 		}
