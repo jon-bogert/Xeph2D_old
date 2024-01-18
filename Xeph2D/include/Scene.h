@@ -5,10 +5,6 @@ namespace Xeph2D
 {
 	class Scene
 	{
-	protected:
-		std::vector<std::unique_ptr<GameObject>> _gameObjects;
-		std::vector<GameObject*> _rootObjects;
-
 	public:
 		Scene() = default;
 		virtual ~Scene() = default;
@@ -37,5 +33,9 @@ namespace Xeph2D
 		void MoveUp(size_t index);
 		void MoveDown(size_t index);
 #endif //_EDITOR
+
+	protected:
+		std::vector<std::unique_ptr<GameObject>> m_gameObjects;
+		std::vector<GameObject*> m_rootObjects;
 	};
 }

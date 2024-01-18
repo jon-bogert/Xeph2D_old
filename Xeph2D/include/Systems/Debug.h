@@ -13,52 +13,6 @@ namespace Xeph2D
 		using VertexChain = std::vector<Vector2>;
 		enum class LogType {Log, Warn, Err};
 
-	private:
-		struct LogEntry
-		{
-			Color color = Color::LightGrey;
-			float timer = 0.f;
-			std::string dateTime = "";
-			std::string contents = "";
-		};
-
-		Debug();
-		static Debug& Get();
-		
-#ifdef _DEBUG
-		bool _closeOnEscape = true;
-		bool _logToFile = false;
-		std::string _logPath = "log/";
-		std::ofstream _logFile;
-
-		bool _drawOutput = true;
-		bool _drawGraphics = true;
-		Key _drawOutputKey = Key::F1;
-		Key _drawGraphicsKey = Key::F2;
-
-		std::vector<sf::RectangleShape> _rectBuffer;
-		std::vector<sf::CircleShape> _circleBuffer;
-		std::vector<sf::VertexArray> _lineBuffer;
-
-		std::unique_ptr<sf::Font> _font = nullptr;
-		std::unique_ptr<unsigned char[]> _fontData = nullptr;
-		size_t _fontDataLength = 0;
-		std::deque<sf::Text> _textBuffer;
-		sf::Text _instructions;
-		sf::Text _textTemplate{};
-
-		std::map<std::string, std::string> _monitorBuffer;
-		std::deque<LogEntry> _logBuffer;
-		Color _defaultLogColor = Color::LightGrey;
-		Color _defaultWarnColor = Color::Yellow;
-		Color _defaultErrColor = Color::Red;
-		Color _logColor = _defaultLogColor;
-		Color _warnColor = _defaultWarnColor;
-		Color _errColor = _defaultErrColor;
-		float _logTime = 5.f;
-#endif // _DEBUG
-
-	public:
 		~Debug();
 		Debug(const Debug& other) = delete;
 		Debug(const Debug&& other) = delete;
@@ -84,12 +38,54 @@ namespace Xeph2D
 		static void DrawToWindow();
 
 	private:
+		struct LogEntry
+		{
+			Color color = Color::LightGrey;
+			float timer = 0.f;
+			std::string dateTime = "";
+			std::string contents = "";
+		};
+
+		Debug();
+		static Debug& Get();
+
 #ifdef _DEBUG
 		void UpdateTextBuffer();
 		void AddToLogBuffer(const LogEntry& entry);
 		void ToggleShowOutput(InputAction* ctx);
 		void ToggleShowGraphics(InputAction* ctx);
 		void LogToFile(const std::string& msg);
+
+		bool m_closeOnEscape = true;
+		bool m_logToFile = false;
+		std::string m_logPath = "log/";
+		std::ofstream m_logFile;
+
+		bool m_drawOutput = true;
+		bool m_drawGraphics = true;
+		Key m_drawOutputKey = Key::F1;
+		Key m_drawGraphicsKey = Key::F2;
+
+		std::vector<sf::RectangleShape> m_rectBuffer;
+		std::vector<sf::CircleShape> m_circleBuffer;
+		std::vector<sf::VertexArray> m_lineBuffer;
+
+		std::unique_ptr<sf::Font> m_font = nullptr;
+		std::unique_ptr<unsigned char[]> m_fontData = nullptr;
+		size_t m_fontDataLength = 0;
+		std::deque<sf::Text> m_textBuffer;
+		sf::Text m_instructions;
+		sf::Text m_textTemplate{};
+
+		std::map<std::string, std::string> m_monitorBuffer;
+		std::deque<LogEntry> m_logBuffer;
+		Color m_defaultLogColor = Color::LightGrey;
+		Color m_defaultWarnColor = Color::Yellow;
+		Color m_defaultErrColor = Color::Red;
+		Color m_logColor = m_defaultLogColor;
+		Color m_warnColor = m_defaultWarnColor;
+		Color m_errColor = m_defaultErrColor;
+		float m_logTime = 5.f;
 #endif // _DEBUG
 	};
 }

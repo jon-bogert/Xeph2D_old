@@ -6,10 +6,6 @@ namespace Xeph2D
 	enum class AudioStatus { Stopped, Paused, Playing };
 	class AudioSource : public Component
 	{
-		std::unique_ptr<sf::Sound> _sound = nullptr;
-		AudioData* _data = nullptr;
-		std::string _audioDataKey = "";
-
 	public:
 		COMP_HEADER_STD(0x00000003);
 
@@ -27,5 +23,9 @@ namespace Xeph2D
 	private:
 		bool IsStreamed();
 		void SoundSetup();
+
+		std::unique_ptr<sf::Sound> m_sound = nullptr;
+		AudioData* m_data = nullptr;
+		std::string m_audioDataKey = "";
 	};
 }

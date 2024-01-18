@@ -10,16 +10,6 @@ namespace Xeph2D
 {
 	class SceneManager final
 	{
-		SceneManager() {}
-		static SceneManager& Get();
-
-		std::vector<std::string> _scenes;
-		std::unique_ptr<Scene> _currScene = nullptr;
-		int _currIndex = -1;
-		int _nextIndex = 0;
-		bool _doLoadScene = false;
-		std::function<void(std::unique_ptr<Component>& ptr, uint32_t compID)> _scriptCallback;
-
 	public:
 		~SceneManager() = default;
 		SceneManager(const SceneManager& other) = delete;
@@ -56,5 +46,15 @@ namespace Xeph2D
 		friend class Edit::Inspector;
 		void __AddComponentByID(GameObject* obj, uint32_t id);
 #endif //_EDITOR
+
+		SceneManager() {}
+		static SceneManager& Get();
+
+		std::vector<std::string> m_scenes;
+		std::unique_ptr<Scene> m_currScene = nullptr;
+		int m_currIndex = -1;
+		int m_nextIndex = 0;
+		bool m_doLoadScene = false;
+		std::function<void(std::unique_ptr<Component>& ptr, uint32_t compID)> m_scriptCallback;
 	};
 }

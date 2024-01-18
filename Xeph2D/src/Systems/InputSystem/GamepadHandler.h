@@ -42,23 +42,23 @@ namespace Xeph2D
 			float rt = 0.f;
 		};
 
-		XINPUT_STATE _state{};
+		XINPUT_STATE m_state{};
 
-		bool _controllerActive = true;
-		uint8_t  _controllerCount = 0;
-		bool _controllerCountChange = false;
+		bool m_controllerActive = true;
+		uint8_t  m_controllerCount = 0;
+		bool m_controllerCountChange = false;
 
-		WORD _controllerButtonHold[XUSER_MAX_COUNT];
-		WORD _controllerButtonDown[XUSER_MAX_COUNT];
-		WORD _controllerButtonUp[XUSER_MAX_COUNT];
-		WORD _controllerAxisHold[XUSER_MAX_COUNT];
-		WORD _controllerAxisDown[XUSER_MAX_COUNT];
-		WORD _controllerAxisUp[XUSER_MAX_COUNT];
-		Axis _controllerAxisState[XUSER_MAX_COUNT];
+		WORD m_controllerButtonHold[XUSER_MAX_COUNT];
+		WORD m_controllerButtonDown[XUSER_MAX_COUNT];
+		WORD m_controllerButtonUp[XUSER_MAX_COUNT];
+		WORD m_controllerAxisHold[XUSER_MAX_COUNT];
+		WORD m_controllerAxisDown[XUSER_MAX_COUNT];
+		WORD m_controllerAxisUp[XUSER_MAX_COUNT];
+		Axis m_controllerAxisState[XUSER_MAX_COUNT];
 
-		float _triggerThreshold = 0.1f;
-		float _deadzoneMinimum = 0.3f;
-		float _deadzoneMaximum = 1.f;
+		float m_triggerThreshold = 0.1f;
+		float m_deadzoneMinimum = 0.3f;
+		float m_deadzoneMaximum = 1.f;
 
 		void Initialize();
 		void Update();

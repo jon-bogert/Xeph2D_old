@@ -1,12 +1,12 @@
 #include "Scene.h"
 
-#define __CALLONALL(func) for (auto& go : _gameObjects) { go->func(); }
+#define __CALLONALL(func) for (auto& go : m_gameObjects) { go->func(); }
 
 using namespace Xeph2D;
 
 GameObject* Xeph2D::Scene::AddGameObject(GameObject* parent)
 {
-	GameObject* obj = _gameObjects.emplace_back(std::make_unique<GameObject>()).get();
+	GameObject* obj = m_gameObjects.emplace_back(std::make_unique<GameObject>()).get();
 	if (parent)
 	{
 		obj->SetParent(parent);
@@ -32,7 +32,7 @@ void Scene::OnDestroy()			{ __CALLONALL(OnDestroy) }
 void Xeph2D::Scene::Destroy(GameObject* obj)
 {
 	//TODO - Destroy Children
-	for (auto it = _gameObjects.begin(); it != _gameObjects.end(); it++)
+	for (auto it = m_gameObjects.begin(); it != m_gameObjects.end(); it++)
 	{
 		if ((*it).get() == obj)
 		{
@@ -42,7 +42,7 @@ void Xeph2D::Scene::Destroy(GameObject* obj)
 			(*it)->OnDisable();
 			(*it)->OnDestroy();
 #endif //_EDITOR
-			_gameObjects.erase(it);
+			m_gameObjects.erase(it);
 			return;
 		}
 	}
@@ -52,7 +52,7 @@ std::vector<GameObject*> Xeph2D::Scene::GetAllObjects()
 {
 	std::vector<GameObject*> objs;
 
-	for (auto& ptr : _gameObjects)
+	for (auto& ptr : m_gameObjects)
 		objs.push_back(ptr.get());
 
 	return objs;
@@ -61,11 +61,11 @@ std::vector<GameObject*> Xeph2D::Scene::GetAllObjects()
 #ifdef _EDITOR
 void Xeph2D::Scene::MoveUp(size_t index)
 {
-	std::swap(_gameObjects[index], _gameObjects[index - 1]);
+	std::swap(m_gameObjects[index], m_gameObjects[index - 1]);
 }
 
 void Xeph2D::Scene::MoveDown(size_t index)
 {
-	std::swap(_gameObjects[index], _gameObjects[index + 1]);
+	std::swap(m_gameObjects[index], m_gameObjects[index + 1]);
 }
 #endif //_EDITOR

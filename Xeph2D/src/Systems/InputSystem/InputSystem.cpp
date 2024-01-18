@@ -48,9 +48,9 @@ namespace
 
 Xeph2D::InputSystem::InputSystem()
 {
-	_gamepadHandler = new GamepadHandler();
-	_keyHandler = new KeyHandler();
-	GetCursorPos(&_mousePos);
+	m_gamepadHandler = new GamepadHandler();
+	m_keyHandler = new KeyHandler();
+	GetCursorPos(&m_mousePos);
 }
 
 InputSystem& Xeph2D::InputSystem::Get()
@@ -61,8 +61,8 @@ InputSystem& Xeph2D::InputSystem::Get()
 
 Xeph2D::InputSystem::~InputSystem()
 {
-	delete _keyHandler;
-	delete _gamepadHandler;
+	delete m_keyHandler;
+	delete m_gamepadHandler;
 }
 
 //================================================================================
@@ -83,77 +83,77 @@ void Xeph2D::InputSystem::Update()
 
 bool Xeph2D::InputSystem::IsControllerConnected(const uint8_t num)
 {
-	return Get()._gamepadHandler->IsControllerConnected(num);
+	return Get().m_gamepadHandler->IsControllerConnected(num);
 }
 
 bool Xeph2D::InputSystem::GetGamepadHold(Gamepad::Button button, uint8_t num)
 {
-	return Get()._gamepadHandler->GetGamepadHold(button, num);
+	return Get().m_gamepadHandler->GetGamepadHold(button, num);
 }
 
 bool Xeph2D::InputSystem::GetGamepadDown(Gamepad::Button button, uint8_t num)
 {
-	return Get()._gamepadHandler->GetGamepadDown(button, num);
+	return Get().m_gamepadHandler->GetGamepadDown(button, num);
 }
 
 bool Xeph2D::InputSystem::GetGamepadUp(Gamepad::Button button, uint8_t num)
 {
-	return Get()._gamepadHandler->GetGamepadUp(button, num);
+	return Get().m_gamepadHandler->GetGamepadUp(button, num);
 }
 
 void Xeph2D::InputSystem::GetGamepadAxis(float* out_v2, Gamepad::Axis axis, uint8_t num)
 {
-	Get()._gamepadHandler->GetGamepadAxis(out_v2, axis, num);
+	Get().m_gamepadHandler->GetGamepadAxis(out_v2, axis, num);
 }
 
 float Xeph2D::InputSystem::GetTriggerThreshold()
 {
-	return Get()._gamepadHandler->GetTriggerThreshold();
+	return Get().m_gamepadHandler->GetTriggerThreshold();
 }
 
 void Xeph2D::InputSystem::SetTriggerThreshold(const float threshold)
 {
-	Get()._gamepadHandler->SetTriggerThreshold(threshold);
+	Get().m_gamepadHandler->SetTriggerThreshold(threshold);
 }
 
 bool Xeph2D::InputSystem::GetKeyHold(Key keycode)
 {
-	return Get()._keyHandler->GetKeyHold(keycode);
+	return Get().m_keyHandler->GetKeyHold(keycode);
 }
 
 bool Xeph2D::InputSystem::GetKeyDown(Key keycode)
 {
-	return Get()._keyHandler->GetKeyDown(keycode);
+	return Get().m_keyHandler->GetKeyDown(keycode);
 }
 
 bool Xeph2D::InputSystem::GetKeyUp(Key keycode)
 {
-	return Get()._keyHandler->GetKeyUp(keycode);
+	return Get().m_keyHandler->GetKeyUp(keycode);
 }
 
 bool Xeph2D::InputSystem::GetMouseHold(Mouse::Button btncode)
 {
-	return Get()._keyHandler->GetMouseHold(btncode);
+	return Get().m_keyHandler->GetMouseHold(btncode);
 }
 
 bool Xeph2D::InputSystem::GetMouseDown(Mouse::Button btncode)
 {
-	return Get()._keyHandler->GetMouseDown(btncode);
+	return Get().m_keyHandler->GetMouseDown(btncode);
 }
 
 bool Xeph2D::InputSystem::GetMouseUp(Mouse::Button btncode)
 {
-	return Get()._keyHandler->GetMouseUp(btncode);
+	return Get().m_keyHandler->GetMouseUp(btncode);
 }
 
 float Xeph2D::InputSystem::GetKeyAxisComposite1D(Key negative, Key positive)
 {
-	return Get()._keyHandler->GetKeyAxisComposite1D(negative, positive);
+	return Get().m_keyHandler->GetKeyAxisComposite1D(negative, positive);
 }
 
 void Xeph2D::InputSystem::GetKeyAxisComposite2D(float* out_v2, Key negX, Key posX, Key negY, Key posY)
 {
-	return Get()._keyHandler->GetKeyAxisComposite2D(out_v2, negX, posX, negY, posY);
+	return Get().m_keyHandler->GetKeyAxisComposite2D(out_v2, negX, posX, negY, posY);
 }
 
 void Xeph2D::InputSystem::GetMousePos(float* out_v2, bool relativeToWindow)
@@ -163,42 +163,42 @@ void Xeph2D::InputSystem::GetMousePos(float* out_v2, bool relativeToWindow)
 
 void Xeph2D::InputSystem::GetMouseDelta(float* out_v2)
 {
-	out_v2[0] = Get()._mouseDelta[0];
-	out_v2[1] = Get()._mouseDelta[1];
+	out_v2[0] = Get().m_mouseDelta[0];
+	out_v2[1] = Get().m_mouseDelta[1];
 }
 
 void Xeph2D::InputSystem::SetCaptureMouse(const bool captureMouse)
 {
-	if (!Get()._hwnd) return;
-	Get()._captureMouse = captureMouse;
+	if (!Get().m_hwnd) return;
+	Get().m_captureMouse = captureMouse;
 }
 
 bool Xeph2D::InputSystem::GetCaptureMouse()
 {
-	return Get()._captureMouse;
+	return Get().m_captureMouse;
 }
 
 bool Xeph2D::InputSystem::MouseOverWindow()
 {
-	if (!Get()._hwnd) return false;
+	if (!Get().m_hwnd) return false;
 	float pos[2];
 	RECT clientRect;
 	GetMousePos(pos, true);
-	GetClientRect(Get()._hwnd, &clientRect);
+	GetClientRect(Get().m_hwnd, &clientRect);
 	return !(pos[0] < 0 || pos[0] >= (float)clientRect.bottom || pos[1] < 0 || pos[1] >= (float)clientRect.right);
 }
 
 Xeph2D::InputActionMap* Xeph2D::InputSystem::CreateInputActionMap(std::string name)
 {
-	InputActionMap* map = Get()._actionMaps.emplace_back(std::make_unique<InputActionMap>()).get();
+	InputActionMap* map = Get().m_actionMaps.emplace_back(std::make_unique<InputActionMap>()).get();
 	map->name = name;
 	return map;
 }
 
 InputActionMap* Xeph2D::InputSystem::FindInputActionMap(std::string name)
 {
-	auto it = std::find_if(Get()._actionMaps.begin(), Get()._actionMaps.end(), [=](const std::unique_ptr<InputActionMap>& x) {return x->name == name; });
-	return (it == Get()._actionMaps.end()) ? nullptr : it->get();
+	auto it = std::find_if(Get().m_actionMaps.begin(), Get().m_actionMaps.end(), [=](const std::unique_ptr<InputActionMap>& x) {return x->name == name; });
+	return (it == Get().m_actionMaps.end()) ? nullptr : it->get();
 }
 
 //================================================================================
@@ -208,49 +208,49 @@ InputActionMap* Xeph2D::InputSystem::FindInputActionMap(std::string name)
 
 void Xeph2D::InputSystem::_Initialize(HWND& hwnd)
 {
-	_hwnd = hwnd;
-	_gamepadHandler->Initialize();
+	m_hwnd = hwnd;
+	m_gamepadHandler->Initialize();
 }
 
 void Xeph2D::InputSystem::_Update()
 {
 	POINT newPos;
 	GetCursorPos(&newPos);
-	if (_captureMouse)
+	if (m_captureMouse)
 	{
-		if (_hwnd == nullptr) return; // Cannot capture mouse while window is null
-		POINT center = WindowCenter(_hwnd);
+		if (m_hwnd == nullptr) return; // Cannot capture mouse while window is null
+		POINT center = WindowCenter(m_hwnd);
 
-		_mouseDelta[0] = newPos.x - center.x;
-		_mouseDelta[1] = newPos.y - center.y;
+		m_mouseDelta[0] = newPos.x - center.x;
+		m_mouseDelta[1] = newPos.y - center.y;
 		SetCursorPos(center.x, center.y);
 	}
 	else
 	{
-		_mouseDelta[0] = newPos.x - _mousePos.x;
-		_mouseDelta[1] = newPos.y - _mousePos.y;
-		_mousePos = newPos;
+		m_mouseDelta[0] = newPos.x - m_mousePos.x;
+		m_mouseDelta[1] = newPos.y - m_mousePos.y;
+		m_mousePos = newPos;
 	}
 
-	_gamepadHandler->Update();
-	_keyHandler->Update();
-	for (auto& map : _actionMaps)
+	m_gamepadHandler->Update();
+	m_keyHandler->Update();
+	for (auto& map : m_actionMaps)
 		map->Update();
 }
 
 void Xeph2D::InputSystem::_GetMousePos(float* out_v2, bool relativeToWindow)
 {
-	if (_hwnd && relativeToWindow)
+	if (m_hwnd && relativeToWindow)
 	{
-		POINT copy = _mousePos;
-		ScreenToClient(_hwnd, &copy);
+		POINT copy = m_mousePos;
+		ScreenToClient(m_hwnd, &copy);
 		out_v2[0] = copy.x;
 		out_v2[1] = copy.y;
 	}
 	else
 	{
-		out_v2[0] = _mousePos.x;
-		out_v2[1] = _mousePos.y;
+		out_v2[0] = m_mousePos.x;
+		out_v2[1] = m_mousePos.y;
 	}
 
 }

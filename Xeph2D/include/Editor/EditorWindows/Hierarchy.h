@@ -6,13 +6,12 @@ namespace Xeph2D::Edit
 {
 	class Hierarchy : public EditorWindow
 	{
-
-	private:
-		int _selectionIndex = -1;
-
 	public:
 		void Initialize() override;
 		void OnGUI() override;
+
+	private:
+		int m_selectionIndex = -1;
 	};
 }
 #endif //_EDITOR

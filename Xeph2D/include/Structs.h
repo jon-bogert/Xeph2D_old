@@ -204,48 +204,48 @@ namespace Xeph2D
 
 	struct Rotation
 	{
-	private:
-		float _val = 0.f;
-
-		void CheckVal()
-		{
-			while (_val > 180.f)
-				_val -= 360.f;
-			while (_val <= -180.f)
-				_val += 360.f;
-		}
 	public:
 		void SetRad(const float val)
 		{
-			_val = val * 180.f / 3.14159265358979f;
+			m_val = val * 180.f / 3.14159265358979f;
 			CheckVal();
 		}
 		float GetRad() const
 		{
-			return _val * 3.14159265358979f / 180.f;
+			return m_val * 3.14159265358979f / 180.f;
 		}
 		float AddRad(const float amt)
 		{
-			_val += amt * 180.f / 3.14159265358979f;
+			m_val += amt * 180.f / 3.14159265358979f;
 			CheckVal();
-			return _val;
+			return m_val;
 		}
 		void SetDeg(const float val)
 		{
-			_val = val;
+			m_val = val;
 			CheckVal();
 		}
 		float GetDeg() const
 		{
-			return _val;
+			return m_val;
 		}
 		float AddDeg(const float amt)
 		{
-			_val += amt;
+			m_val += amt;
 			CheckVal();
-			return _val;
+			return m_val;
 		}
 
+	private:
+		float m_val = 0.f;
+
+		void CheckVal()
+		{
+			while (m_val > 180.f)
+				m_val -= 360.f;
+			while (m_val <= -180.f)
+				m_val += 360.f;
+		}
 	};
 
 	class Transform

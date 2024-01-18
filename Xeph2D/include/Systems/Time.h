@@ -6,13 +6,6 @@ namespace Xeph2D
 {
 	class Time final
 	{
-		Time() {}
-		static Time& Get();
-
-		float _delta = 0.f;
-		float _timescale = 1.f;
-		sf::Clock _timer = {};
-
 	public:
 		~Time() = default;
 		Time(const Time& other) = delete;
@@ -27,5 +20,13 @@ namespace Xeph2D
 		static float GetTimeScale();
 		static void SetTimeScale(float timescale);
 		static uint32_t FPS();
+
+	private:
+		Time() {}
+		static Time& Get();
+
+		float m_delta = 0.f;
+		float m_timescale = 1.f;
+		sf::Clock m_timer = {};
 	};
 }

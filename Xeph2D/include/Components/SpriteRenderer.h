@@ -11,8 +11,8 @@ namespace Xeph2D
 {
 	class SpriteRenderer : public Component
 	{
-		std::unique_ptr<sf::Sprite> _sprite = nullptr;
-		std::string _textureKey = "";
+		std::unique_ptr<sf::Sprite> m_sprite = nullptr;
+		std::string m_textureKey = "";
 	public:
 		COMP_HEADER_STD(0x00000002);
 

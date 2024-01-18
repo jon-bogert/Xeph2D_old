@@ -30,9 +30,9 @@ void Hierarchy::OnGUI()
 	std::vector<std::string> itemNames;
 	for (GameObject*& obj : objects)
 		itemNames.push_back(obj->name);
-	if (ImGui::ListBox("##HItems", &_selectionIndex, Utility::CStrVect(itemNames).data(), itemNames.size()))
+	if (ImGui::ListBox("##HItems", &m_selectionIndex, Utility::CStrVect(itemNames).data(), itemNames.size()))
 	{
-		Editor::GetInspectorWindow()->SetGameObject(objects[_selectionIndex]);
+		Editor::GetInspectorWindow()->SetGameObject(objects[m_selectionIndex]);
 	}
 	
 	if (ImGui::Button("+##Hier"))
@@ -44,10 +44,10 @@ void Hierarchy::OnGUI()
 	ImGui::SameLine();
 	if (ImGui::Button("-##Hier"))
 	{
-		if (_selectionIndex >= 0)
+		if (m_selectionIndex >= 0)
 		{
-			Serializer::Get().EditorRemoveGameObject(objects[_selectionIndex]);
-			SceneManager::GetCurrentScene()->Destroy(objects[_selectionIndex]);
+			Serializer::Get().EditorRemoveGameObject(objects[m_selectionIndex]);
+			SceneManager::GetCurrentScene()->Destroy(objects[m_selectionIndex]);
 			Editor::GetInspectorWindow()->SetGameObject(nullptr);
 			Editor::SetHasSaved(false);
 		}
@@ -55,21 +55,21 @@ void Hierarchy::OnGUI()
 	ImGui::SameLine();
 	if (ImGui::Button("^##Hier"))
 	{
-		if (_selectionIndex > 0)
+		if (m_selectionIndex > 0)
 		{
-			SceneManager::GetCurrentScene()->MoveUp(_selectionIndex);
+			SceneManager::GetCurrentScene()->MoveUp(m_selectionIndex);
 			Editor::SetHasSaved(false);
-			--_selectionIndex;
+			--m_selectionIndex;
 		}
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("v##Hier"))
 	{
-		if (_selectionIndex < objects.size() - 1 && _selectionIndex >= 0)
+		if (m_selectionIndex < objects.size() - 1 && m_selectionIndex >= 0)
 		{
-			SceneManager::GetCurrentScene()->MoveDown(_selectionIndex);
+			SceneManager::GetCurrentScene()->MoveDown(m_selectionIndex);
 			Editor::SetHasSaved(false);
-			++_selectionIndex;
+			++m_selectionIndex;
 		}
 	}
 }

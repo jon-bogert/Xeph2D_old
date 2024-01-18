@@ -9,16 +9,6 @@ namespace Xeph2D
 {
 	class AssetManager final
 	{
-#ifdef _EDITOR
-		std::unique_ptr<unsigned char[]> _emptyImageData;
-#endif //_EDITOR
-		std::unordered_map<std::string, sf::Texture> _textures;
-		std::unordered_map<std::string, AudioData> _audioSources;
-		AssetManager();
-		static AssetManager& Get();
-
-		const std::string assetPath = "Assets/";
-
 	public:
 		~AssetManager() = default;
 		AssetManager(const AssetManager& other) = delete;
@@ -41,5 +31,15 @@ namespace Xeph2D
 		static void UnloadAll();
 	private:
 		static std::string TagFromFileName(const std::string& filename);
+
+#ifdef _EDITOR
+		std::unique_ptr<unsigned char[]> m_emptyImageData;
+#endif //_EDITOR
+		std::unordered_map<std::string, sf::Texture> m_textures;
+		std::unordered_map<std::string, AudioData> m_audioSources;
+		AssetManager();
+		static AssetManager& Get();
+
+		const std::string k_assetPath = "Assets/";
 	};
 }

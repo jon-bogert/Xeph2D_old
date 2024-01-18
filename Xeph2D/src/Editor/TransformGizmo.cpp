@@ -13,63 +13,63 @@ using namespace Xeph2D::Edit;
 
 void Xeph2D::Edit::TransformGizmo::UpdateMouse(const Vector2& mousePos)
 {
-	if (_currentObject == nullptr)
+	if (m_currentObject == nullptr)
 		return;
 
-	Vector2 position = WindowManager::WorldToPixel(_currentObject->transform.position);
+	Vector2 position = WindowManager::WorldToPixel(m_currentObject->transform.position);
 	
-	if (!_applyingTransform && (_mode == Mode::Position || _mode == Mode::Scale))
+	if (!m_applyingTransform && (m_mode == Mode::Position || m_mode == Mode::Scale))
 	{
 		//both Square
-		if (mousePos.x >= position.x && mousePos.x <= position.x + _centerWidth &&
-			mousePos.y <= position.y && mousePos.y >= position.y - _centerWidth)
+		if (mousePos.x >= position.x && mousePos.x <= position.x + m_centerWidth &&
+			mousePos.y <= position.y && mousePos.y >= position.y - m_centerWidth)
 		{
-			_xSelected = true;
-			_ySelected = true;
+			m_xSelected = true;
+			m_ySelected = true;
 		}
 		// X line
-		else if (mousePos.x >= position.x + _centerWidth && mousePos.x <= position.x + _radius + _symbolWidth &&
-			mousePos.y <= position.y + _centerWidth * 0.5f && mousePos.y >= position.y - _centerWidth * 0.5f)
+		else if (mousePos.x >= position.x + m_centerWidth && mousePos.x <= position.x + m_radius + m_symbolWidth &&
+			mousePos.y <= position.y + m_centerWidth * 0.5f && mousePos.y >= position.y - m_centerWidth * 0.5f)
 		{
-			_xSelected = true;
-			_ySelected = false;
+			m_xSelected = true;
+			m_ySelected = false;
 		}
 		// Y line
-		else if (mousePos.x <= position.x + _centerWidth * 0.5f && mousePos.x >= position.x - _centerWidth * 0.5f &&
-			mousePos.y <= position.y - _centerWidth  && mousePos.y >= position.y - _radius - _symbolWidth)
+		else if (mousePos.x <= position.x + m_centerWidth * 0.5f && mousePos.x >= position.x - m_centerWidth * 0.5f &&
+			mousePos.y <= position.y - m_centerWidth  && mousePos.y >= position.y - m_radius - m_symbolWidth)
 		{
-			_xSelected = false;
-			_ySelected = true;
+			m_xSelected = false;
+			m_ySelected = true;
 		}
 		else
 		{
-			_xSelected = false;
-			_ySelected = false;
+			m_xSelected = false;
+			m_ySelected = false;
 		}
 	}
-	else if (_mode == Mode::Rotation)
+	else if (m_mode == Mode::Rotation)
 	{
 		float mag = Math::Magnitude(position - mousePos);
-		if (mag < _radius + _symbolWidth && mag > _radius - _symbolWidth)
+		if (mag < m_radius + m_symbolWidth && mag > m_radius - m_symbolWidth)
 		{
-			_xSelected = true;
-			_ySelected = true;
+			m_xSelected = true;
+			m_ySelected = true;
 		}
 		else
 		{
-			_xSelected = false;
-			_ySelected = false;
+			m_xSelected = false;
+			m_ySelected = false;
 		}
 	}
 
-	if ((_xSelected || _ySelected) &&
+	if ((m_xSelected || m_ySelected) &&
 		(InputSystem::GetMouseDown(Mouse::Button::Left) && !InputSystem::GetKeyHold(Key::LAlt)))
 	{
-		_applyingTransform = true;
+		m_applyingTransform = true;
 	}
 	else if (InputSystem::GetMouseUp(Mouse::Button::Left))
 	{
-		_applyingTransform = false;
+		m_applyingTransform = false;
 	}
 
 	ApplyTransform();
@@ -77,71 +77,71 @@ void Xeph2D::Edit::TransformGizmo::UpdateMouse(const Vector2& mousePos)
 
 void TransformGizmo::Draw()
 {
-	if (_currentObject == nullptr)
+	if (m_currentObject == nullptr)
 		return;
 
 	Debug::VertexChain vertChain;
 	Vector2 out;
-	Vector2 cwUnit = { WindowManager::PixelToUnit(_centerWidth), WindowManager::PixelToUnit(_centerWidth) };
-	float swUnit = WindowManager::PixelToUnit(_symbolWidth);
-	Color xColor = (_xSelected) ? Color::Yellow : Color::Red;
-	Color yColor = (_ySelected) ? Color::Yellow : Color::Green;
-	Color zColor = (_xSelected || _ySelected) ? Color::Yellow : Color::Blue;
-	Color bothColor = (_xSelected && _ySelected) ? Color::Yellow : Color::Blue;
+	Vector2 cwUnit = { WindowManager::PixelToUnit(m_centerWidth), WindowManager::PixelToUnit(m_centerWidth) };
+	float swUnit = WindowManager::PixelToUnit(m_symbolWidth);
+	Color xColor = (m_xSelected) ? Color::Yellow : Color::Red;
+	Color yColor = (m_ySelected) ? Color::Yellow : Color::Green;
+	Color zColor = (m_xSelected || m_ySelected) ? Color::Yellow : Color::Blue;
+	Color bothColor = (m_xSelected && m_ySelected) ? Color::Yellow : Color::Blue;
 	bothColor.a = 0.25f;
 
-	switch (_mode)
+	switch (m_mode)
 	{
 	case Mode::Position:
-		vertChain.push_back(_currentObject->transform.position);
-		out = WindowManager::PixelToUnit({ _radius, 0.f });
-		vertChain.push_back(_currentObject->transform.position + out);
-		vertChain.push_back(_currentObject->transform.position + out + Vector2(0.f, swUnit * 0.5f));
-		vertChain.push_back(_currentObject->transform.position + out + Vector2(swUnit, 0.f));
-		vertChain.push_back(_currentObject->transform.position + out + Vector2(0.f, -swUnit * 0.5f));
-		vertChain.push_back(_currentObject->transform.position + out);
+		vertChain.push_back(m_currentObject->transform.position);
+		out = WindowManager::PixelToUnit({ m_radius, 0.f });
+		vertChain.push_back(m_currentObject->transform.position + out);
+		vertChain.push_back(m_currentObject->transform.position + out + Vector2(0.f, swUnit * 0.5f));
+		vertChain.push_back(m_currentObject->transform.position + out + Vector2(swUnit, 0.f));
+		vertChain.push_back(m_currentObject->transform.position + out + Vector2(0.f, -swUnit * 0.5f));
+		vertChain.push_back(m_currentObject->transform.position + out);
 		Debug::DrawChainLine(vertChain, xColor);
 
 		vertChain.clear();
-		vertChain.push_back(_currentObject->transform.position);
-		out = WindowManager::PixelToUnit({ 0.f, _radius });
-		vertChain.push_back(_currentObject->transform.position + out);
-		vertChain.push_back(_currentObject->transform.position + out + Vector2(-swUnit * 0.5f, 0.f));
-		vertChain.push_back(_currentObject->transform.position + out + Vector2(0.f, swUnit));
-		vertChain.push_back(_currentObject->transform.position + out + Vector2(swUnit * 0.5f, 0.f));
-		vertChain.push_back(_currentObject->transform.position + out);
+		vertChain.push_back(m_currentObject->transform.position);
+		out = WindowManager::PixelToUnit({ 0.f, m_radius });
+		vertChain.push_back(m_currentObject->transform.position + out);
+		vertChain.push_back(m_currentObject->transform.position + out + Vector2(-swUnit * 0.5f, 0.f));
+		vertChain.push_back(m_currentObject->transform.position + out + Vector2(0.f, swUnit));
+		vertChain.push_back(m_currentObject->transform.position + out + Vector2(swUnit * 0.5f, 0.f));
+		vertChain.push_back(m_currentObject->transform.position + out);
 		Debug::DrawChainLine(vertChain, yColor);
 
-		Debug::DrawBoxFilled(_currentObject->transform.position + cwUnit * 0.5f, cwUnit, 0.f, bothColor);
+		Debug::DrawBoxFilled(m_currentObject->transform.position + cwUnit * 0.5f, cwUnit, 0.f, bothColor);
 		break;
 	case Mode::Rotation:
-		Debug::DrawCircleOutline(_currentObject->transform.position, WindowManager::PixelToUnit(_radius), zColor);
-		out = Vector2(std::cosf(_currentObject->transform.rotation.GetRad()), -std::sinf(_currentObject->transform.rotation.GetRad())) * WindowManager::PixelToUnit(_radius);
-		Debug::DrawLine(_currentObject->transform.position, _currentObject->transform.position + out, zColor);
+		Debug::DrawCircleOutline(m_currentObject->transform.position, WindowManager::PixelToUnit(m_radius), zColor);
+		out = Vector2(std::cosf(m_currentObject->transform.rotation.GetRad()), -std::sinf(m_currentObject->transform.rotation.GetRad())) * WindowManager::PixelToUnit(m_radius);
+		Debug::DrawLine(m_currentObject->transform.position, m_currentObject->transform.position + out, zColor);
 		break;
 	case Mode::Scale:
-		vertChain.push_back(_currentObject->transform.position);
-		out = WindowManager::PixelToUnit({ _radius, 0.f });
-		vertChain.push_back(_currentObject->transform.position + out);
-		vertChain.push_back(_currentObject->transform.position + out + Vector2(0.f, swUnit * 0.5f));
-		vertChain.push_back(_currentObject->transform.position + out + Vector2(swUnit, swUnit * 0.5f));
-		vertChain.push_back(_currentObject->transform.position + out + Vector2(swUnit, -swUnit * 0.5f));
-		vertChain.push_back(_currentObject->transform.position + out + Vector2(0.f, -swUnit * 0.5f));
-		vertChain.push_back(_currentObject->transform.position + out);
+		vertChain.push_back(m_currentObject->transform.position);
+		out = WindowManager::PixelToUnit({ m_radius, 0.f });
+		vertChain.push_back(m_currentObject->transform.position + out);
+		vertChain.push_back(m_currentObject->transform.position + out + Vector2(0.f, swUnit * 0.5f));
+		vertChain.push_back(m_currentObject->transform.position + out + Vector2(swUnit, swUnit * 0.5f));
+		vertChain.push_back(m_currentObject->transform.position + out + Vector2(swUnit, -swUnit * 0.5f));
+		vertChain.push_back(m_currentObject->transform.position + out + Vector2(0.f, -swUnit * 0.5f));
+		vertChain.push_back(m_currentObject->transform.position + out);
 		Debug::DrawChainLine(vertChain, xColor);
 
 		vertChain.clear();
-		vertChain.push_back(_currentObject->transform.position);
-		out = WindowManager::PixelToUnit({ 0.f, _radius });
-		vertChain.push_back(_currentObject->transform.position + out);
-		vertChain.push_back(_currentObject->transform.position + out + Vector2(-swUnit * 0.5f, 0.f));
-		vertChain.push_back(_currentObject->transform.position + out + Vector2(-swUnit * 0.5f, swUnit));
-		vertChain.push_back(_currentObject->transform.position + out + Vector2(swUnit * 0.5f, swUnit));
-		vertChain.push_back(_currentObject->transform.position + out + Vector2(swUnit * 0.5f, 0.f));
-		vertChain.push_back(_currentObject->transform.position + out);
+		vertChain.push_back(m_currentObject->transform.position);
+		out = WindowManager::PixelToUnit({ 0.f, m_radius });
+		vertChain.push_back(m_currentObject->transform.position + out);
+		vertChain.push_back(m_currentObject->transform.position + out + Vector2(-swUnit * 0.5f, 0.f));
+		vertChain.push_back(m_currentObject->transform.position + out + Vector2(-swUnit * 0.5f, swUnit));
+		vertChain.push_back(m_currentObject->transform.position + out + Vector2(swUnit * 0.5f, swUnit));
+		vertChain.push_back(m_currentObject->transform.position + out + Vector2(swUnit * 0.5f, 0.f));
+		vertChain.push_back(m_currentObject->transform.position + out);
 		Debug::DrawChainLine(vertChain, yColor);
 
-		Debug::DrawBoxFilled(_currentObject->transform.position + cwUnit * 0.5f, cwUnit, 0.f, bothColor);
+		Debug::DrawBoxFilled(m_currentObject->transform.position + cwUnit * 0.5f, cwUnit, 0.f, bothColor);
 		break;
 	default:
 		Debug::LogErr("TransfromGizmo::Draw -> Enum type not supported");
@@ -151,22 +151,22 @@ void TransformGizmo::Draw()
 
 void TransformGizmo::SetCurrentObject(GameObject* gameObject)
 {
-	_currentObject = gameObject;
+	m_currentObject = gameObject;
 }
 
 TransformGizmo::Mode TransformGizmo::GetMode() const
 {
-	return _mode;
+	return m_mode;
 }
 
 void TransformGizmo::SetMode(const Mode mode)
 {
-	_mode = mode;
+	m_mode = mode;
 }
 
 void Xeph2D::Edit::TransformGizmo::ApplyTransform()
 {
-	if (!_applyingTransform)
+	if (!m_applyingTransform)
 		return;
 
 	Vector2 mouseDelta{};
@@ -177,31 +177,31 @@ void Xeph2D::Edit::TransformGizmo::ApplyTransform()
 	float scaleBoth = (mouseDelta.x + mouseDelta.y) * 0.5f;
 	Vector2 globalMousePos{};
 
-	switch (_mode)
+	switch (m_mode)
 	{
 	case Mode::Position:
-		if (_xSelected)
-			_currentObject->transform.position.x += mouseDelta.x;
-		if (_ySelected)
-			_currentObject->transform.position.y += mouseDelta.y;
+		if (m_xSelected)
+			m_currentObject->transform.position.x += mouseDelta.x;
+		if (m_ySelected)
+			m_currentObject->transform.position.y += mouseDelta.y;
 		break;
 	case Mode::Rotation:
 		InputSystem::GetMousePos(&globalMousePos.x, false);
-		_currentObject->transform.rotation.AddDeg(mouseDelta.x * __ROT_SPEED);
+		m_currentObject->transform.rotation.AddDeg(mouseDelta.x * __ROT_SPEED);
 		break;
 	case Mode::Scale:
-		if (_xSelected && _ySelected)
+		if (m_xSelected && m_ySelected)
 		{
-			_currentObject->transform.scale += Vector2(scaleBoth, scaleBoth);
+			m_currentObject->transform.scale += Vector2(scaleBoth, scaleBoth);
 			break;
 		}
-		if (_xSelected)
-			_currentObject->transform.scale.x += mouseDelta.x;
-		if (_ySelected)
-			_currentObject->transform.scale.y += mouseDelta.y;
+		if (m_xSelected)
+			m_currentObject->transform.scale.x += mouseDelta.x;
+		if (m_ySelected)
+			m_currentObject->transform.scale.y += mouseDelta.y;
 		break;
 	}
-	for (Serializer::EdVarEntry& e : Serializer::GetDataFromInstance(_currentObject->instID)->go_variables)
+	for (Serializer::EdVarEntry& e : Serializer::GetDataFromInstance(m_currentObject->instID)->go_variables)
 	{
 		if (e.name == "transform")
 		{

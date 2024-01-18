@@ -12,31 +12,12 @@ namespace Xeph2D
 {
 	class WindowManager final
 	{
-		WindowManager() {}
-		static WindowManager& Get();
+	public:
 #ifdef _EDITOR
-		std::unique_ptr<sf::RenderTexture> _viewport = nullptr;
-	public:
-		static sf::RenderTexture* __Viewport() { return Get()._viewport.get(); }
+		static sf::RenderTexture* __Viewport() { return Get().m_viewport.get(); }
 		static void __UpdateViewportSize(Vector2 size);
-	private:
-#endif
-		std::unique_ptr<sf::RenderWindow> _window = nullptr;
+#endif //_EDITOR
 
-		uint32_t _width = 1280;
-		uint32_t _height = 720;
-		uint32_t _refWidth = 1920;
-		uint32_t _refHeight = 1080;
-		float _aspect = _refWidth / (float)_refHeight;
-		uint32_t _ppu = 32;
-
-		float _resScale = 1.f;
-
-		Camera* _camera = nullptr;
-
-		HWND _handle = nullptr;
-
-	public:
 		~WindowManager() = default;
 		WindowManager(const WindowManager& other) = delete;
 		WindowManager(const WindowManager&& other) = delete;
@@ -78,5 +59,28 @@ namespace Xeph2D
 		static void SetTargetFramerate(uint32_t framerate);
 
 		static sf::RenderWindow* __UnWrap();
+
+	private:
+#ifdef _EDITOR
+		std::unique_ptr<sf::RenderTexture> m_viewport = nullptr;
+#endif //_EDITOR
+
+		WindowManager() {}
+		static WindowManager& Get();
+
+		std::unique_ptr<sf::RenderWindow> m_window = nullptr;
+
+		uint32_t m_width = 1280;
+		uint32_t m_height = 720;
+		uint32_t m_refWidth = 1920;
+		uint32_t m_refHeight = 1080;
+		float m_aspect = m_refWidth / (float)m_refHeight;
+		uint32_t m_ppu = 32;
+
+		float m_resScale = 1.f;
+
+		Camera* m_camera = nullptr;
+
+		HWND m_handle = nullptr;
 	};
 }

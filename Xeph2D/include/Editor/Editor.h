@@ -18,33 +18,6 @@ namespace Xeph2D::Edit
     class EditorWindow;
     class Editor final
     {
-        Editor() {}
-        static Editor& Get() { static Editor instance; return instance; }
-
-        std::unique_ptr<sf::RenderWindow> _window;
-        sf::Clock _frameTimer{};
-
-        std::unique_ptr<sf::Font> _font = nullptr;
-        std::unique_ptr<unsigned char[]> _fontData = nullptr;
-        size_t _fontDataLength = 0;
-
-        std::vector<std::unique_ptr<EditorWindow>> _editorWindows;
-        void* _hwnd;
-
-        Transform _viewportTransform{};
-        Viewport* _viewportWindow = nullptr;
-        Inspector* _inspector = nullptr;
-        Hierarchy* _hierarchyWindow = nullptr;
-        ScriptManager* _scriptManager = nullptr;
-        ScriptCreator* _scriptCreator = nullptr;
-        
-
-        bool _hasSaved = true;
-        bool _showSaveWindow = false;
-        bool _rebuildProject = false;
-
-        TransformGizmo _transformGizmo;
-
     public:
         ~Editor() = default;
         Editor(const Editor& other) = delete;
@@ -80,6 +53,33 @@ namespace Xeph2D::Edit
         void ViewportGUI();
         void SetUIStyle();
         void DoProjectRebuild();
+
+        Editor() {}
+        static Editor& Get() { static Editor instance; return instance; }
+
+        std::unique_ptr<sf::RenderWindow> m_window;
+        sf::Clock m_frameTimer{};
+
+        std::unique_ptr<sf::Font> m_font = nullptr;
+        std::unique_ptr<unsigned char[]> m_fontData = nullptr;
+        size_t m_fontDataLength = 0;
+
+        std::vector<std::unique_ptr<EditorWindow>> m_editorWindows;
+        void* m_hwnd;
+
+        Transform m_viewportTransform{};
+        Viewport* m_viewportWindow = nullptr;
+        Inspector* m_inspector = nullptr;
+        Hierarchy* m_hierarchyWindow = nullptr;
+        ScriptManager* m_scriptManager = nullptr;
+        ScriptCreator* m_scriptCreator = nullptr;
+
+
+        bool m_hasSaved = true;
+        bool m_showSaveWindow = false;
+        bool m_rebuildProject = false;
+
+        TransformGizmo m_transformGizmo;
     };
 
 }

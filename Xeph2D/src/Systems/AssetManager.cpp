@@ -11,10 +11,10 @@ Xeph2D::AssetManager::AssetManager()
 {
 #ifdef _EDITOR
 	size_t size = 0;
-	res::no_image_png(_emptyImageData, size);
+	res::no_image_png(m_emptyImageData, size);
 	sf::Texture tex;
-	tex.loadFromMemory(_emptyImageData.get(), size);
-	_textures["__no-image"] = tex;
+	tex.loadFromMemory(m_emptyImageData.get(), size);
+	m_textures["__no-image"] = tex;
 #endif //_EDITOR
 }
 
@@ -26,15 +26,15 @@ AssetManager& AssetManager::Get()
 
 sf::Texture* Xeph2D::AssetManager::LoadTextureFromFile(const std::string& filename, std::string tag)
 {
-	std::string fullpath = Get().assetPath + "Textures/" + filename;
+	std::string fullpath = Get().k_assetPath + "Textures/" + filename;
 	if (tag == "")
 		tag = TagFromFileName(filename);
 
-	sf::Texture& tex = Get()._textures[tag];
+	sf::Texture& tex = Get().m_textures[tag];
 	if (!tex.loadFromFile(fullpath))
 	{
 		Debug::LogErr("Could not open file at path: %s", fullpath.c_str());
-		Get()._textures.erase(tag);
+		Get().m_textures.erase(tag);
 		return nullptr;
 	}
 	return &tex;
@@ -42,11 +42,11 @@ sf::Texture* Xeph2D::AssetManager::LoadTextureFromFile(const std::string& filena
 
 AudioData* Xeph2D::AssetManager::LoadAudioDataFromFile(const std::string& filename, bool isStreamed, std::string tag)
 {
-	std::string fullpath = Get().assetPath + "Audio/" + filename;
+	std::string fullpath = Get().k_assetPath + "Audio/" + filename;
 	if (tag == "")
 		tag = TagFromFileName(filename);
 	
-	AudioData& source = Get()._audioSources[tag];
+	AudioData& source = Get().m_audioSources[tag];
 	if (!source.LoadAssetData(fullpath, isStreamed))
 	{
 		Debug::LogErr("Could not open file at path: %s", fullpath.c_str());
@@ -57,9 +57,9 @@ AudioData* Xeph2D::AssetManager::LoadAudioDataFromFile(const std::string& filena
 
 sf::Texture* Xeph2D::AssetManager::GetTexture(const std::string& tag)
 {
-	auto result = Get()._textures.find(tag);
+	auto result = Get().m_textures.find(tag);
 
-	if (result == Get()._textures.end())
+	if (result == Get().m_textures.end())
 	{
 		Debug::LogErr("Could not find texture with tag: %s", tag.c_str());
 		return nullptr;
@@ -70,27 +70,27 @@ sf::Texture* Xeph2D::AssetManager::GetTexture(const std::string& tag)
 
 void Xeph2D::AssetManager::UnloadTexture(const std::string& tag)
 {
-	auto result = Get()._textures.find(tag);
+	auto result = Get().m_textures.find(tag);
 
-	if (result == Get()._textures.end())
+	if (result == Get().m_textures.end())
 	{
 		Debug::LogErr("Could not unload texture with tag: %s", tag.c_str());
 		return;
 	}
 
-	Get()._textures.erase(result);
+	Get().m_textures.erase(result);
 }
 
 void Xeph2D::AssetManager::UnloadAllTextures()
 {
-	Get()._textures.clear();
+	Get().m_textures.clear();
 }
 
 AudioData* Xeph2D::AssetManager::GetAudioData(const std::string& tag)
 {
-	auto result = Get()._audioSources.find(tag);
+	auto result = Get().m_audioSources.find(tag);
 
-	if (result == Get()._audioSources.end())
+	if (result == Get().m_audioSources.end())
 	{
 		Debug::LogErr("Could not find audio source with tag: %s", tag.c_str());
 		return nullptr;
@@ -101,31 +101,31 @@ AudioData* Xeph2D::AssetManager::GetAudioData(const std::string& tag)
 
 void Xeph2D::AssetManager::UnloadAudioData(const std::string& tag)
 {
-	auto result = Get()._audioSources.find(tag);
+	auto result = Get().m_audioSources.find(tag);
 
-	if (result == Get()._audioSources.end())
+	if (result == Get().m_audioSources.end())
 	{
 		Debug::LogErr("Could not find audio source with tag: %s", tag.c_str());
 		return;
 	}
 
-	Get()._audioSources.erase(result);
+	Get().m_audioSources.erase(result);
 }
 
 void Xeph2D::AssetManager::UnloadAllAudioData(bool includeStreams)
 {
 	if (includeStreams)
 	{
-		Get()._audioSources.clear();
+		Get().m_audioSources.clear();
 		return;
 	}
 	
-	for (auto it = Get()._audioSources.begin(); it != Get()._audioSources.end();)
+	for (auto it = Get().m_audioSources.begin(); it != Get().m_audioSources.end();)
 	{
 		if (it->second.GetIsStreamed())
 			it++;
 		else
-			it = Get()._audioSources.erase(it);
+			it = Get().m_audioSources.erase(it);
 	}
 }
 

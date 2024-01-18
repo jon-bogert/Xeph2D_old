@@ -25,10 +25,6 @@ namespace Xeph2D
 		};
 		Properties properties = {};
 
-	protected:
-		bool enabled = true;
-
-	public:
 		virtual void Register(GameObject* gameObject) = 0;
 
 		virtual void EditorInit() {};
@@ -53,5 +49,8 @@ namespace Xeph2D
 		void RemoveFromObject();
 
 		virtual uint32_t GetTypeID() = 0;
+
+	protected:
+		bool enabled = true;
 	};
 }

@@ -8,18 +8,19 @@ namespace Xeph2D
 	class Rigidbody;
 	class BoxCollider : public Component
 	{
-		b2PolygonShape _shape;
-
-		Vector2 _dimensions = { 1.f, 1.f };
-		Rigidbody* _rigidbody = nullptr;
-		bool _isTrigger;
-
-		bool _showCollider = true;
-
 	public:
 		COMP_HEADER_STD(0x00000005);
 
 		void Awake() override;
 		void DebugDraw() override;
+
+	private:
+		b2PolygonShape m_shape;
+
+		Vector2 m_dimensions = { 1.f, 1.f };
+		Rigidbody* m_rigidbody = nullptr;
+		bool m_isTrigger;
+
+		bool m_showCollider = true;
 	};
 }

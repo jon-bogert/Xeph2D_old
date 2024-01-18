@@ -24,10 +24,10 @@ void Xeph2D::Serializer::Register(const uint32_t instID, const uint32_t typeID, 
 void Xeph2D::Serializer::Register(const uint32_t instID, DataType type, void* ptr, const std::string& name)
 {
 	Serializer& s = Get();
-	auto obj = s._manifest.find(instID);
+	auto obj = s.m_manifest.find(instID);
 
 	//Already object
-	if (obj != s._manifest.end())
+	if (obj != s.m_manifest.end())
 	{
 		auto field = obj->second.find(name);
 		if (field != obj->second.end()) // Field was found
@@ -59,7 +59,7 @@ void Xeph2D::Serializer::Register(const uint32_t instID, DataType type, void* pt
 		return;
 	}
 	// No Object
-	auto& inst = s._manifest[instID][name];
+	auto& inst = s.m_manifest[instID][name];
 	inst.type = type;
 	Get().DataImport(inst, ptr);
 #ifdef _EDITOR
@@ -72,7 +72,7 @@ void Xeph2D::Serializer::EditorAdd(uint32_t instID, const std::string& fieldName
 {
 	if (fieldName.substr(0, 3) == "go_") // Game Object Variable
 	{
-		EdVarEntry& newEntry = _editorManifest[instID].go_variables.emplace_back();
+		EdVarEntry& newEntry = m_editorManifest[instID].go_variables.emplace_back();
 		newEntry.type = entry.type;
 		newEntry.data = entry.data;
 		newEntry.name = fieldName.substr(3);
@@ -86,7 +86,7 @@ void Xeph2D::Serializer::EditorAdd(uint32_t instID, const std::string& fieldName
 	compIDStr >> compID;
 
 	EdComponent* comp = nullptr;
-	for (EdComponent& x : _editorManifest[instID].components)
+	for (EdComponent& x : m_editorManifest[instID].components)
 	{
 		if (x.id == compID)
 		{
@@ -96,7 +96,7 @@ void Xeph2D::Serializer::EditorAdd(uint32_t instID, const std::string& fieldName
 	}
 	if (comp == nullptr)
 	{
-		comp = &_editorManifest[instID].components.emplace_back();
+		comp = &m_editorManifest[instID].components.emplace_back();
 		comp->id = compID;
 	}
 
@@ -114,22 +114,22 @@ void Xeph2D::Serializer::EditorAddGameObject(GameObject* obj)
 	while (isUsed)
 	{
 		newID = Math::Random::UInt32();
-		isUsed = (_editorManifest.find(newID) != _editorManifest.end());
+		isUsed = (m_editorManifest.find(newID) != m_editorManifest.end());
 	}
 	obj->instID = newID;
-	_editorManifest[newID];
+	m_editorManifest[newID];
 	obj->Serializables();
 }
 
 void Xeph2D::Serializer::EditorRemoveGameObject(GameObject* obj)
 {
-	_editorManifest.erase(obj->instID);
+	m_editorManifest.erase(obj->instID);
 }
 
 Xeph2D::Serializer::EdObject* Xeph2D::Serializer::GetDataFromInstance(uint32_t instID)
 {
-	auto it = Get()._editorManifest.find(instID);
-	if (it == Get()._editorManifest.end())
+	auto it = Get().m_editorManifest.find(instID);
+	if (it == Get().m_editorManifest.end())
 	{
 		std::stringstream idStr;
 		idStr << std::hex << std::setfill('0') << instID;
@@ -141,7 +141,7 @@ Xeph2D::Serializer::EdObject* Xeph2D::Serializer::GetDataFromInstance(uint32_t i
 }
 void Xeph2D::Serializer::RemoveAllComponents(uint32_t id)
 {
-	for (auto& obj : Get()._editorManifest)
+	for (auto& obj : Get().m_editorManifest)
 	{
 		for (auto it = obj.second.components.begin(); it != obj.second.components.end();)
 		{
@@ -329,7 +329,7 @@ void Xeph2D::Serializer::_SaveToFile(const std::string& scene)
 	if (!std::filesystem::exists("Assets/Scenes"))
 		std::filesystem::create_directories("Assets/Scenes");
 	std::ofstream file("Assets/Scenes/" + scene + ".x2dsc");
-	for (auto& obj : _editorManifest)
+	for (auto& obj : m_editorManifest)
 	{
 		file << "inst=" << std::setw(8) << std::setfill('0') << std::hex << obj.first << std::dec << std::endl;
 		for (auto& goField : obj.second.go_variables)
@@ -382,7 +382,7 @@ void Xeph2D::Serializer::_LoadFromFile(const std::string& scene)
 		std::getline(linestream, key, '=');
 		std::getline(linestream, cell, '\n');
 		DataParse(entry, cell);
-		_manifest[inst][key] = entry;
+		m_manifest[inst][key] = entry;
 	}
 	file.close();
 }

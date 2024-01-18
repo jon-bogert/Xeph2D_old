@@ -7,15 +7,16 @@ namespace Xeph2D::Edit
 {
 	class ScriptCreator : public EditorWindow
 	{
-		char _nameBuffer[256];
-		char _pathBuffer[1024];
-
-		int _defaultFlags = 0;
-		bool _isConfirmed = false;
-
 	public:
 		void Initialize() override;
 		void OnGUI() override;
+
+	private:
+		char m_nameBuffer[256];
+		char m_pathBuffer[1024];
+
+		int m_defaultFlags = 0;
+		bool m_isConfirmed = false;
 	};
 }
 

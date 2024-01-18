@@ -16,10 +16,10 @@ void Xeph2D::Edit::Inspector::Initialize()
 
 void Xeph2D::Edit::Inspector::OnGUI()
 {
-	if (_objectInfo == nullptr)
+	if (m_objectInfo == nullptr)
 		return;
 
-	if (_showEdit)
+	if (m_showEdit)
 	{
 		ShowEdit();
 		return;
@@ -27,17 +27,17 @@ void Xeph2D::Edit::Inspector::OnGUI()
 
 	VarEntry entry;
 	//Game Object Variables
-	for (Serializer::EdVarEntry& e : _objectInfo->go_variables)
+	for (Serializer::EdVarEntry& e : m_objectInfo->go_variables)
 	{
 		entry.displayName = Var2DisplayName(e.name);
 		entry.serialized = &e;
 		entry.instanced = e.ptr;
 		DrawVar(entry);
 	}
-	for (Serializer::EdComponent& comp : _objectInfo->components)
+	for (Serializer::EdComponent& comp : m_objectInfo->components)
 	{
 		ImGui::NewLine();
-		if (ImGui::CollapsingHeader((_compNames[comp.id] + "##Comp").c_str(),ImGuiTreeNodeFlags_DefaultOpen))
+		if (ImGui::CollapsingHeader((m_compNames[comp.id] + "##Comp").c_str(),ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			for (Serializer::EdVarEntry& e : comp.variables)
 			{
@@ -53,27 +53,27 @@ void Xeph2D::Edit::Inspector::OnGUI()
 	ImGui::NewLine();
 	if (ImGui::Button("Edit Components##Insp"))
 	{
-		_showEdit = !_showEdit;
-		if (_showEdit)
-			_editSelection = -1;
+		m_showEdit = !m_showEdit;
+		if (m_showEdit)
+			m_editSelection = -1;
 	}
 }
 void Xeph2D::Edit::Inspector::SetGameObject(GameObject* obj)
 {
-	_currObject = obj;
+	m_currObject = obj;
 
-	if (_currObject == nullptr)
+	if (m_currObject == nullptr)
 	{
-		_objectInfo = nullptr;
+		m_objectInfo = nullptr;
 		Editor::GetTransformGizmo()->SetCurrentObject(nullptr);
 		return;
 	}
 
 	Editor::GetTransformGizmo()->SetCurrentObject(obj);
 
-	uint32_t instID = _currObject->instID;
-	_objectInfo = Serializer::GetDataFromInstance(instID);
-	if (_objectInfo == nullptr)
+	uint32_t instID = m_currObject->instID;
+	m_objectInfo = Serializer::GetDataFromInstance(instID);
+	if (m_objectInfo == nullptr)
 	{
 		Debug::LogErr("Inspector::SetGameObject -> could not get variable data from Serializer, See serializer Error");
 	}
@@ -81,12 +81,12 @@ void Xeph2D::Edit::Inspector::SetGameObject(GameObject* obj)
 
 void Xeph2D::Edit::Inspector::RegisterComponentNames(std::function<std::unordered_map<uint32_t, std::string>(void)> callback)
 {
-	_compNames = callback();
+	m_compNames = callback();
 }
 
 bool Xeph2D::Edit::Inspector::CompNamesContains(uint32_t id)
 {
-	return (_compNames.find(id) != _compNames.end());
+	return (m_compNames.find(id) != m_compNames.end());
 }
 
 #define __CAP_OFFSET 32
@@ -274,69 +274,69 @@ void Xeph2D::Edit::Inspector::DrawTransform(VarEntry& entry)
 void Xeph2D::Edit::Inspector::ShowEdit()
 {
 	std::vector<std::string> itemNames;
-	for (const Serializer::EdComponent& c : _objectInfo->components)
+	for (const Serializer::EdComponent& c : m_objectInfo->components)
 	{
-		itemNames.push_back(_compNames[c.id]);
+		itemNames.push_back(m_compNames[c.id]);
 	}
-	if (ImGui::ListBox("##HItems", &_editSelection, Utility::CStrVect(itemNames).data(), itemNames.size()))
+	if (ImGui::ListBox("##HItems", &m_editSelection, Utility::CStrVect(itemNames).data(), itemNames.size()))
 	{
 	
 	}
 	if (ImGui::Button("+##Insp"))
 	{
-		_showAdd = !_showAdd;
+		m_showAdd = !m_showAdd;
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("-##Insp"))
 	{
-		if (_editSelection >= 0)
+		if (m_editSelection >= 0)
 		{
-			Serializer::EdComponent& comp = _objectInfo->components[_editSelection];
-			_currObject->RemoveComponent(comp.id);
-			_objectInfo->components.erase(_objectInfo->components.begin() + _editSelection);
+			Serializer::EdComponent& comp = m_objectInfo->components[m_editSelection];
+			m_currObject->RemoveComponent(comp.id);
+			m_objectInfo->components.erase(m_objectInfo->components.begin() + m_editSelection);
 			Editor::SetHasSaved(false);
 		}
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("^##Insp"))
 	{
-		if (_editSelection > 0)
+		if (m_editSelection > 0)
 		{
-			_currObject->MoveUp(_editSelection);
-			std::swap(_objectInfo->components[_editSelection], _objectInfo->components[_editSelection - 1]);
+			m_currObject->MoveUp(m_editSelection);
+			std::swap(m_objectInfo->components[m_editSelection], m_objectInfo->components[m_editSelection - 1]);
 			Editor::SetHasSaved(false);
-			--_editSelection;
+			--m_editSelection;
 		}
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("v##Insp"))
 	{
-		if (_editSelection < itemNames.size() - 1 && _editSelection >= 0)
+		if (m_editSelection < itemNames.size() - 1 && m_editSelection >= 0)
 		{
-			_currObject->MoveDown(_editSelection);
-			std::swap(_objectInfo->components[_editSelection], _objectInfo->components[_editSelection + 1]);
+			m_currObject->MoveDown(m_editSelection);
+			std::swap(m_objectInfo->components[m_editSelection], m_objectInfo->components[m_editSelection + 1]);
 			Editor::SetHasSaved(false);
-			++_editSelection;
+			++m_editSelection;
 		}
 	}
-	if (_showAdd)
+	if (m_showAdd)
 	{
 		ImVec2 nextPos = (Vector2)ImGui::GetCursorPos() + ImGui::GetWindowPos();
 		ImGui::SetNextWindowPos(nextPos);
 		ImGui::Begin("Add Component##Insp", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
 		if (InputSystem::GetMouseDown(Mouse::Button::Left) && !ImGui::IsWindowHovered())
-			_showAdd = false;
+			m_showAdd = false;
 
-		ImGui::InputText("##SearchAddComp", _editSearchBuff, 256);
-		for (auto& comp : _compNames)
+		ImGui::InputText("##SearchAddComp", m_editSearchBuff, 256);
+		for (auto& comp : m_compNames)
 		{
-			if (!std::regex_search(comp.second, std::regex(_editSearchBuff)))
+			if (!std::regex_search(comp.second, std::regex(m_editSearchBuff)))
 				continue;
 			if (ImGui::MenuItem((comp.second + "##AddComp").c_str()))
 			{
-				SceneManager::Get().__AddComponentByID(_currObject, comp.first);
+				SceneManager::Get().__AddComponentByID(m_currObject, comp.first);
 				Editor::SetHasSaved(false);
-				_showAdd = false;
+				m_showAdd = false;
 				break;
 			}
 		}
@@ -348,7 +348,7 @@ void Xeph2D::Edit::Inspector::ShowEdit()
 	ImGui::NewLine();
 	if (ImGui::Button("Show Components##Insp"))
 	{
-		_showEdit = !_showEdit;
+		m_showEdit = !m_showEdit;
 	}
 }
 

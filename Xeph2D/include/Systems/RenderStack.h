@@ -8,6 +8,20 @@ namespace Xeph2D
 {
 	class RenderStack final
 	{
+	public:
+		~RenderStack() = default;
+		RenderStack(const RenderStack& other) = delete;
+		RenderStack(const RenderStack&& other) = delete;
+		RenderStack operator=(const RenderStack& other) = delete;
+		RenderStack operator=(const RenderStack&& other) = delete;
+
+		static void AddSprite(const GameObject* gameObject, sf::Sprite* sprite, int order = 0);
+		static void Draw();
+
+		static void SubscribeDrawCall(void* component, std::function<void(void)> drawCall);
+		static void UnubscribeDrawCall(void* component);
+
+	private:
 		struct Item
 		{
 			enum class Type { Sprite };
@@ -27,23 +41,10 @@ namespace Xeph2D
 			std::function<void(void)> func;
 		};
 
-		std::vector<Callback> _drawCallbacks;
-		std::vector<Item> _stack;
+		std::vector<Callback> m_drawCallbacks;
+		std::vector<Item> m_stack;
 
 		RenderStack() {}
 		static RenderStack& Get();
-
-	public:
-		~RenderStack() = default;
-		RenderStack(const RenderStack& other) = delete;
-		RenderStack(const RenderStack&& other) = delete;
-		RenderStack operator=(const RenderStack& other) = delete;
-		RenderStack operator=(const RenderStack&& other) = delete;
-
-		static void AddSprite(const GameObject* gameObject, sf::Sprite* sprite, int order = 0);
-		static void Draw();
-
-		static void SubscribeDrawCall(void* component, std::function<void(void)> drawCall);
-		static void UnubscribeDrawCall(void* component);
 	};
 }

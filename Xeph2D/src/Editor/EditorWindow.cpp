@@ -3,8 +3,8 @@
 
 void Xeph2D::Edit::EditorWindow::UpdateValues()
 {
-	_isFocused = ImGui::IsWindowFocused();
-	_isHovered = ImGui::IsWindowHovered();
+	m_isFocused = ImGui::IsWindowFocused();
+	m_isHovered = ImGui::IsWindowHovered();
 }
 
 const char* Xeph2D::Edit::EditorWindow::GetName() const
@@ -34,12 +34,12 @@ void Xeph2D::Edit::EditorWindow::Open()
 
 bool Xeph2D::Edit::EditorWindow::IsFocused() const
 {
-	return _isFocused;
+	return m_isFocused;
 }
 
 bool Xeph2D::Edit::EditorWindow::IsHovered() const
 {
-	return _isHovered;
+	return m_isHovered;
 }
 
 #endif //_EDITOR

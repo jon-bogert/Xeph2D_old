@@ -40,22 +40,7 @@ namespace Xeph2D
     class KeyHandler;
 	class InputSystem final
 	{
-	private:
-		HWND _hwnd = nullptr;
-
-        GamepadHandler* _gamepadHandler = nullptr;
-        KeyHandler* _keyHandler = nullptr;
-
-        POINT _mousePos;
-        float _mouseDelta[2] = { 0.f, 0.f };
-        bool _captureMouse = false;
-
-        std::list<std::unique_ptr<InputActionMap>> _actionMaps;
-
-        InputSystem();
-		static InputSystem& Get();
 	public:
-
         ~InputSystem();
 
 		static void Initialize(HWND& hwnd, std::function<void(InputSystem*)> func);
@@ -98,6 +83,19 @@ namespace Xeph2D
 
         void _GetMousePos(float* out_v2, bool relativeToWindow);
 
+        InputSystem();
+        static InputSystem& Get();
+
+        HWND m_hwnd = nullptr;
+
+        GamepadHandler* m_gamepadHandler = nullptr;
+        KeyHandler* m_keyHandler = nullptr;
+
+        POINT m_mousePos;
+        float m_mouseDelta[2] = { 0.f, 0.f };
+        bool m_captureMouse = false;
+
+        std::list<std::unique_ptr<InputActionMap>> m_actionMaps;
 	};
 }
 

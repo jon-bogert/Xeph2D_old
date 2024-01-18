@@ -12,19 +12,7 @@ namespace Xeph2D::Edit
 	class TransformGizmo
 	{
 	public:
-		enum class Mode { Position, Rotation, Scale};
-		Mode _mode = Mode::Position;
-		float _radius = 100.f;
-		float _symbolWidth = 15.f;
-		float _centerWidth = 25.f;
-
-		bool _xSelected = false;
-		bool _ySelected = false;
-
-		bool _applyingTransform = false;
-
-		GameObject* _currentObject = nullptr;
-
+		enum class Mode { Position, Rotation, Scale };
 		void UpdateMouse(const Vector2& mousePos);
 		void Draw();
 		void SetCurrentObject(GameObject* gameObject);
@@ -34,6 +22,18 @@ namespace Xeph2D::Edit
 
 	private:
 		void ApplyTransform();
+
+		Mode m_mode = Mode::Position;
+		float m_radius = 100.f;
+		float m_symbolWidth = 15.f;
+		float m_centerWidth = 25.f;
+
+		bool m_xSelected = false;
+		bool m_ySelected = false;
+
+		bool m_applyingTransform = false;
+
+		GameObject* m_currentObject = nullptr;
 	};
 }
 

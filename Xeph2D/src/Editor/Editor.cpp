@@ -18,36 +18,36 @@ using namespace Xeph2D;
 
 void Xeph2D::Edit::Editor::Initialize()
 {
-	Get()._window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Xeph2D Editor");
-	Get()._hwnd = (void*)FindWindowA(NULL, "Xeph2D Editor");
-	ImGui::SFML::Init(*Get()._window);
+	Get().m_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Xeph2D Editor");
+	Get().m_hwnd = (void*)FindWindowA(NULL, "Xeph2D Editor");
+	ImGui::SFML::Init(*Get().m_window);
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 	Get().SetUIStyle();
 
-	Get()._viewportWindow =
-		(Viewport*)Get()._editorWindows.emplace_back(std::make_unique<Viewport>()).get();
-	Get()._inspector =
-		(Inspector*)Get()._editorWindows.emplace_back(std::make_unique<Inspector>()).get();
-	Get()._hierarchyWindow =
-		(Hierarchy*)Get()._editorWindows.emplace_back(std::make_unique<Hierarchy>()).get();
-	Get()._scriptManager =
-		(ScriptManager*)Get()._editorWindows.emplace_back(std::make_unique<ScriptManager>()).get();
-	Get()._scriptCreator =
-		(ScriptCreator*)Get()._editorWindows.emplace_back(std::make_unique<ScriptCreator>()).get();
+	Get().m_viewportWindow =
+		(Viewport*)Get().m_editorWindows.emplace_back(std::make_unique<Viewport>()).get();
+	Get().m_inspector =
+		(Inspector*)Get().m_editorWindows.emplace_back(std::make_unique<Inspector>()).get();
+	Get().m_hierarchyWindow =
+		(Hierarchy*)Get().m_editorWindows.emplace_back(std::make_unique<Hierarchy>()).get();
+	Get().m_scriptManager =
+		(ScriptManager*)Get().m_editorWindows.emplace_back(std::make_unique<ScriptManager>()).get();
+	Get().m_scriptCreator =
+		(ScriptCreator*)Get().m_editorWindows.emplace_back(std::make_unique<ScriptCreator>()).get();
 
-	for (auto& window : Get()._editorWindows)
+	for (auto& window : Get().m_editorWindows)
 		window->Initialize();
 }
 
 void Xeph2D::Edit::Editor::CheckWindowEvents()
 {
 	sf::Event winEvent{};
-	while (Get()._window->pollEvent(winEvent))
+	while (Get().m_window->pollEvent(winEvent))
 	{
-		ImGui::SFML::ProcessEvent(*Get()._window, winEvent);
+		ImGui::SFML::ProcessEvent(*Get().m_window, winEvent);
 
 		if (winEvent.type == sf::Event::Closed)
 		{
@@ -58,30 +58,30 @@ void Xeph2D::Edit::Editor::CheckWindowEvents()
 
 void Xeph2D::Edit::Editor::InputProc()
 {
-	if (Get()._viewportWindow->IsHovered())
+	if (Get().m_viewportWindow->IsHovered())
 	{
 		if (InputSystem::GetMouseHold(Mouse::Button::Right) ||
 			(InputSystem::GetKeyHold(Key::LAlt) && InputSystem::GetMouseHold(Mouse::Button::Left)))
 		{
 			Vector2 delta{};
 			InputSystem::GetMouseDelta(&delta.x);
-			Get()._viewportTransform.position.x -= WindowManager::PixelToUnit(delta).x;
-			Get()._viewportTransform.position.y += WindowManager::PixelToUnit(delta).y;
+			Get().m_viewportTransform.position.x -= WindowManager::PixelToUnit(delta).x;
+			Get().m_viewportTransform.position.y += WindowManager::PixelToUnit(delta).y;
 		}
 	}
-	if (Get()._viewportWindow->IsFocused())
+	if (Get().m_viewportWindow->IsFocused())
 	{
 		if (InputSystem::GetKeyDown(Key::W))
 		{
-			Get()._transformGizmo.SetMode(TransformGizmo::Mode::Position);
+			Get().m_transformGizmo.SetMode(TransformGizmo::Mode::Position);
 		}
 		if (InputSystem::GetKeyDown(Key::E))
 		{
-			Get()._transformGizmo.SetMode(TransformGizmo::Mode::Rotation);
+			Get().m_transformGizmo.SetMode(TransformGizmo::Mode::Rotation);
 		}
 		if (InputSystem::GetKeyDown(Key::R))
 		{
-			Get()._transformGizmo.SetMode(TransformGizmo::Mode::Scale);
+			Get().m_transformGizmo.SetMode(TransformGizmo::Mode::Scale);
 		}
 	}
 	if (InputSystem::GetKeyHold(Key::Ctrl))
@@ -90,7 +90,7 @@ void Xeph2D::Edit::Editor::InputProc()
 		{
 			if (InputSystem::GetKeyDown(Key::N))
 			{
-				Get()._scriptCreator->Open();
+				Get().m_scriptCreator->Open();
 			}
 		}
 		else //============
@@ -98,7 +98,7 @@ void Xeph2D::Edit::Editor::InputProc()
 			if (InputSystem::GetKeyDown(Key::S))
 			{
 				Serializer::SaveToFile(SceneManager::GetCurrentName());
-				Get()._hasSaved = true;
+				Get().m_hasSaved = true;
 			}
 			if (InputSystem::GetKeyDown(Key::Q))
 			{
@@ -110,8 +110,8 @@ void Xeph2D::Edit::Editor::InputProc()
 
 void Xeph2D::Edit::Editor::Update()
 {
-	Get()._transformGizmo.UpdateMouse(Get()._viewportWindow->GetMousePos());
-	ImGui::SFML::Update(*Get()._window, Get()._frameTimer.restart());
+	Get().m_transformGizmo.UpdateMouse(Get().m_viewportWindow->GetMousePos());
+	ImGui::SFML::Update(*Get().m_window, Get().m_frameTimer.restart());
 }
 
 void Xeph2D::Edit::Editor::OnGUI()
@@ -123,7 +123,7 @@ void Xeph2D::Edit::Editor::OnGUI()
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 		{
 			Serializer::SaveToFile(SceneManager::GetCurrentName());
-			Get()._hasSaved = true;
+			Get().m_hasSaved = true;
 		}
 		if (ImGui::MenuItem("Close", "Ctrl+Q"))
 		{
@@ -135,7 +135,7 @@ void Xeph2D::Edit::Editor::OnGUI()
 	{
 		if (ImGui::MenuItem("Create New Script", "Ctrl+Shift+N"))
 		{
-			Get()._scriptCreator->Open();
+			Get().m_scriptCreator->Open();
 		}
 		ImGui::EndMenu();
 	}
@@ -145,19 +145,19 @@ void Xeph2D::Edit::Editor::OnGUI()
 		{
 			if (ImGui::MenuItem("Hierarchy"))
 			{
-				Get()._hierarchyWindow->Open();
+				Get().m_hierarchyWindow->Open();
 			}
 			if (ImGui::MenuItem("Inspector"))
 			{
-				Get()._inspector->Open();
+				Get().m_inspector->Open();
 			}
 			if (ImGui::MenuItem("Script Manager"))
 			{
-				Get()._scriptManager->Open();
+				Get().m_scriptManager->Open();
 			}
 			if (ImGui::MenuItem("Viewport"))
 			{
-				Get()._viewportWindow->Open();
+				Get().m_viewportWindow->Open();
 			}
 			ImGui::EndMenu();
 		}
@@ -165,7 +165,7 @@ void Xeph2D::Edit::Editor::OnGUI()
 	}
 	ImGui::EndMainMenuBar();
 	ImGui::DockSpaceOverViewport();
-	for (auto& window : Get()._editorWindows)
+	for (auto& window : Get().m_editorWindows)
 	{
 		if (!window->isOpen)
 			continue;
@@ -175,9 +175,9 @@ void Xeph2D::Edit::Editor::OnGUI()
 		window->OnGUI();
 		ImGui::End();
 	}
-	if (Get()._showSaveWindow)
+	if (Get().m_showSaveWindow)
 	{
-		ImGui::Begin("Save Your Progress?", &Get()._showSaveWindow,
+		ImGui::Begin("Save Your Progress?", &Get().m_showSaveWindow,
 			ImGuiWindowFlags_AlwaysAutoResize |
 			ImGuiWindowFlags_NoResize |
 			ImGuiWindowFlags_NoDocking |
@@ -188,22 +188,22 @@ void Xeph2D::Edit::Editor::OnGUI()
 		ImGui::NewLine();
 		if (ImGui::Button("Save"))
 		{
-			Get()._hasSaved = true;
+			Get().m_hasSaved = true;
 			Serializer::SaveToFile(SceneManager::GetCurrentName());
 			Close();
-			Get()._showSaveWindow = false;
+			Get().m_showSaveWindow = false;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Don't Save"))
 		{
-			Get()._hasSaved = true;
+			Get().m_hasSaved = true;
 			Close();
-			Get()._showSaveWindow = false;
+			Get().m_showSaveWindow = false;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Cancel"))
 		{
-			Get()._showSaveWindow = false;
+			Get().m_showSaveWindow = false;
 		}
 		ImGui::End();
 	}
@@ -211,80 +211,80 @@ void Xeph2D::Edit::Editor::OnGUI()
 
 void Xeph2D::Edit::Editor::Draw()
 {
-	Get()._window->clear({ 5, 5, 5, 255 });
-	ImGui::SFML::Render(*Get()._window);
-	Get()._window->display();
+	Get().m_window->clear({ 5, 5, 5, 255 });
+	ImGui::SFML::Render(*Get().m_window);
+	Get().m_window->display();
 }
 
 void Xeph2D::Edit::Editor::Shutdown()
 {
 	ImGui::SFML::Shutdown();
-	if (Get()._rebuildProject)
+	if (Get().m_rebuildProject)
 		Get().DoProjectRebuild();
 }
 
 bool Xeph2D::Edit::Editor::IsOpen()
 {
-	return Get()._window->isOpen();
+	return Get().m_window->isOpen();
 }
 
 void Xeph2D::Edit::Editor::Close()
 {
-	bool hs = Get()._hasSaved;
-	if (Get()._hasSaved)
-		Get()._window->close();
+	bool hs = Get().m_hasSaved;
+	if (Get().m_hasSaved)
+		Get().m_window->close();
 	else
-		Get()._showSaveWindow = true;
+		Get().m_showSaveWindow = true;
 }
 
 bool Xeph2D::Edit::Editor::GetHasSaved()
 {
-	return Get()._hasSaved;
+	return Get().m_hasSaved;
 }
 
 void Xeph2D::Edit::Editor::SetHasSaved(const bool hasSaved)
 {
-	Get()._hasSaved = hasSaved;
+	Get().m_hasSaved = hasSaved;
 }
 
 void Xeph2D::Edit::Editor::RegisterComponentNames(std::function<std::unordered_map<uint32_t, std::string>(void)> callback)
 {
-	if (Get()._inspector == nullptr)
+	if (Get().m_inspector == nullptr)
 	{
 		Debug::LogErr("Editor -> Inspector window is null, could not register component names");
 		return;
 	}
-	Get()._inspector->RegisterComponentNames(callback);
+	Get().m_inspector->RegisterComponentNames(callback);
 }
 
 Transform* Xeph2D::Edit::Editor::GetViewportTransform()
 {
-	return &Get()._viewportTransform;
+	return &Get().m_viewportTransform;
 }
 
 Xeph2D::Edit::Inspector* Xeph2D::Edit::Editor::GetInspectorWindow()
 {
-	return Get()._inspector;
+	return Get().m_inspector;
 }
 
 Xeph2D::Edit::ScriptManager* Xeph2D::Edit::Editor::GetScriptManager()
 {
-	return Get()._scriptManager;
+	return Get().m_scriptManager;
 }
 
 Xeph2D::Edit::ScriptCreator* Xeph2D::Edit::Editor::GetScriptCreator()
 {
-	return Get()._scriptCreator;
+	return Get().m_scriptCreator;
 }
 
 Edit::TransformGizmo* Xeph2D::Edit::Editor::GetTransformGizmo()
 {
-	return &Get()._transformGizmo;
+	return &Get().m_transformGizmo;
 }
 
 void Xeph2D::Edit::Editor::RebuildProject()
 {
-	Get()._rebuildProject = true;
+	Get().m_rebuildProject = true;
 }
 
 void Xeph2D::Edit::Editor::ViewportGUI()
@@ -321,7 +321,7 @@ void Xeph2D::Edit::Editor::ViewportGUI()
 		Vector2 max = Vector2(x, WindowManager::WorldWindowMaximum().y);
 		Debug::DrawLine(min, max, worldUnitColor);
 	}
-	_transformGizmo.Draw();
+	m_transformGizmo.Draw();
 }
 
 void Xeph2D::Edit::Editor::SetUIStyle()
@@ -386,11 +386,11 @@ void Xeph2D::Edit::Editor::SetUIStyle()
 	//Font
 	ImGuiIO& io = ImGui::GetIO();
 	ImFontAtlas* fontAtlas = io.Fonts;
-	res::BasierSquare_Medium_otf(Get()._fontData, Get()._fontDataLength);
+	res::BasierSquare_Medium_otf(Get().m_fontData, Get().m_fontDataLength);
 	ImFontConfig fontConfig;
 	fontConfig.FontDataOwnedByAtlas = false;
 	ImWchar defaultRange[] = { 0x0020, 0x00FF, 0x0100, 0x017F, 0 };
-	ImFont* font = fontAtlas->AddFontFromMemoryTTF((void*)Get()._fontData.get(), Get()._fontDataLength, 16, &fontConfig, defaultRange);
+	ImFont* font = fontAtlas->AddFontFromMemoryTTF((void*)Get().m_fontData.get(), Get().m_fontDataLength, 16, &fontConfig, defaultRange);
 	fontAtlas->Build();
 	io.FontDefault = font;
 

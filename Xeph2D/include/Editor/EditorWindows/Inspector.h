@@ -18,17 +18,7 @@ namespace Xeph2D::Edit
 			Serializer::EdVarEntry* serialized = nullptr;
 			void* instanced = nullptr;
 		};
-	private:
-		GameObject* _currObject = nullptr;
-		Serializer::EdObject* _objectInfo = nullptr;
-		std::unordered_map<uint32_t, std::string> _compNames;
 
-		bool _showEdit = false;
-		bool _showAdd = false;
-		char _editSearchBuff[256];
-		int _editSelection = -1;
-
-	public:
 		void Initialize() override;
 		void OnGUI() override;
 
@@ -50,5 +40,14 @@ namespace Xeph2D::Edit
 		void DrawTransform(VarEntry& entry);
 
 		void ShowEdit();
+
+		GameObject* m_currObject = nullptr;
+		Serializer::EdObject* m_objectInfo = nullptr;
+		std::unordered_map<uint32_t, std::string> m_compNames;
+
+		bool m_showEdit = false;
+		bool m_showAdd = false;
+		char m_editSearchBuff[256];
+		int m_editSelection = -1;
 	};
 }

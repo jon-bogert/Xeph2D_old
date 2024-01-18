@@ -18,8 +18,8 @@ SceneManager& SceneManager::Get()
 
 void SceneManager::Initialize(std::function<void(std::unique_ptr<Component>& ptr, uint32_t compID)> scriptCallback)
 {
-    Get()._scriptCallback = scriptCallback;
-    Get()._currIndex = 0;
+    Get().m_scriptCallback = scriptCallback;
+    Get().m_currIndex = 0;
     AddScene("Main"); // TODO - Find some way to add this from settings file;
     //Get()._scriptCallback(&Get(), Get()._currIndex, true);
     Get().DoSceneLoading();
@@ -28,13 +28,13 @@ void SceneManager::Initialize(std::function<void(std::unique_ptr<Component>& ptr
 
 Scene* Xeph2D::SceneManager::NewScene()
 {
-    Get()._currScene = std::make_unique<Scene>();
-    return Get()._currScene.get();
+    Get().m_currScene = std::make_unique<Scene>();
+    return Get().m_currScene.get();
 }
 
 void SceneManager::AddScene(const std::string& name)
 {
-    Get()._scenes.emplace_back(name);
+    Get().m_scenes.emplace_back(name);
 }
 
 void SceneManager::LoadScene(const std::string& name)
@@ -44,15 +44,15 @@ void SceneManager::LoadScene(const std::string& name)
 
 void SceneManager::LoadScene(const int index)
 {
-    Get()._nextIndex = index;
-    Get()._doLoadScene = true;
+    Get().m_nextIndex = index;
+    Get().m_doLoadScene = true;
 }
 
 int SceneManager::GetSceneIndex(const std::string& name)
 {
-    for (int i = 0; i < Get()._scenes.size(); ++i)
+    for (int i = 0; i < Get().m_scenes.size(); ++i)
     {
-        if (Get()._scenes[i] == name)
+        if (Get().m_scenes[i] == name)
             return i;
     }
     return -1;
@@ -60,86 +60,86 @@ int SceneManager::GetSceneIndex(const std::string& name)
 
 Scene* Xeph2D::SceneManager::GetCurrentScene()
 {
-    return Get()._currScene.get();
+    return Get().m_currScene.get();
 }
 
 int Xeph2D::SceneManager::GetCurrentIndex()
 {
-    return Get()._currIndex;
+    return Get().m_currIndex;
 }
 
 std::string Xeph2D::SceneManager::GetCurrentName()
 {
-    return Get()._scenes[Get()._currIndex];
+    return Get().m_scenes[Get().m_currIndex];
 }
 
 void Xeph2D::SceneManager::EditorInit()
 {
-    Get()._currScene->EditorInit();
+    Get().m_currScene->EditorInit();
 }
 
 void Xeph2D::SceneManager::EditorShutdown()
 {
-    Get()._currScene->EditorShutdown();
+    Get().m_currScene->EditorShutdown();
 }
 
 void Xeph2D::SceneManager::Serializables()
 {
-    Get()._currScene->Serializables();
+    Get().m_currScene->Serializables();
 }
 
 void Xeph2D::SceneManager::HandleSceneChange()
 {
-    if (!Get()._doLoadScene)
+    if (!Get().m_doLoadScene)
         return;
 
-    Get()._doLoadScene = false;
+    Get().m_doLoadScene = false;
 
-    Get()._currScene->OnDisable();
-    Get()._currScene->OnDestroy();
+    Get().m_currScene->OnDisable();
+    Get().m_currScene->OnDestroy();
 
     Debug::ClearMonitorBuffer();
     //Get()._scriptCallback(&Get(), Get()._nextIndex, false);
     Get().DoSceneLoading();
-    Get()._currIndex = Get()._nextIndex;
+    Get().m_currIndex = Get().m_nextIndex;
 
-    Get()._currScene->Awake();
-    Get()._currScene->Start();
-    Get()._currScene->OnEnable();
+    Get().m_currScene->Awake();
+    Get().m_currScene->Start();
+    Get().m_currScene->OnEnable();
 }
 
 void Xeph2D::SceneManager::Startup()
 {
-    if (Get()._scenes.size() <= 0)
+    if (Get().m_scenes.size() <= 0)
     {
         WindowManager::Close();
         return;
     }
 
-    Get()._currScene->Awake();
-    Get()._currScene->Start();
-    Get()._currScene->OnEnable();
+    Get().m_currScene->Awake();
+    Get().m_currScene->Start();
+    Get().m_currScene->OnEnable();
 }
 
 void Xeph2D::SceneManager::Update()
 {
-    Get()._currScene->EarlyUpdate();
-    Get()._currScene->Update();
-    Get()._currScene->LateUpdate();
+    Get().m_currScene->EarlyUpdate();
+    Get().m_currScene->Update();
+    Get().m_currScene->LateUpdate();
 }
 
 void Xeph2D::SceneManager::DebugDraw()
 {
-    Get()._currScene->DebugDraw();
+    Get().m_currScene->DebugDraw();
 }
 
 void Xeph2D::SceneManager::Shutdown()
 {
-    if (Get()._currIndex < 0)
+    if (Get().m_currIndex < 0)
         return;
 
-    Get()._currScene->OnDisable();
-    Get()._currScene->OnDestroy();
+    Get().m_currScene->OnDisable();
+    Get().m_currScene->OnDestroy();
 }
 
 void Xeph2D::SceneManager::DoSceneLoading()
@@ -166,7 +166,7 @@ void Xeph2D::SceneManager::DoSceneLoading()
             uint32_t inst;
             id << std::hex << line.substr(5);
             id >> inst;
-            gameObject = _currScene->AddGameObject();
+            gameObject = m_currScene->AddGameObject();
             gameObject->instID = inst;
             compAdded.clear();
             continue;
@@ -189,7 +189,7 @@ void Xeph2D::SceneManager::DoSceneLoading()
         if (compAdded.find(type) != compAdded.end())
             continue;
         std::unique_ptr<Component>& compPtr = gameObject->__GetNewEmptyComponentPtr();
-        _scriptCallback(compPtr, type);
+        m_scriptCallback(compPtr, type);
         compPtr->Register(gameObject);
         compAdded.insert(type);
     }
@@ -200,7 +200,7 @@ void Xeph2D::SceneManager::DoSceneLoading()
 void Xeph2D::SceneManager::__AddComponentByID(GameObject* obj, uint32_t id)
 {
     std::unique_ptr<Component>& compPtr = obj->__GetNewEmptyComponentPtr();
-    _scriptCallback(compPtr, id);
+    m_scriptCallback(compPtr, id);
     compPtr->Register(obj);
     compPtr->Serializables();
     compPtr->EditorInit();

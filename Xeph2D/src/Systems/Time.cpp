@@ -10,30 +10,30 @@ Time& Time::Get()
 
 void Xeph2D::Time::Update()
 {
-	Get()._delta = Get()._timer.restart().asSeconds();
+	Get().m_delta = Get().m_timer.restart().asSeconds();
 }
 
 float Xeph2D::Time::DeltaTime()
 {
-	return Get()._delta * Get()._timescale;
+	return Get().m_delta * Get().m_timescale;
 }
 
 float Xeph2D::Time::UnscaledDeltaTime()
 {
-	return Get()._delta;
+	return Get().m_delta;
 }
 
 float Xeph2D::Time::GetTimeScale()
 {
-	return Get()._timescale;
+	return Get().m_timescale;
 }
 
 void Xeph2D::Time::SetTimeScale(float timescale)
 {
-	Get()._timescale = timescale;
+	Get().m_timescale = timescale;
 }
 
 uint32_t Xeph2D::Time::FPS()
 {
-	return (Get()._delta <= 0.f) ? 0.f : 1.f / Get()._delta;
+	return (Get().m_delta <= 0.f) ? 0.f : 1.f / Get().m_delta;
 }

@@ -8,29 +8,29 @@ using namespace Xeph2D;
 
 Physics::Physics()
 {
-	_world.SetContactListener(&_listener);
+	m_world.SetContactListener(&m_listener);
 }
 
 void Physics::Update()
 {
-	Get()._world.Step(Time::DeltaTime(), Get()._velIter, Get()._posIter);
-	for (Rigidbody* rb : Get()._rigidbodies)
+	Get().m_world.Step(Time::DeltaTime(), Get().m_velIter, Get().m_posIter);
+	for (Rigidbody* rb : Get().m_rigidbodies)
 		rb->UpdateTransform();
 	Get().CallCollisionCallbacks();
 }
 
 void Xeph2D::Physics::RegisterRigidbody(Rigidbody* rb)
 {
-	_rigidbodies.push_back(rb);
+	m_rigidbodies.push_back(rb);
 }
 
 void Xeph2D::Physics::UnregisterRigidbody(Rigidbody* rb)
 {
-	for (auto it = _rigidbodies.begin(); it != _rigidbodies.end(); it++)
+	for (auto it = m_rigidbodies.begin(); it != m_rigidbodies.end(); it++)
 	{
 		if (*it == rb)
 		{
-			_rigidbodies.erase(it);
+			m_rigidbodies.erase(it);
 			return;
 		}
 	}
@@ -38,7 +38,7 @@ void Xeph2D::Physics::UnregisterRigidbody(Rigidbody* rb)
 
 void Physics::CallCollisionCallbacks()
 {
-	for (CollisionPair& cp : Get()._collisionPairs)
+	for (CollisionPair& cp : Get().m_collisionPairs)
 	{
 		if (cp.isTrigger && cp.isExit)
 		{
@@ -61,12 +61,12 @@ void Physics::CallCollisionCallbacks()
 			cp.b->onCollisionEnter.Invoke(cp.a);
 		}
 	}
-	_collisionPairs.clear();
+	m_collisionPairs.clear();
 }
 
 void Xeph2D::Physics::AddCollisionPair(Rigidbody* a, Rigidbody* b, bool isTrigger, bool isExit)
 {
-	Get()._collisionPairs.push_back({ a, b, isTrigger, isExit });
+	Get().m_collisionPairs.push_back({ a, b, isTrigger, isExit });
 }
 
 void Xeph2D::CollisionListener::BeginContact(b2Contact* contact)

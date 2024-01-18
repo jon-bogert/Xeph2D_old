@@ -37,11 +37,11 @@ namespace Xeph2D
 	class KeyHandler
 	{
 		friend class InputSystem;
-		std::bitset<256> _keyHold;
-		std::bitset<256> _keyDown; 
-		std::bitset<256> _keyUp;
-		std::bitset<256> _keyRepeat;
-		std::bitset<256> _keyBuffer;
+		std::bitset<256> m_keyHold;
+		std::bitset<256> m_keyDown; 
+		std::bitset<256> m_keyUp;
+		std::bitset<256> m_keyRepeat;
+		std::bitset<256> m_keyBuffer;
 
 		KeyHandler() {} // Only InputSystem can create one of these
 

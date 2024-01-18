@@ -8,13 +8,6 @@ namespace Xeph2D::Edit
 {
     class EditorSplash final
     {
-        EditorSplash() {}
-        static EditorSplash& Get() { static EditorSplash instance; return instance; }
-        std::unique_ptr<unsigned char[]> _textureData = nullptr;
-        std::unique_ptr<sf::Texture> _texture = nullptr;
-        std::unique_ptr<sf::Sprite> _sprite = nullptr;
-        std::unique_ptr<sf::RenderWindow> _window = nullptr;
-
     public:
         ~EditorSplash() = default;
         EditorSplash(const EditorSplash& other) = delete;
@@ -24,6 +17,14 @@ namespace Xeph2D::Edit
 
         static void Begin();
         static void End();
+
+    private:
+        EditorSplash() {}
+        static EditorSplash& Get() { static EditorSplash instance; return instance; }
+        std::unique_ptr<unsigned char[]> m_textureData = nullptr;
+        std::unique_ptr<sf::Texture> m_texture = nullptr;
+        std::unique_ptr<sf::Sprite> m_sprite = nullptr;
+        std::unique_ptr<sf::RenderWindow> m_window = nullptr;
     };
 
 }

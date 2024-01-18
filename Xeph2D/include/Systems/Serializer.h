@@ -66,20 +66,6 @@ namespace Xeph2D
         using EdMap = std::unordered_map<uint32_t, EdObject>;
 #endif //_EDITOR
 
-    private:
-        Serializer() {}
-        static Serializer& Get();
-
-        ObjMap _manifest;
-#ifdef _EDITOR
-        friend class Edit::Hierarchy;
-        EdMap _editorManifest;
-        void EditorAdd(uint32_t instID, const std::string& fieldName, const VarEntry& entry, void* ptr);
-        void EditorAddGameObject(GameObject* obj);
-        void EditorRemoveGameObject(GameObject* obj);
-#endif //_EDITOR
-
-    public:
         ~Serializer() = default;
         Serializer(const Serializer& other) = delete;
         Serializer(const Serializer&& other) = delete;
@@ -104,6 +90,18 @@ namespace Xeph2D
         void _SaveToFile(const std::string& scene);
 #endif //_EDITOR
         void _LoadFromFile(const std::string& scene);
+
+        Serializer() {}
+        static Serializer& Get();
+
+        ObjMap m_manifest;
+#ifdef _EDITOR
+        friend class Edit::Hierarchy;
+        EdMap m_editorManifest;
+        void EditorAdd(uint32_t instID, const std::string& fieldName, const VarEntry& entry, void* ptr);
+        void EditorAddGameObject(GameObject* obj);
+        void EditorRemoveGameObject(GameObject* obj);
+#endif //_EDITOR
     };
 
 }

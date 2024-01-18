@@ -144,15 +144,15 @@ void Xeph2D::GamepadHandler::Initialize()
 {
 	for (DWORD i = 0; i < XUSER_MAX_COUNT; ++i)
 	{
-		DWORD result = XInputGetState(i, &_state);
+		DWORD result = XInputGetState(i, &m_state);
 		if (result == ERROR_SUCCESS)
-			_controllerCount++;
+			m_controllerCount++;
 	}
 	for (uint8_t i = 0; i < XUSER_MAX_COUNT; ++i)
 	{
-		_controllerButtonHold[i] = 0;
-		_controllerButtonDown[i] = 0;
-		_controllerButtonUp[i] = 0;
+		m_controllerButtonHold[i] = 0;
+		m_controllerButtonDown[i] = 0;
+		m_controllerButtonUp[i] = 0;
 	}
 }
 
@@ -162,42 +162,42 @@ void Xeph2D::GamepadHandler::Update()
 	DWORD result;
 	for (DWORD i = 0; i < XUSER_MAX_COUNT; ++i)
 	{
-		ZeroMemory(&_state, sizeof(XINPUT_STATE));
-		result = XInputGetState(i, &_state);
+		ZeroMemory(&m_state, sizeof(XINPUT_STATE));
+		result = XInputGetState(i, &m_state);
 		if (result == ERROR_SUCCESS)
 		{
 			controllerCount++;
-			WORD buttonState = _state.Gamepad.wButtons;
+			WORD buttonState = m_state.Gamepad.wButtons;
 
 			//Get button/up down
-			_controllerButtonDown[i] = ~_controllerButtonHold[i] & buttonState;
-			_controllerButtonUp[i] = _controllerButtonHold[i] & ~buttonState;
+			m_controllerButtonDown[i] = ~m_controllerButtonHold[i] & buttonState;
+			m_controllerButtonUp[i] = m_controllerButtonHold[i] & ~buttonState;
 
 			//Store current values
-			_controllerButtonHold[i] = buttonState;
+			m_controllerButtonHold[i] = buttonState;
 
 			// Update axis
-			_controllerAxisState[i].lx = (static_cast<short>(_state.Gamepad.sThumbLX) + 0.5f) * STICK_2_FLT;
-			_controllerAxisState[i].ly = (static_cast<short>(_state.Gamepad.sThumbLY) + 0.5f) * STICK_2_FLT;
-			_controllerAxisState[i].rx = (static_cast<short>(_state.Gamepad.sThumbRX) + 0.5f) * STICK_2_FLT;
-			_controllerAxisState[i].ry = (static_cast<short>(_state.Gamepad.sThumbRY) + 0.5f) * STICK_2_FLT;
+			m_controllerAxisState[i].lx = (static_cast<short>(m_state.Gamepad.sThumbLX) + 0.5f) * STICK_2_FLT;
+			m_controllerAxisState[i].ly = (static_cast<short>(m_state.Gamepad.sThumbLY) + 0.5f) * STICK_2_FLT;
+			m_controllerAxisState[i].rx = (static_cast<short>(m_state.Gamepad.sThumbRX) + 0.5f) * STICK_2_FLT;
+			m_controllerAxisState[i].ry = (static_cast<short>(m_state.Gamepad.sThumbRY) + 0.5f) * STICK_2_FLT;
 
-			_controllerAxisState[i].lt = static_cast<uint8_t>(_state.Gamepad.bLeftTrigger) * BYTE_2_FLT;
-			_controllerAxisState[i].rt = static_cast<uint8_t>(_state.Gamepad.bRightTrigger) * BYTE_2_FLT;
+			m_controllerAxisState[i].lt = static_cast<uint8_t>(m_state.Gamepad.bLeftTrigger) * BYTE_2_FLT;
+			m_controllerAxisState[i].rt = static_cast<uint8_t>(m_state.Gamepad.bRightTrigger) * BYTE_2_FLT;
 
 			UpdateAxisState(i);
 		}
 	}
-	if (_controllerCount != controllerCount)
+	if (m_controllerCount != controllerCount)
 	{
-		_controllerCountChange = true;
-		_controllerCount = controllerCount;
+		m_controllerCountChange = true;
+		m_controllerCount = controllerCount;
 	}
 }
 
 bool Xeph2D::GamepadHandler::IsControllerConnected(const uint8_t num)
 {
-	return num < _controllerCount;
+	return num < m_controllerCount;
 }
 
 bool Xeph2D::GamepadHandler::GetGamepadHold(Gamepad::Button button, uint8_t num)
@@ -205,9 +205,9 @@ bool Xeph2D::GamepadHandler::GetGamepadHold(Gamepad::Button button, uint8_t num)
 	WORD result;
 	if (GamepadXInput(button, result))
 	{
-		return _controllerButtonHold[num] & result;
+		return m_controllerButtonHold[num] & result;
 	}
-	return _controllerAxisHold[num] & result;
+	return m_controllerAxisHold[num] & result;
 }
 
 bool Xeph2D::GamepadHandler::GetGamepadDown(Gamepad::Button button, uint8_t num)
@@ -215,9 +215,9 @@ bool Xeph2D::GamepadHandler::GetGamepadDown(Gamepad::Button button, uint8_t num)
 	WORD result;
 	if (GamepadXInput(button, result))
 	{
-		return _controllerButtonDown[num] & result;
+		return m_controllerButtonDown[num] & result;
 	}
-	return _controllerAxisDown[num] & result;
+	return m_controllerAxisDown[num] & result;
 }
 
 bool Xeph2D::GamepadHandler::GetGamepadUp(Gamepad::Button button, uint8_t num)
@@ -225,9 +225,9 @@ bool Xeph2D::GamepadHandler::GetGamepadUp(Gamepad::Button button, uint8_t num)
 	WORD result;
 	if (GamepadXInput(button, result))
 	{
-		return _controllerButtonUp[num] & result;
+		return m_controllerButtonUp[num] & result;
 	}
-	return _controllerAxisUp[num] & result;
+	return m_controllerAxisUp[num] & result;
 }
 
 void Xeph2D::GamepadHandler::GetGamepadAxis(float* out_v2, Gamepad::Axis axis, uint8_t num)
@@ -235,16 +235,16 @@ void Xeph2D::GamepadHandler::GetGamepadAxis(float* out_v2, Gamepad::Axis axis, u
 	switch (axis)
 	{
 	case Gamepad::Axis::LS:
-		*out_v2 = ApplyDeadzone(_controllerAxisState[num].lx, _deadzoneMinimum, _deadzoneMaximum);
-		*(out_v2 + 1) = ApplyDeadzone(_controllerAxisState[num].ly, _deadzoneMinimum, _deadzoneMaximum);
+		*out_v2 = ApplyDeadzone(m_controllerAxisState[num].lx, m_deadzoneMinimum, m_deadzoneMaximum);
+		*(out_v2 + 1) = ApplyDeadzone(m_controllerAxisState[num].ly, m_deadzoneMinimum, m_deadzoneMaximum);
 		return;
 	case Gamepad::Axis::RS:
-		*out_v2 = ApplyDeadzone(_controllerAxisState[num].rx, _deadzoneMinimum, _deadzoneMaximum);
-		*(out_v2 + 1) = ApplyDeadzone(_controllerAxisState[num].ry, _deadzoneMinimum, _deadzoneMaximum);
+		*out_v2 = ApplyDeadzone(m_controllerAxisState[num].rx, m_deadzoneMinimum, m_deadzoneMaximum);
+		*(out_v2 + 1) = ApplyDeadzone(m_controllerAxisState[num].ry, m_deadzoneMinimum, m_deadzoneMaximum);
 		return;
 	case Gamepad::Axis::Trig:
-		*out_v2 = _controllerAxisState[num].lt;
-		*(out_v2 + 1) = _controllerAxisState[num].rt;
+		*out_v2 = m_controllerAxisState[num].lt;
+		*(out_v2 + 1) = m_controllerAxisState[num].rt;
 		return;
 	case Gamepad::Axis::DPad:
 		float x = (float)GetGamepadHold(Gamepad::Button::DPad_Right) - (float)GetGamepadHold(Gamepad::Button::DPad_Left);
@@ -262,44 +262,44 @@ void Xeph2D::GamepadHandler::GetGamepadAxis(float* out_v2, Gamepad::Axis axis, u
 
 float Xeph2D::GamepadHandler::GetTriggerThreshold()
 {
-	return _triggerThreshold;
+	return m_triggerThreshold;
 }
 
 void Xeph2D::GamepadHandler::SetTriggerThreshold(const float threshold)
 {
-	_triggerThreshold = threshold;
+	m_triggerThreshold = threshold;
 }
 
 void Xeph2D::GamepadHandler::UpdateAxisState(uint8_t index)
 {
 	WORD newState = 0;
-	if (_controllerAxisState[index].lt >= _triggerThreshold)
+	if (m_controllerAxisState[index].lt >= m_triggerThreshold)
 		newState |= BUTTONAXIS_LT;
-	if (_controllerAxisState[index].rt >= _triggerThreshold)
+	if (m_controllerAxisState[index].rt >= m_triggerThreshold)
 		newState |= BUTTONAXIS_RT;
 
-	if (_controllerAxisState[index].ly >= _deadzoneMinimum)
+	if (m_controllerAxisState[index].ly >= m_deadzoneMinimum)
 		newState |= BUTTONAXIS_LS_UP;
-	if (_controllerAxisState[index].ly <= -_deadzoneMinimum)
+	if (m_controllerAxisState[index].ly <= -m_deadzoneMinimum)
 		newState |= BUTTONAXIS_LS_DOWN;
-	if (_controllerAxisState[index].lx >= _deadzoneMinimum)
+	if (m_controllerAxisState[index].lx >= m_deadzoneMinimum)
 		newState |= BUTTONAXIS_LS_RIGHT;
-	if (_controllerAxisState[index].lx <= -_deadzoneMinimum)
+	if (m_controllerAxisState[index].lx <= -m_deadzoneMinimum)
 		newState |= BUTTONAXIS_LS_LEFT;
 
-	if (_controllerAxisState[index].ry >= _deadzoneMinimum)
+	if (m_controllerAxisState[index].ry >= m_deadzoneMinimum)
 		newState |= BUTTONAXIS_RS_UP;
-	if (_controllerAxisState[index].ry <= -_deadzoneMinimum)
+	if (m_controllerAxisState[index].ry <= -m_deadzoneMinimum)
 		newState |= BUTTONAXIS_RS_DOWN;
-	if (_controllerAxisState[index].rx >= _deadzoneMinimum)
+	if (m_controllerAxisState[index].rx >= m_deadzoneMinimum)
 		newState |= BUTTONAXIS_RS_RIGHT;
-	if (_controllerAxisState[index].rx <= -_deadzoneMinimum)
+	if (m_controllerAxisState[index].rx <= -m_deadzoneMinimum)
 		newState |= BUTTONAXIS_RS_LEFT;
 
 	//Get button/up down
-	_controllerAxisDown[index] = ~_controllerAxisHold[index] & newState;
-	_controllerAxisUp[index] = _controllerAxisHold[index] & ~newState;
+	m_controllerAxisDown[index] = ~m_controllerAxisHold[index] & newState;
+	m_controllerAxisUp[index] = m_controllerAxisHold[index] & ~newState;
 
 	//Store current values
-	_controllerAxisHold[index] = newState;
+	m_controllerAxisHold[index] = newState;
 }

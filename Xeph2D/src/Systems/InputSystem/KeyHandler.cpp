@@ -41,15 +41,15 @@ void Xeph2D::KeyHandler::Update()
 {
 	PollKeys();
 
-	_keyDown = ~_keyHold & _keyBuffer;
-	_keyUp = _keyHold & ~_keyBuffer;
+	m_keyDown = ~m_keyHold & m_keyBuffer;
+	m_keyUp = m_keyHold & ~m_keyBuffer;
 
-	_keyHold = _keyBuffer;
+	m_keyHold = m_keyBuffer;
 }
 
 void Xeph2D::KeyHandler::PollKeys()
 {
-	_keyBuffer.reset();
+	m_keyBuffer.reset();
 	for (uint8_t i = 1; i < 166; ++i)
 	{
 		//Don't check keys that arent needed
@@ -69,38 +69,38 @@ void Xeph2D::KeyHandler::PollKeys()
 
 		SHORT keyState = GetAsyncKeyState(i);
 		if (keyState & 0x8000)
-			_keyBuffer.set(i);
+			m_keyBuffer.set(i);
 	}
 }
 
 bool Xeph2D::KeyHandler::GetKeyHold(Key keycode)
 {
-	return _keyHold.test(static_cast<uint8_t>(keycode));
+	return m_keyHold.test(static_cast<uint8_t>(keycode));
 }
 
 bool Xeph2D::KeyHandler::GetKeyDown(Key keycode)
 {
-	return _keyDown.test(static_cast<uint8_t>(keycode));
+	return m_keyDown.test(static_cast<uint8_t>(keycode));
 }
 
 bool Xeph2D::KeyHandler::GetKeyUp(Key keycode)
 {
-	return _keyUp.test(static_cast<uint8_t>(keycode));
+	return m_keyUp.test(static_cast<uint8_t>(keycode));
 }
 
 bool Xeph2D::KeyHandler::GetMouseHold(Mouse::Button btncode)
 {
-	return _keyHold.test(static_cast<uint8_t>(btncode));
+	return m_keyHold.test(static_cast<uint8_t>(btncode));
 }
 
 bool Xeph2D::KeyHandler::GetMouseDown(Mouse::Button btncode)
 {
-	return _keyDown.test(static_cast<uint8_t>(btncode));
+	return m_keyDown.test(static_cast<uint8_t>(btncode));
 }
 
 bool Xeph2D::KeyHandler::GetMouseUp(Mouse::Button btncode)
 {
-	return _keyUp.test(static_cast<uint8_t>(btncode));
+	return m_keyUp.test(static_cast<uint8_t>(btncode));
 }
 
 float Xeph2D::KeyHandler::GetKeyAxisComposite1D(Key negative, Key positive)

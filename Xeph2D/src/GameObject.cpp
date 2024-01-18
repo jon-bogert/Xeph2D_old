@@ -7,13 +7,13 @@
 #include "Editor/Editor.h"
 #endif //_EDITOR
 
-#define __CALLONALL(func) for (auto& c : _components) { c->func(); }
+#define __CALLONALL(func) for (auto& c : m_components) { c->func(); }
 
 using namespace Xeph2D;
 
 void Xeph2D::GameObject::RemoveComponent(Component* comp)
 {
-    for (auto it = _components.begin(); it != _components.end(); it++)
+    for (auto it = m_components.begin(); it != m_components.end(); it++)
     {
         if (it->get() == comp)
         {
@@ -23,7 +23,7 @@ void Xeph2D::GameObject::RemoveComponent(Component* comp)
             comp->OnDisable();
             comp->OnDestroy();
 #endif //_EDITOR
-            _components.erase(it);
+            m_components.erase(it);
             return;
         }
     }
@@ -31,7 +31,7 @@ void Xeph2D::GameObject::RemoveComponent(Component* comp)
 
 void Xeph2D::GameObject::RemoveComponent(uint32_t compID)
 {
-    for (auto it = _components.begin(); it != _components.end(); it++)
+    for (auto it = m_components.begin(); it != m_components.end(); it++)
     {
         if ((*it)->GetTypeID() == compID)
         {
@@ -41,7 +41,7 @@ void Xeph2D::GameObject::RemoveComponent(uint32_t compID)
             (*it)->OnDisable();
             (*it)->OnDestroy();
 #endif //_EDITOR
-            _components.erase(it);
+            m_components.erase(it);
             return;
         }
     }
@@ -50,18 +50,18 @@ void Xeph2D::GameObject::RemoveComponent(uint32_t compID)
 #ifdef _EDITOR
 void Xeph2D::GameObject::MoveUp(size_t index)
 {
-    std::swap(_components[index], _components[index - 1]);
+    std::swap(m_components[index], m_components[index - 1]);
 }
 
 void Xeph2D::GameObject::MoveDown(size_t index)
 {
-    std::swap(_components[index], _components[index + 1]);
+    std::swap(m_components[index], m_components[index + 1]);
 }
 #endif //_EDITOR
 
 std::unique_ptr<Component>& Xeph2D::GameObject::__GetNewEmptyComponentPtr()
 {
-    return _components.emplace_back(nullptr);
+    return m_components.emplace_back(nullptr);
 }
 
 void Xeph2D::GameObject::Serializables()
@@ -86,11 +86,11 @@ void GameObject::OnDestroy()	    { __CALLONALL(OnDestroy) }
 
 GameObject* Xeph2D::GameObject::GetParent() const
 {
-    return _parent;
+    return m_parent;
 }
 
 void Xeph2D::GameObject::SetParent(GameObject* parent)
 {
-    _parent = parent;
+    m_parent = parent;
     // TODO - Re-jig Scene
 }

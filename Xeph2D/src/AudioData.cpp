@@ -7,19 +7,19 @@ using SoundBufferPtr = std::shared_ptr<sf::SoundBuffer>;
 
 bool AudioData::LoadAssetData(const std::string& filepath)
 {
-	_filepath = filepath;
-	if (_isStreamed)
+	m_filepath = filepath;
+	if (m_isStreamed)
 	{
-		_source = std::make_shared<sf::Music>();
-		sf::Music* source = std::any_cast<MusicPtr>(_source).get();
+		m_source = std::make_shared<sf::Music>();
+		sf::Music* source = std::any_cast<MusicPtr>(m_source).get();
 		if (!source->openFromFile(filepath))
 			return false;
 
 		return true;
 	}
 
-	_source = std::make_shared<sf::SoundBuffer>();
-	sf::SoundBuffer* source = std::any_cast<SoundBufferPtr>(_source).get(); 
+	m_source = std::make_shared<sf::SoundBuffer>();
+	sf::SoundBuffer* source = std::any_cast<SoundBufferPtr>(m_source).get(); 
 	if (!source->loadFromFile(filepath))
 		return false;
 
@@ -28,40 +28,40 @@ bool AudioData::LoadAssetData(const std::string& filepath)
 
 bool AudioData::LoadAssetData(const std::string& filepath, bool isStreamed)
 {
-	_isStreamed = isStreamed;
+	m_isStreamed = isStreamed;
 	return LoadAssetData(filepath);
 }
 
 void AudioData::SetIsStreamed(const bool isStreamed)
 {
-	if (_isStreamed == isStreamed)
+	if (m_isStreamed == isStreamed)
 		return;
 
-	_isStreamed = isStreamed;
-	LoadAssetData(_filepath);
+	m_isStreamed = isStreamed;
+	LoadAssetData(m_filepath);
 }
 
 bool AudioData::GetIsStreamed() const
 {
-	return _isStreamed;
+	return m_isStreamed;
 }
 
 sf::SoundBuffer* Xeph2D::AudioData::GetBuffer() const
 {
-	if (_isStreamed)
+	if (m_isStreamed)
 	{
 		Debug::LogErr("AudioSource.GetBuffer -> audio source is streamed");
 		return nullptr;
 	}
-	return std::any_cast<SoundBufferPtr>(_source).get();
+	return std::any_cast<SoundBufferPtr>(m_source).get();
 }
 
 sf::Music* AudioData::GetStream() const
 {
-	if (!_isStreamed)
+	if (!m_isStreamed)
 	{
 		Debug::LogErr("AudioSource.GetStream -> audio source is not streamed");
 		return nullptr;
 	}
-	return std::any_cast<MusicPtr>(_source).get();
+	return std::any_cast<MusicPtr>(m_source).get();
 }

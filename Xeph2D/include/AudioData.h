@@ -6,11 +6,6 @@ namespace Xeph2D
 {
 	class AudioData
 	{
-	protected:
-		std::any _source;
-		bool _isStreamed = true;
-		std::string _filepath = "";
-
 	public:
 		AudioData() = default;
 		virtual ~AudioData() = default;
@@ -23,5 +18,10 @@ namespace Xeph2D
 		
 		sf::SoundBuffer* GetBuffer() const;
 		sf::Music* GetStream() const;
+
+	protected:
+		std::any m_source;
+		bool m_isStreamed = true;
+		std::string m_filepath = "";
 	};
 }

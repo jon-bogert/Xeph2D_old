@@ -45,34 +45,33 @@ namespace Xeph2D
     class InputActionEvent
     {
         friend class InputAction;
-    private:
 
+    public:
+        void Subscribe(void* object, std::function<void(InputAction*)> function)
+        {
+            m_events.push_back({ object, function });
+        }
+
+        void UnsubscribeAll(void* object)
+        {
+            m_events.remove_if([=](const EventEntry& x) {return object == x.object; });
+        }
+
+    private:
         struct EventEntry
         {
             void* object;
             std::function<void(InputAction*)> function;
         };
 
-        std::list<EventEntry> _events;
-
-    public:
-        void Subscribe(void* object, std::function<void(InputAction*)> function)
-        {
-            _events.push_back({ object, function });
-        }
-
-        void UnsubscribeAll(void* object)
-        {
-            _events.remove_if([=](const EventEntry& x) {return object == x.object; });
-        }
-
-    private:
         void Invoke(InputAction* agent) {
-            for (const auto& event : _events)
+            for (const auto& event : m_events)
             {
                 event.function(agent);
             }
         }
+
+        std::list<EventEntry> m_events;
     };
 
     class InputAction
@@ -85,15 +84,6 @@ namespace Xeph2D
         std::string name = "";
         InputActionEvent performed; // subscribed events will be triggered when action is performed
 
-    private:
-        Type _type = Type::Button;
-        ButtonEvent _buttonEvent = ButtonEvent::Down; // Whether ".performed" will be called on button press, release, or both (Type::Button only)
-
-        InputActionMap* _map = nullptr; // reference to parent map
-        void* _data;
-        bool _triggered = false; // flag as to whether ".performed" event has already been invoked by another binding this frame;
-
-    public:
         InputAction(std::string name = "", Type type = Type::Button, ButtonEvent buttonEvent = ButtonEvent::Down);
         virtual ~InputAction();
 
@@ -115,31 +105,38 @@ namespace Xeph2D
 
     private:
         void RaiseEvent();
+
+        Type m_type = Type::Button;
+        ButtonEvent m_buttonEvent = ButtonEvent::Down; // Whether ".performed" will be called on button press, release, or both (Type::Button only)
+
+        InputActionMap* m_map = nullptr; // reference to parent map
+        void* m_data;
+        bool m_triggered = false; // flag as to whether ".performed" event has already been invoked by another binding this frame;
         
     };
 
     class InputActionMap
     {
         friend class InputAction;
-
-        //List of all Input Actions
-        std::list<std::unique_ptr<InputAction>> _inputActions;
-
-        //References to each input action based on their input types
-        std::map<std::pair<Gamepad::Button, uint8_t>, std::pair<bool, std::vector<InputAction*>>> _buttonActions;
-        std::map<Key, std::pair<bool, std::vector<InputAction*>>> _keyActions;
-        std::map<Mouse::Button, std::pair<bool, std::vector<InputAction*>>> _mouseActions;
-        std::map<std::pair<std::pair<Gamepad::Axis, uint8_t>, uint8_t>, std::pair<float, std::vector<InputAction*>>> _1DActions;
-        std::map<std::pair<Key, Key>, std::pair<float, std::vector<InputAction*>>> _1DCompActions;
-        std::map<std::pair<Gamepad::Axis, uint8_t>, std::pair<float[2], std::vector<InputAction*>>> _2DActions;
-        std::map<std::pair<std::pair<Key, Key>, std::pair<Key, Key>>, std::pair<float[2], std::vector<InputAction*>>> _2DCompActions;
-
     public:
         std::string name = "";
         //Adds an InputAction and returns a reference to it as a pointer
         InputAction* CreateAction(std::string name, InputAction::Type type = InputAction::Type::Button, InputAction::ButtonEvent buttonEvent = InputAction::ButtonEvent::Down);
         InputAction* FindInputAction(std::string name);
         void Update();
+
+    private:
+        //List of all Input Actions
+        std::list<std::unique_ptr<InputAction>> m_inputActions;
+
+        //References to each input action based on their input types
+        std::map<std::pair<Gamepad::Button, uint8_t>, std::pair<bool, std::vector<InputAction*>>> m_buttonActions;
+        std::map<Key, std::pair<bool, std::vector<InputAction*>>> m_keyActions;
+        std::map<Mouse::Button, std::pair<bool, std::vector<InputAction*>>> m_mouseActions;
+        std::map<std::pair<std::pair<Gamepad::Axis, uint8_t>, uint8_t>, std::pair<float, std::vector<InputAction*>>> m_1DActions;
+        std::map<std::pair<Key, Key>, std::pair<float, std::vector<InputAction*>>> m_1DCompActions;
+        std::map<std::pair<Gamepad::Axis, uint8_t>, std::pair<float[2], std::vector<InputAction*>>> m_2DActions;
+        std::map<std::pair<std::pair<Key, Key>, std::pair<Key, Key>>, std::pair<float[2], std::vector<InputAction*>>> m_2DCompActions;
     };
 }
 
