@@ -2,6 +2,7 @@
 #include "Systems/WindowManager.h"
 #include "Systems/Debug.h"
 #include "Systems/Serializer.h"
+#include "Utility.h"
 
 #include <unordered_set>
 #include <string>
@@ -22,8 +23,8 @@ void SceneManager::Initialize(std::function<void(std::unique_ptr<Component>& ptr
     Get().m_currIndex = 0;
     AddScene("Main"); // TODO - Find some way to add this from settings file;
     //Get()._scriptCallback(&Get(), Get()._currIndex, true);
-    Get().DoSceneLoading();
     Serializer::LoadFromFile(GetCurrentName());
+    Get().DoSceneLoading();
 }
 
 Scene* Xeph2D::SceneManager::NewScene()
@@ -144,56 +145,20 @@ void Xeph2D::SceneManager::Shutdown()
 
 void Xeph2D::SceneManager::DoSceneLoading()
 {
-    std::string scene = GetCurrentName();
 
-    std::ifstream file("Assets/Scenes/" + scene + ".x2dsc");
-    if (!file.is_open())
-    {
-        Debug::LogWarn("Serializer::LoadFromFile -> No file to load: %s", (scene + ".x2dsc").c_str());
-        return;
-    }
-
-    std::unordered_set<uint32_t> compAdded;
-    GameObject* gameObject = nullptr;
+    std::vector<Serializer::IDInfo> sceneObjects = Serializer::GetIDInfo();
     NewScene();
-
-    std::string line;
-    while (std::getline(file, line))
+    for (Serializer::IDInfo objInfo : sceneObjects)
     {
-        if (line.substr(0, 5) == "inst=")
+        GameObject* gameObject = m_currScene->AddGameObject();
+        gameObject->instID = objInfo.gameObject;
+        for (uint32_t compID : objInfo.components)
         {
-            std::stringstream id;
-            uint32_t inst;
-            id << std::hex << line.substr(5);
-            id >> inst;
-            gameObject = m_currScene->AddGameObject();
-            gameObject->instID = inst;
-            compAdded.clear();
-            continue;
+            std::unique_ptr<Component>& compPtr = gameObject->__GetNewEmptyComponentPtr();
+            m_scriptCallback(compPtr, compID);
+            compPtr->Register(gameObject);
         }
-        if (line[0] != '\t' && line.substr(0, 4) != "    ")
-        {
-            Debug::LogErr("Serializer::LoadFromFile -> Bad Formatting: %s", line.c_str());
-            continue;
-        }
-        std::stringstream linestream((line[0] == '\t') ? line.substr(1) : line.substr(4));
-        std::string key;
-        std::getline(linestream, key, ' ');
-        std::getline(linestream, key, '=');
-        if (key.substr(0, 2) == "go")
-            continue;
-        std::stringstream id;
-        uint32_t type;
-        id << std::hex << key.substr(0, 8);
-        id >> type;
-        if (compAdded.find(type) != compAdded.end())
-            continue;
-        std::unique_ptr<Component>& compPtr = gameObject->__GetNewEmptyComponentPtr();
-        m_scriptCallback(compPtr, type);
-        compPtr->Register(gameObject);
-        compAdded.insert(type);
     }
-    file.close();
 }
 
 #ifdef _EDITOR

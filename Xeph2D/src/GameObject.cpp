@@ -66,8 +66,7 @@ std::unique_ptr<Component>& Xeph2D::GameObject::__GetNewEmptyComponentPtr()
 
 void Xeph2D::GameObject::Serializables()
 {
-    Serializer::Register(instID, Serializer::DataType::String, &name, "go_name");
-    Serializer::Register(instID, Serializer::DataType::Transform, &transform, "go_transform");
+    Serializer::RegisterGameObject(instID, this);
     __CALLONALL(Serializables)
 }
 

@@ -39,9 +39,22 @@ namespace Xeph2D
                 }
             }
         };
-
         using VarMap = std::unordered_map<std::string, VarEntry>;
-        using ObjMap = std::unordered_map<uint32_t, VarMap>;
+        using CompMap = std::unordered_map<uint32_t, VarMap>;
+        struct ObjInfo
+        {
+            std::string name;
+            Transform transform;
+            CompMap components;
+        };
+        using ObjMap = std::unordered_map<uint32_t, ObjInfo>;
+        
+        //Provides just the gameObjects
+        struct IDInfo
+        {
+            uint32_t gameObject;
+            std::vector<uint32_t> components;
+        };
 
 #ifdef _EDITOR
 
@@ -67,15 +80,14 @@ namespace Xeph2D
         };
         using EdMap = std::unordered_map<uint32_t, EdObject>;
 #endif //_EDITOR
-
         ~Serializer() = default;
         Serializer(const Serializer& other) = delete;
         Serializer(const Serializer&& other) = delete;
         Serializer operator=(const Serializer& other) = delete;
         Serializer operator=(const Serializer&& other) = delete;
 
-        static void Register(const uint32_t instID, DataType type, void* ptr, const std::string& name);
-        static void Register(const uint32_t instID, const uint32_t typeID, DataType type, void* ptr, const std::string& name);
+        static void RegisterGameObject(const uint32_t instID, GameObject* object);
+        static void Register(const uint32_t instID, const uint32_t compID, DataType type, void* ptr, const std::string& name);
         static void LoadFromFile(const std::string& scene) { Get()._LoadFromFile(scene); };
 #ifdef _EDITOR
         static void SaveToFile(const std::string& scene) { Get()._SaveToFile(scene); };
@@ -83,24 +95,27 @@ namespace Xeph2D
         static void RemoveAllComponents(uint32_t id);
 #endif //_EDITOR
 
+        static std::vector<IDInfo> GetIDInfo();
+
     private:
         void DataImport(VarEntry& iter, void*& ptr);
         void DataExport(VarEntry& iter, void*& ptr);
-        std::string DataStr(VarEntry& var) const;
-        void DataParse(VarEntry& entry, std::string& data);
 #ifdef _EDITOR
+        void YAMLSave(EdVarEntry& entry, YAML::Node& content);
         void _SaveToFile(const std::string& scene);
 #endif //_EDITOR
+        void YAMLLoad(YAML::const_iterator& field, VarEntry& entry);
         void _LoadFromFile(const std::string& scene);
+        
 
         Serializer() {}
         static Serializer& Get();
-
         ObjMap m_manifest;
+
 #ifdef _EDITOR
         friend class Edit::Hierarchy;
         EdMap m_editorManifest;
-        void EditorAdd(uint32_t instID, const std::string& fieldName, const VarEntry& entry, void* ptr);
+        void EditorAdd(uint32_t instID, uint32_t compID, const std::string& fieldName, const VarEntry& entry, void* ptr);
         void EditorAddGameObject(GameObject* obj);
         void EditorRemoveGameObject(GameObject* obj);
 #endif //_EDITOR

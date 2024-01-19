@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <iomanip>
 
 namespace Xeph2D::Utility
 {
@@ -14,4 +15,23 @@ namespace Xeph2D::Utility
 		}
 		return inputCStr;
 	}
+
+	inline std::string ToHex32String(const uint32_t val)
+	{
+		std::stringstream stream;
+		stream << "0x"
+			<< std::setfill('0') << std::setw(8)
+			<< std::hex << val;
+
+		std::string hexString = stream.str();
+		return hexString;
+	}
+
+	inline uint32_t FromHex32String(const std::string& hexStr)
+	{
+		uint32_t val = std::stoul(hexStr, nullptr, 16);
+		return val;
+	}
+
+	
 }

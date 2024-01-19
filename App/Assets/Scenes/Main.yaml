@@ -1,0 +1,242 @@
+objects:
+  - inst: 0x00000000
+    name: Player
+    transform:
+      pos:
+        x: 26.98559
+        y: 25.1720295
+      rot: 0
+      sca:
+        x: 1
+        y: 1
+    components:
+      - id: 0x00000002
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+          - field: m_textureKey
+            type: string
+            data: test2
+      - id: 0x00000003
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+          - field: m_audioDataKey
+            type: string
+            data: gun-shot
+      - id: 0x00000019
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+          - field: _showDebug
+            type: bool
+            data: true
+          - field: speed
+            type: float
+            data: 10
+          - field: jumpVelocity
+            type: float
+            data: 15
+      - id: 0x00000004
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+          - field: m_typeAsInt
+            type: int
+            data: 1
+          - field: m_lockRotation
+            type: bool
+            data: false
+      - id: 0x00000005
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+          - field: m_dimensions
+            type: vector2
+            data:
+              x: 1
+              y: 1
+          - field: m_isTrigger
+            type: bool
+            data: false
+          - field: m_showCollider
+            type: bool
+            data: true
+  - inst: 0x00000001
+    name: Camera
+    transform:
+      pos:
+        x: 0
+        y: 0
+      rot: 0
+      sca:
+        x: 1
+        y: 1
+    components:
+      - id: 0x00000001
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+      - id: 0x0000001a
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+  - inst: 0x00000002
+    name: MusicManager
+    transform:
+      pos:
+        x: 0
+        y: 0
+      rot: 0
+      sca:
+        x: 1
+        y: 1
+    components:
+      - id: 0x00000003
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+          - field: m_audioDataKey
+            type: string
+            data: music
+      - id: 0x0000001b
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+  - inst: 0xaac9338d
+    name: Floor
+    transform:
+      pos:
+        x: 27.1150227
+        y: 4.20216513
+      rot: 0
+      sca:
+        x: 50
+        y: 1
+    components:
+      - id: 0x00000004
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+          - field: m_typeAsInt
+            type: int
+            data: 0
+          - field: m_lockRotation
+            type: bool
+            data: false
+      - id: 0x00000005
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+          - field: m_dimensions
+            type: vector2
+            data:
+              x: 50
+              y: 1
+          - field: m_isTrigger
+            type: bool
+            data: false
+          - field: m_showCollider
+            type: bool
+            data: true
+      - id: 0x00000002
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+          - field: m_textureKey
+            type: string
+            data: test2
+  - inst: 0x83637e25
+    name: CircleToPush
+    transform:
+      pos:
+        x: 13.446928
+        y: 9.90825844
+      rot: 0
+      sca:
+        x: 1
+        y: 1
+    components:
+      - id: 0x00000004
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+          - field: m_typeAsInt
+            type: int
+            data: 1
+          - field: m_lockRotation
+            type: bool
+            data: false
+      - id: 0x00000006
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+          - field: m_radius
+            type: float
+            data: 0.5
+          - field: m_isTrigger
+            type: bool
+            data: false
+          - field: m_showCollider
+            type: bool
+            data: true
+      - id: 0x00000002
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+          - field: m_textureKey
+            type: string
+            data: test2-round
+  - inst: 0x66adaab0
+    name: TriggerZone
+    transform:
+      pos:
+        x: 47.4622879
+        y: 9.77555466
+      rot: 0
+      sca:
+        x: 1
+        y: 1
+    components:
+      - id: 0x00000004
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+          - field: m_typeAsInt
+            type: int
+            data: 0
+          - field: m_lockRotation
+            type: bool
+            data: false
+      - id: 0x00000005
+        variables:
+          - field: enabled
+            type: bool
+            data: true
+          - field: m_dimensions
+            type: vector2
+            data:
+              x: 2
+              y: 10
+          - field: m_isTrigger
+            type: bool
+            data: false
+          - field: m_showCollider
+            type: bool
+            data: false

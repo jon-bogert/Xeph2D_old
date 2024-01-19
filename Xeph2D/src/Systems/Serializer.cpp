@@ -1,5 +1,6 @@
 #include "Systems/Serializer.h"
 #include "GameObject.h"
+#include "Utility.h"
 
 #include <sstream>
 #include <iomanip>
@@ -14,76 +15,99 @@ Serializer& Serializer::Get()
 	return instance;
 }
 
-void Xeph2D::Serializer::Register(const uint32_t instID, const uint32_t typeID, DataType type, void* ptr, const std::string& name)
-{
-	std::stringstream nameFull;
-	nameFull << std::setw(8) << std::setfill('0') << std::hex << typeID << name;
-	Register(instID, type, ptr, nameFull.str());
-}
 
-void Xeph2D::Serializer::Register(const uint32_t instID, DataType type, void* ptr, const std::string& name)
+void Xeph2D::Serializer::RegisterGameObject(const uint32_t instID, GameObject* object)
 {
 	Serializer& s = Get();
 	auto obj = s.m_manifest.find(instID);
 
-	//Already object
-	if (obj != s.m_manifest.end())
+	//Object not found
+	if (obj == s.m_manifest.end())
 	{
-		auto field = obj->second.find(name);
-		if (field != obj->second.end()) // Field was found
-		{
-			if (field->second.type != type) // Bad Type
-			{
-				Debug::LogWarn("Serializer::Register -> Missmatched type on Register, Changing to new type");
-				field->second.type = type;
-				Get().DataImport(field->second, ptr); // second is VarEntry, first is field name; obj.first is object id
+		VarEntry tmpEntry;
+		tmpEntry.type = DataType::String;
+		tmpEntry.data = s.m_manifest[instID].name = object->name;
 #ifdef _EDITOR
-				Get().EditorAdd(instID, field->first, field->second, ptr);
-#endif //_EDITOR
-				return;
-			}
-			//Good Type
-			Get().DataExport(field->second, ptr);
+		Get().EditorAdd(instID, NULL, "name", tmpEntry, &object->name);
+#endif // _EDITOR
+		tmpEntry.type = DataType::Transform;
+		tmpEntry.data = s.m_manifest[instID].transform = object->transform;
 #ifdef _EDITOR
-			Get().EditorAdd(instID, field->first, field->second, ptr);
-#endif //_EDITOR
-			return;
-		}
-		// No Field
-		auto& inst = obj->second[name];
+		Get().EditorAdd(instID, NULL, "transform", tmpEntry, &object->name);
+#endif // _EDITOR
+		return;
+	}
+
+	object->name = obj->second.name;
+	object->transform = obj->second.transform;
+}
+
+void Xeph2D::Serializer::Register(const uint32_t instID, const uint32_t compID, DataType type, void* ptr, const std::string& name)
+{
+	Serializer& s = Get();
+	auto obj = s.m_manifest.find(instID);
+
+	//Object not found
+	if (obj == s.m_manifest.end())
+	{
+		//Is Component Value
+		VarEntry& inst = s.m_manifest[instID].components[compID][name];
 		inst.type = type;
 		Get().DataImport(inst, ptr);
 #ifdef _EDITOR
-		Get().EditorAdd(instID, name, inst, ptr);
+		Get().EditorAdd(instID, compID, name, inst, ptr);
 #endif //_EDITOR
 		return;
 	}
-	// No Object
-	auto& inst = s.m_manifest[instID][name];
+
+	//Create Component if not found
+	if (obj->second.components.find(compID) == obj->second.components.end())
+		obj->second.components[compID];
+
+	auto field = obj->second.components[compID].find(name);
+	if (field != obj->second.components[compID].end()) // Field was found
+	{
+		if (field->second.type != type) // Bad Type
+		{
+			Debug::LogWarn("Serializer::Register -> Missmatched type on Register, Changing to new type");
+			field->second.type = type;
+			Get().DataImport(field->second, ptr); // second is VarEntry, first is field name; obj.first is object id
+#ifdef _EDITOR
+			Get().EditorAdd(instID, compID, field->first, field->second, ptr);
+#endif //_EDITOR
+			return;
+		}
+		//Good Type
+		Get().DataExport(field->second, ptr);
+#ifdef _EDITOR
+		Get().EditorAdd(instID, compID, field->first, field->second, ptr);
+#endif //_EDITOR
+		return;
+	}
+	// No Field
+	VarEntry& inst = obj->second.components[compID][name];
 	inst.type = type;
 	Get().DataImport(inst, ptr);
 #ifdef _EDITOR
-	Get().EditorAdd(instID, name, inst, ptr);
+	Get().EditorAdd(instID, compID, name, inst, ptr);
 #endif //_EDITOR
+	return;
+
 }
 
 #ifdef _EDITOR
-void Xeph2D::Serializer::EditorAdd(uint32_t instID, const std::string& fieldName, const VarEntry& entry, void* ptr)
+void Xeph2D::Serializer::EditorAdd(uint32_t instID, uint32_t compID, const std::string& fieldName, const VarEntry& entry, void* ptr)
 {
-	if (fieldName.substr(0, 3) == "go_") // Game Object Variable
+	if (compID == 0x00000000) // Game Object Variable
 	{
 		EdVarEntry& newEntry = m_editorManifest[instID].go_variables.emplace_back();
 		newEntry.type = entry.type;
 		newEntry.data = entry.data;
-		newEntry.name = fieldName.substr(3);
+		newEntry.name = fieldName;
 		newEntry.ptr = ptr;
 		return;
 	}
 	//Component Variable
-	uint32_t compID;
-	std::stringstream compIDStr;
-	compIDStr << std::hex << fieldName.substr(0, 8);
-	compIDStr >> compID;
 
 	EdComponent* comp = nullptr;
 	for (EdComponent& x : m_editorManifest[instID].components)
@@ -103,7 +127,7 @@ void Xeph2D::Serializer::EditorAdd(uint32_t instID, const std::string& fieldName
 	EdVarEntry& newEntry = comp->variables.emplace_back();
 	newEntry.type = entry.type;
 	newEntry.data = entry.data;
-	newEntry.name = fieldName.substr(8);
+	newEntry.name = fieldName;
 	newEntry.ptr = ptr;
 }
 
@@ -226,96 +250,49 @@ void Xeph2D::Serializer::DataExport(VarEntry& iter, void*& ptr)
 	}
 }
 
-std::string Xeph2D::Serializer::DataStr(VarEntry& var) const
+void Xeph2D::Serializer::YAMLSave(EdVarEntry& entry, YAML::Node& content)
 {
-	Vector2 v2{};
-	Color c{};
-	Transform t{};
-	std::string str;
-	switch (var.type)
-	{
-	case DataType::Int:
-		return std::to_string(var.DataAs<int>());
-	case DataType::Float:
-		return std::to_string(var.DataAs<float>());
-	case DataType::Bool:
-		return (var.DataAs<bool>()) ? "true" : "false";
-	case DataType::Char:
-		return std::to_string(var.DataAs<char>());
-	case DataType::String:
-		str = var.DataAs<std::string>();
-		return var.DataAs<std::string>();
-	case DataType::Vector2:
-		v2 = var.DataAs<Vector2>();
-		return std::to_string(v2.x) + "," + std::to_string(v2.y);
-	case DataType::Color:
-		c = var.DataAs<Color>();
-		return std::to_string(c.r) + "," + std::to_string(c.g) + "," + std::to_string(c.b) + "," + std::to_string(c.a);
-	case DataType::Transform:
-		t = var.DataAs<Transform>();
-		return std::to_string(t.position.x) + "," + std::to_string(t.position.y) + "," +
-			std::to_string(t.rotation.GetDeg()) + "," +
-			std::to_string(t.scale.x) + "," + std::to_string(t.scale.y);
-	default:
-		Debug::LogErr("Serializer::DataStr -> Enum type not supported");
-		return "";
-	}
-}
-
-void Xeph2D::Serializer::DataParse(VarEntry& entry, std::string& data)
-{
-	Vector2 v2{};
-	Color c{};
-	Transform t{};
-	std::stringstream datastream(data);
-	std::string cell;
 	switch (entry.type)
 	{
 	case DataType::Int:
-		entry.data = (int)std::stoi(data);
+		content["type"] = "int";
+		content["data"] = std::any_cast<int>(entry.data);
 		break;
 	case DataType::Float:
-		entry.data = (float)std::stof(data);
+		content["type"] = "float";
+		content["data"] = std::any_cast<float>(entry.data);
 		break;
 	case DataType::Bool:
-		entry.data = (data == "true");
+		content["type"] = "bool";
+		content["data"] = std::any_cast<bool>(entry.data);
 		break;
 	case DataType::Char:
-		entry.data = data[0];
+		content["type"] = "char";
+		content["data"] = std::any_cast<char>(entry.data);
 		break;
 	case DataType::String:
-		entry.data = data;
+		content["type"] = "string";
+		content["data"] = std::any_cast<std::string>(entry.data);
 		break;
 	case DataType::Vector2:
-		std::getline(datastream, cell, ',');
-		v2.x = std::stof(cell);
-		std::getline(datastream, cell, ',');
-		v2.y = std::stof(cell);
-		entry.data = v2;
+		content["type"] = "vector2";
+		content["data"]["x"] = std::any_cast<Vector2>(entry.data).x;
+		content["data"]["y"] = std::any_cast<Vector2>(entry.data).y;
 		break;
 	case DataType::Color:
-		std::getline(datastream, cell, ',');
-		c.r = std::stof(cell);
-		std::getline(datastream, cell, ',');
-		c.g = std::stof(cell);
-		std::getline(datastream, cell, ',');
-		c.b = std::stof(cell);
-		std::getline(datastream, cell, ',');
-		c.a = std::stof(cell);
-		entry.data = c;
+		content["type"] = "color";
+		content["data"]["r"] = std::any_cast<Color>(entry.data).r;
+		content["data"]["g"] = std::any_cast<Color>(entry.data).g;
+		content["data"]["b"] = std::any_cast<Color>(entry.data).b;
+		content["data"]["a"] = std::any_cast<Color>(entry.data).a;
 		break;
 	case DataType::Transform:
-		std::getline(datastream, cell, ',');
-		t.position.x = std::stof(cell);
-		std::getline(datastream, cell, ',');
-		t.position.y = std::stof(cell);
-		std::getline(datastream, cell, ',');
-		t.rotation.SetDeg(std::stof(cell));
-		std::getline(datastream, cell, ',');
-		t.scale.x = std::stof(cell);
-		std::getline(datastream, cell, ',');
-		t.scale.y = std::stof(cell);
-		entry.data = t;
+		content["type"] = "transform";
+		content["data"]["pos"]["x"] = std::any_cast<Transform>(entry.data).position.x;
+		content["data"]["pos"]["y"] = std::any_cast<Transform>(entry.data).position.y;
+		content["data"]["rot"] = std::any_cast<Transform>(entry.data).rotation.GetDeg();
+		content["data"]["sca"]["x"] = std::any_cast<Transform>(entry.data).scale.x;
+		content["data"]["sca"]["y"] = std::any_cast<Transform>(entry.data).scale.y;
 		break;
 	default:
 		Debug::LogErr("Serializer::DataStr -> Enum type not supported");
@@ -326,63 +303,172 @@ void Xeph2D::Serializer::DataParse(VarEntry& entry, std::string& data)
 #ifdef _EDITOR
 void Xeph2D::Serializer::_SaveToFile(const std::string& scene)
 {
-	if (!std::filesystem::exists("Assets/Scenes"))
-		std::filesystem::create_directories("Assets/Scenes");
-	std::ofstream file("Assets/Scenes/" + scene + ".x2dsc");
+	YAML::Node sceneInfo;
+	//Add scene information here
+
 	for (auto& obj : m_editorManifest)
 	{
-		file << "inst=" << std::setw(8) << std::setfill('0') << std::hex << obj.first << std::dec << std::endl;
+		YAML::Node objInfo;
+		objInfo["inst"] = Utility::ToHex32String(obj.first);
 		for (auto& goField : obj.second.go_variables)
 		{
-			file << "    " << (int)goField.type << " go_" << goField.name << '=' << DataStr(goField) << std::endl;
+			if (goField.type == DataType::String)
+				objInfo[goField.name] = std::any_cast<std::string>(goField.data);
+			else if (goField.type == DataType::Transform)
+			{
+				objInfo[goField.name]["pos"]["x"] = std::any_cast<Transform>(goField.data).position.x;
+				objInfo[goField.name]["pos"]["y"] = std::any_cast<Transform>(goField.data).position.y;
+				objInfo[goField.name]["rot"] = std::any_cast<Transform>(goField.data).rotation.GetDeg();
+				objInfo[goField.name]["sca"]["x"] = std::any_cast<Transform>(goField.data).scale.x;
+				objInfo[goField.name]["sca"]["y"] = std::any_cast<Transform>(goField.data).scale.y;
+			}
 		}
 		for (auto& comp : obj.second.components)
 		{
+			YAML::Node compInfo;
+			compInfo["id"] = Utility::ToHex32String(comp.id);
 			for (auto& compField : comp.variables)
 			{
-				file << "    " << (int)compField.type << ' ' << std::setw(8) << std::setfill('0') << std::hex << comp.id << std::dec << compField.name << '=' << DataStr(compField) << std::endl;
+				YAML::Node fieldInfo;
+				fieldInfo["field"] = compField.name;
+				YAMLSave(compField, fieldInfo);
+				compInfo["variables"].push_back(fieldInfo);
 			}
+			objInfo["components"].push_back(compInfo);
 		}
+		sceneInfo["objects"].push_back(objInfo);
 	}
+
+	if (!std::filesystem::exists("Assets/Scenes"))
+		std::filesystem::create_directories("Assets/Scenes");
+	std::ofstream file("Assets/Scenes/" + scene + ".yaml");
+	file << sceneInfo;
 	file.close();
 }
 #endif //_EDITOR
 
+void Xeph2D::Serializer::YAMLLoad(YAML::const_iterator& field, VarEntry& entry)
+{
+	std::string type = (*field)["type"].as<std::string>();
+	if (type == "int")
+	{
+		entry.type = DataType::Int;
+		entry.data = (*field)["data"].as<int>();
+	}
+	else if (type == "float")
+	{
+		entry.type = DataType::Float;
+		entry.data = (*field)["data"].as<float>();
+	}
+	else if (type == "bool")
+	{
+		entry.type = DataType::Bool;
+		entry.data = (*field)["data"].as<bool>();
+	}
+	else if (type == "char")
+	{
+		entry.type = DataType::Char;
+		entry.data = (*field)["data"].as<char>();
+	}
+	else if (type == "string")
+	{
+		entry.type = DataType::String;
+		entry.data = (*field)["data"].as<std::string>();
+	}
+	else if (type == "vector2")
+	{
+		entry.type = DataType::Vector2;
+		Vector2 data;
+		data.x = (*field)["data"]["x"].as<float>();
+		data.y = (*field)["data"]["y"].as<float>();
+		entry.data = data;
+	}
+	else if (type == "Color")
+	{
+		entry.type = DataType::Color;
+		Color data;
+		data.r = (*field)["data"]["r"].as<float>();
+		data.g = (*field)["data"]["g"].as<float>();
+		data.b = (*field)["data"]["b"].as<float>();
+		data.a = (*field)["data"]["a"].as<float>();
+		entry.data = data;
+	}
+	else if (type == "transform")
+	{
+		entry.type = DataType::Transform;
+		Transform data;
+		data.position.x = (*field)["data"]["pos"]["x"].as<float>();
+		data.position.y = (*field)["data"]["pos"]["y"].as<float>();
+		data.rotation.SetDeg((*field)["data"]["rot"].as<float>());
+		data.scale.x = (*field)["data"]["sca"]["x"].as<float>();
+		data.scale.y = (*field)["data"]["sca"]["y"].as<float>();
+		entry.data = data;
+	}
+}
+
 void Xeph2D::Serializer::_LoadFromFile(const std::string& scene)
 {
-	std::ifstream file("Assets/Scenes/" + scene + ".x2dsc");
-	if (!file.is_open())
+	YAML::Node content;
+	if (!std::filesystem::exists("Assets/Scenes/" + scene + ".yaml"))
 	{
-		Debug::LogWarn("Serializer::LoadFromFile -> No file to load: %s", (scene + ".x2dsc").c_str());
+		Debug::LogErr(("No File located at " + std::string("Assets/Scenes/") + scene + ".x2dsc").c_str());
+		return;
+	}
+	try
+	{
+		content = YAML::LoadFile("Assets/Scenes/" + scene + ".yaml");
+	}
+	catch (std::exception e)
+	{
+		Debug::LogErr("Error while reading scene %s -- %s", ("Assets/Scenes/" + scene + ".yaml").c_str(), e.what());
 		return;
 	}
 
-	std::string line;
-	uint32_t inst = 0;
-	while (std::getline(file, line))
+	//Load Scene Info;
+	for (YAML::const_iterator obj = content["objects"].begin(); obj != content["objects"].end(); ++obj)
 	{
-		if (line.substr(0, 5) == "inst=")
+		ObjInfo objInfo;
+
+		uint32_t inst = Utility::FromHex32String((*obj)["inst"].as<std::string>());
+		objInfo.name = (*obj)["name"].as<std::string>();
+
+		Transform transform;
+		transform.position.x = (*obj)["transform"]["pos"]["x"].as<float>();
+		transform.position.y = (*obj)["transform"]["pos"]["y"].as<float>();
+		transform.rotation.SetDeg((*obj)["transform"]["rot"].as<float>());
+		transform.scale.x = (*obj)["transform"]["sca"]["x"].as<float>();
+		transform.scale.y = (*obj)["transform"]["sca"]["y"].as<float>();
+
+		objInfo.transform = transform;
+
+		for (YAML::const_iterator comp = (*obj)["components"].begin(); comp != (*obj)["components"].end(); ++comp)
 		{
-			std::stringstream id;
-			id << std::hex << line.substr(5);
-			id >> inst;
-			continue;
+			uint32_t id = Utility::FromHex32String((*comp)["id"].as<std::string>());
+			VarMap varMap;
+			for (YAML::const_iterator field = (*comp)["variables"].begin(); field != (*comp)["variables"].end(); ++field)
+			{
+				VarEntry entry;
+				std::string key = (*field)["field"].as<std::string>();
+				YAMLLoad(field, entry);
+				varMap[key] = entry;
+			}
+			objInfo.components[id] = varMap;
 		}
-		if (line[0] != '\t' && line.substr(0, 4) != "    ")
-		{
-			Debug::LogErr("Serializer::LoadFromFile -> Bad Formatting: %s", line.c_str());
-			continue;
-		}
-		std::stringstream linestream((line[0] == '\t') ? line.substr(1) : line.substr(4));
-		std::string cell;
-		VarEntry entry;
-		std::string key;
-		std::getline(linestream, cell, ' ');
-		entry.type = static_cast<Serializer::DataType>(std::stoi(cell));
-		std::getline(linestream, key, '=');
-		std::getline(linestream, cell, '\n');
-		DataParse(entry, cell);
-		m_manifest[inst][key] = entry;
+		m_manifest[inst] = objInfo;
 	}
-	file.close();
+}
+
+std::vector<Xeph2D::Serializer::IDInfo> Xeph2D::Serializer::GetIDInfo()
+{
+	std::vector<IDInfo> result;
+	for (const std::pair<uint32_t, ObjInfo>& obj : Get().m_manifest)
+	{
+		IDInfo& o = result.emplace_back();
+		o.gameObject = obj.first;
+		for (const std::pair<uint32_t, VarMap>& comp : obj.second.components)
+		{
+			o.components.push_back(comp.first);
+		}
+	}
+	return result;
 }
