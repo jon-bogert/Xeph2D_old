@@ -23,7 +23,7 @@ project "Xeph2D"
 	cppdialect "C++17"
 	staticruntime "Off"
 	
-	defines { "YAML_CPP_STATIC_DEFINE" }
+	defines { "SFML_STATIC", "YAML_CPP_STATIC_DEFINE" }
 
 	files
 	{
@@ -77,7 +77,7 @@ project "App"
 	cppdialect "C++17"
 	staticruntime "Off"
 	
-	defines { "YAML_CPP_STATIC_DEFINE" }
+	defines { "SFML_STATIC", "YAML_CPP_STATIC_DEFINE" }
 
 	files
 	{
@@ -99,7 +99,21 @@ project "App"
 		"%{prj.name}/lib"
 	}
 	
-	links { "Xeph2D" }
+	links
+	{
+		"Xeph2D",
+		"opengl32",
+		"winmm",
+		"gdi32",
+		"Shell32",
+		"flac",
+		"freetype",
+		"ogg",
+		"openal32",
+		"vorbis",
+		"vorbisenc.lib",
+		"vorbisfile"
+	}
 	
 	filter "system:windows"
 		systemversion "latest"
@@ -111,11 +125,11 @@ project "App"
 		links
 		{
 			"box2d-d.lib",
-			"sfml-system-d.lib",
-			"sfml-graphics-d.lib",
-			"sfml-window-d.lib",
-			"sfml-audio-d.lib",
-			"sfml-network-d.lib",
+			"sfml-system-s-d.lib",
+			"sfml-graphics-s-d.lib",
+			"sfml-window-s-d.lib",
+			"sfml-audio-s-d.lib",
+			"sfml-network-s-d.lib",
 			"yaml-cpp-d.lib"
 		}
 
@@ -126,11 +140,11 @@ project "App"
 		links
 		{
 			"box2d-d.lib",
-			"sfml-system-d.lib",
-			"sfml-graphics-d.lib",
-			"sfml-window-d.lib",
-			"sfml-audio-d.lib",
-			"sfml-network-d.lib",
+			"sfml-system-s-d.lib",
+			"sfml-graphics-s-d.lib",
+			"sfml-window-s-d.lib",
+			"sfml-audio-s-d.lib",
+			"sfml-network-s-d.lib",
 			"yaml-cpp-d.lib"
 		}
 		
@@ -140,12 +154,12 @@ project "App"
 		links
 		{
 			"box2d-d.lib",
-			"sfml-system-d.lib",
-			"sfml-graphics-d.lib",
-			"sfml-window-d.lib",
-			"sfml-audio-d.lib",
-			"sfml-network-d.lib",
-			"imgui.lib",
+			"sfml-system-s-d.lib",
+			"sfml-graphics-s-d.lib",
+			"sfml-window-s-d.lib",
+			"sfml-audio-s-d.lib",
+			"sfml-network-s-d.lib",
+			"imgui-sfml-s-d.lib",
 			"opengl32",
 			"yaml-cpp-d.lib"
 		}
@@ -157,13 +171,12 @@ project "App"
 		links
 		{
 			"box2d-d.lib",
-			"sfml-system-d.lib",
-			"sfml-graphics-d.lib",
-			"sfml-window-d.lib",
-			"sfml-audio-d.lib",
-			"sfml-network-d.lib",
-			"imgui.lib",
-			"opengl32",
+			"sfml-system-s-d.lib",
+			"sfml-graphics-s-d.lib",
+			"sfml-window-s-d.lib",
+			"sfml-audio-s-d.lib",
+			"sfml-network-s-d.lib",
+			"imgui-sfml-s-d.lib",
 			"yaml-cpp-d.lib"
 		}
 		
